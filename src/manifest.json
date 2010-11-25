@@ -1,0 +1,12 @@
+﻿{
+  "name": "HFR - Mes sujets",
+  "version": "0.1",
+  "description": "Vérifie si des sujets bla bla bla.",
+  "background_page": "bg.html",
+  "browser_action": {
+    "default_icon": "icon.ico",
+	"badge": "0"
+  },
+  "permissions": ["tabs","http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0"
+  ]
+}

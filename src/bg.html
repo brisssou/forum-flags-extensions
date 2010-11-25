@@ -1,0 +1,108 @@
+<html>
+<head>
+<script>
+
+	var requestFailureCount = 0;  // used for exponential backoff
+	var requestTimeout = 1000 * 2;  // 5 seconds
+	
+	var HFR_MY_FAV = "http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
+
+	var UNREAD_QUERY = //"//td";
+	"['namespace-uri()='http://www.w3.org/1999/xhtml' and name()='td' and @class='sujetCase9']";
+	function goToHfr(){
+	chrome.tabs.getAllInWindow(undefined, function(tabs){
+	
+	for (var i = 0, tab; tab = tabs[i]; i++) {
+			if (tab.url && tab.url == HFR_MY_FAV) {
+				chrome.tabs.update(tab.id, {selected: true});
+				return;
+			}
+		}
+		chrome.tabs.create({url: HFR_MY_FAV});
+	});
+	
+	}
+	
+	function updateBadge(nbUnread) {
+		chrome.browserAction.setBadgeText({text:""+nbUnread});
+	}
+
+	function scheduleRequest() {
+		window.setTimeout(startRequest, 2000);
+	}
+	
+	
+	
+	function startRequest() {
+	  getUnreadCount(
+		function(count) {
+		  //loadingAnimation.stop();
+		  updateBadge(count);
+		  scheduleRequest();
+		},
+		function() {
+		  //loadingAnimation.stop();
+		  //showLoggedOut();
+		  scheduleRequest();
+		}
+	  );
+	}
+
+	function getUnreadCount(onSuccess, onError) {
+	  var xhr = new XMLHttpRequest();
+	  var abortTimerId = window.setTimeout(function() {
+		xhr.abort();  // synchronously calls onreadystatechange
+	  }, requestTimeout);
+
+	  function handleSuccess(count) {
+		requestFailureCount = 0;
+		window.clearTimeout(abortTimerId);
+		if (onSuccess)
+		  onSuccess(count);
+	  }
+
+	  function handleError() {
+		++requestFailureCount;
+		window.clearTimeout(abortTimerId);
+		if (onError)
+		  onError();
+	  }
+
+	  try {
+		xhr.onreadystatechange = function(){
+		  if (xhr.readyState != 4)
+			return;
+
+		  if (xhr.responseText) {
+			var content = xhr.responseText;
+			var unreadCount = 0;
+			var lastIndx = content.indexOf("sujetCase7",lastIndx);
+			while (lastIndx !=-1) {
+				unreadCount++;
+				lastIndx = content.indexOf("sujetCase7",lastIndx + 1);
+			}
+			handleSuccess(unreadCount);
+			return;
+		  }
+
+		  handleError();
+		}
+
+		xhr.onerror = function(error) {
+		  handleError();
+		}
+
+		xhr.open("GET", HFR_MY_FAV, true);
+		xhr.send(null);
+	  } catch(e) {
+		console.error(e);
+		handleError();
+	  }
+	}
+	
+	chrome.browserAction.onClicked.addListener(goToHfr);
+	//chrome.browserAction.onClicked.addListener(startRequest);
+	startRequest();
+</script>
+</head>
+</html>
