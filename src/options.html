@@ -13,7 +13,8 @@ function save_options() {
   } else {
     setPref(REFRESH_TIME_PREF, refTime);
   }
-  setPref(USE_DIRECT_LINK_PREF, document.getElementById("USE_DIRECT_LINK_PREF").value);
+  //setPref(USE_DIRECT_LINK_PREF, document.getElementById("USE_DIRECT_LINK_PREF").value);
+  setPref(ONLY_FAVS_PREF, document.getElementById("ONLY_FAVS_PREF").value);
 
   init();
 }
@@ -21,21 +22,24 @@ function save_options() {
 // Restores select box state to saved value from localStorage.
 function restore_options() {
   document.getElementById('REFRESH_TIME_PREF').value = getPref(REFRESH_TIME_PREF);
-  if (getPref(USE_DIRECT_LINK_PREF)) document.getElementById('USE_DIRECT_LINK_PREF').checked = true;
+  //if (getPref(USE_DIRECT_LINK_PREF)) document.getElementById('USE_DIRECT_LINK_PREF').checked = true;
+  if (getPref(ONLY_FAVS_PREF)) document.getElementById('ONLY_FAVS_PREF').checked = true;
 }
 </script>
 </head>
 <body onload="restore_options()">
   <div id="prefs">
-    <label for="REFRESH_TIME_PREF">temps de rafrachissement en secondes : </label>
+    <label for="REFRESH_TIME_PREF">Temps de rafra&icirc;chissement  en secondes :</label>
     <input type="text" name="REFRESH_TIME_PREF" id="REFRESH_TIME_PREF" onchange="save_options()" onkeyup="save_options()"/>
     <br/>
     <div id="REFRESH_TIME_PREF.error"></div>
     <br/>
-    <label for="USE_DIRECT_LINK_PREF">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris. </label>
-    <input type="checkbox" name="USE_DIRECT_LINK_PREF" id="USE_DIRECT_LINK_PREF" onchange="save_options()"/>
+    <label for="ONLY_FAVS_PREF" title="Si d&eacute;coch&eacute;, rafra&icirc;chit les drapeaux cyans.">Rafra&icirc;chir uniquement les favoris.</label>
+    <input type="checkbox" name="ONLY_FAVS_PREF" id="ONLY_FAVS_PREF" onchange="save_options()"/>
+    <br/>
+    <!--label for="USE_DIRECT_LINK_PREF">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris.</label>
+    <input type="checkbox" name="USE_DIRECT_LINK_PREF" id="USE_DIRECT_LINK_PREF" onchange="save_options()"/-->
     <br/>
   </div>
 </body>
 </html>
-
