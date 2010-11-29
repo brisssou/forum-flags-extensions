@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>HFR - Mes Sujets - Options</title>
+<script src="prefs.js"></script>
+<script src="web.js"></script>
+<script type="text/javascript">
+
+// Saves options to localStorage.
+function save_options() {
+  var refTime = parseInt(document.getElementById("REFRESH_TIME_PREF").value);
+  if (isNaN(refTime)) {
+    document.getElementById("REFRESH_TIME_PREF.error").innerHtml = "des entiers seulement, merci!";
+  } else {
+    setPref(REFRESH_TIME_PREF, refTime);
+  }
+  setPref(USE_DIRECT_LINK_PREF, document.getElementById("USE_DIRECT_LINK_PREF").value);
+
+  init();
+}
+
+// Restores select box state to saved value from localStorage.
+function restore_options() {
+  document.getElementById('REFRESH_TIME_PREF').value = getPref(REFRESH_TIME_PREF);
+  if (getPref(USE_DIRECT_LINK_PREF)) document.getElementById('USE_DIRECT_LINK_PREF').checked = true;
+}
+</script>
+</head>
+<body onload="restore_options()">
+  <div id="prefs">
+    <label for="REFRESH_TIME_PREF">temps de rafrachissement en secondes : </label>
+    <input type="text" name="REFRESH_TIME_PREF" id="REFRESH_TIME_PREF" onchange="save_options()" onkeyup="save_options()"/>
+    <br/>
+    <div id="REFRESH_TIME_PREF.error"></div>
+    <br/>
+    <label for="USE_DIRECT_LINK_PREF">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris. </label>
+    <input type="checkbox" name="USE_DIRECT_LINK_PREF" id="USE_DIRECT_LINK_PREF" onchange="save_options()"/>
+    <br/>
+  </div>
+</body>
+</html>
+
