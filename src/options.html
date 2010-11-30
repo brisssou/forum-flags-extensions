@@ -1,45 +1,77 @@
 <html>
 <head>
 <title>HFR - Mes Sujets - Options</title>
+<link rel="StyleSheet" href="style.css" type="text/css"/>
 <script src="prefs.js"></script>
 <script src="web.js"></script>
 <script type="text/javascript">
 
-// Saves options to localStorage.
-function save_options() {
-  var refTime = parseInt(document.getElementById("REFRESH_TIME_PREF").value);
-  if (isNaN(refTime)) {
-    document.getElementById("REFRESH_TIME_PREF.error").innerHtml = "des entiers seulement, merci!";
-  } else {
-    setPref(REFRESH_TIME_PREF, refTime);
-  }
-  //setPref(USE_DIRECT_LINK_PREF, document.getElementById("USE_DIRECT_LINK_PREF").value);
-  setPref(ONLY_FAVS_PREF, document.getElementById("ONLY_FAVS_PREF").value);
-
-  init();
-}
-
 // Restores select box state to saved value from localStorage.
-function restore_options() {
-  document.getElementById('REFRESH_TIME_PREF').value = getPref(REFRESH_TIME_PREF);
-  //if (getPref(USE_DIRECT_LINK_PREF)) document.getElementById('USE_DIRECT_LINK_PREF').checked = true;
-  if (getPref(ONLY_FAVS_PREF)) document.getElementById('ONLY_FAVS_PREF').checked = true;
+function initControls() {
+  var refTimeInput = document.getElementById("REFRESH_TIME_PREF");
+  refTimeInput.value = getPref(REFRESH_TIME_PREF);
+  refTimeInput.onchange = function(event) {
+    var refTime = parseInt(this.value);
+    if (isNaN(refTime)) {
+      document.getElementById("REFRESH_TIME_PREF.error").innerHtml = "des entiers seulement, merci!";
+    } else {
+      setPref(REFRESH_TIME_PREF, refTime);
+    }
+    //TODO il faut redémarrer tout une suite un update, sinon on va devoir attend la un temps égale à la valeur t-1, soit potentiellement LONGTEMPS!
+  };
+  refTimeInput.onkeyup=refTimeInput.onchange;
+  
+  var directLinkInput = document.getElementById('USE_DIRECT_LINK_PREF');
+  directLinkInput.checked = getPref(USE_DIRECT_LINK_PREF);
+  directLinkInput.onchange = function (event) {
+    setPref(USE_DIRECT_LINK_PREF, this.value);
+    init();
+  };
+  
+  var onlyFavsInput = document.getElementById('ONLY_FAVS_PREF');
+  onlyFavsInput.checked = getPref(ONLY_FAVS_PREF);
+  onlyFavsInput.onchange = function (event) {
+    setPref(ONLY_FAVS_PREF, this.value);
+  };
+  
+  var aniIconInput = document.getElementById('ANIMATED_ICON_PREF');
+  aniIconInput.checked = getPref(ANIMATED_ICON_PREF);
+  if (getPref(ANIMATED_ICON_PREF)) {
+    document.getElementById('subAnimPrefs').style.display = 'block';
+  } else {
+    document.getElementById('subAnimPrefs').style.display = 'none';
+  }
+  aniIconInput.onchange = function (event) {
+    setPref(ANIMATED_ICON_PREF, this.value);
+    if (this.value) {
+      document.getElementById('subAnimPrefs').style.display = 'block';
+    } else {
+      document.getElementById('subAnimPrefs').style.display = 'none';
+    }
+  };
+  
+  
 }
 </script>
 </head>
-<body onload="restore_options()">
+<body onload="initControls()">
   <div id="prefs">
     <label for="REFRESH_TIME_PREF">Temps de rafra&icirc;chissement  en secondes :</label>
-    <input type="text" name="REFRESH_TIME_PREF" id="REFRESH_TIME_PREF" onchange="save_options()" onkeyup="save_options()"/>
+    <input type="text" name="REFRESH_TIME_PREF" id="REFRESH_TIME_PREF"/>
     <br/>
     <div id="REFRESH_TIME_PREF.error"></div>
     <br/>
     <label for="ONLY_FAVS_PREF" title="Si d&eacute;coch&eacute;, rafra&icirc;chit les drapeaux cyans.">Rafra&icirc;chir uniquement les favoris.</label>
-    <input type="checkbox" name="ONLY_FAVS_PREF" id="ONLY_FAVS_PREF" onchange="save_options()"/>
+    <input type="checkbox" name="ONLY_FAVS_PREF" id="ONLY_FAVS_PREF"/>
     <br/>
-    <!--label for="USE_DIRECT_LINK_PREF">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris.</label>
-    <input type="checkbox" name="USE_DIRECT_LINK_PREF" id="USE_DIRECT_LINK_PREF" onchange="save_options()"/-->
+    <label for="USE_DIRECT_LINK_PREF">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris.</label>
+    <input type="checkbox" name="USE_DIRECT_LINK_PREF" id="USE_DIRECT_LINK_PREF"/>
     <br/>
+    <label for="ANIMATED_ICON_PREF">Animer l'icone de l'extension si il y a des topics non lus.</label>
+    <input type="checkbox" name="ANIMATED_ICON_PREF" id="ANIMATED_ICON_PREF"/>
+    <br/>
+    <div id="subAnimPrefs" display="none">
+    </div>
   </div>
 </body>
 </html>

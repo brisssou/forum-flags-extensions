@@ -1,6 +1,6 @@
 ﻿{
   "name": "HFR - Mes sujets",
-  "version": "0.2",
+  "version": "0.3",
   "description": "Vérifie si les sujets drapalisés ont de nouveaux messages.",
   "background_page": "bg.html",
   "options_page": "options.html",
