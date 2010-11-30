@@ -1,7 +1,9 @@
 <html>
 <head>
 <script src="prefs.js"></script>
+<script src="pop.js"></script>
 <script src="web.js"></script>
+<script src="behaviour.js"></script>
 <script type="text/javascript">
 
 	function scheduleRequest() {
@@ -25,10 +27,19 @@
 	  );
 	}
 
-  //chrome.browserAction.onClicked.addListener(startRequest);
-  chrome.browserAction.onClicked.addListener(goToHfr);
-  init();
-  startRequest();
+  function initBG() {
+    iconImage = document.getElementById('icon')
+    canvas = document.getElementById('canvas');
+    canvasContext = canvas.getContext('2d');
+    chrome.browserAction.onClicked.addListener(goToHfr);
+    //chrome.browserAction.onClicked.addListener(startRequest);
+    initBrowserAction();
+    startRequest();
+  }
 </script>
 </head>
+<body onload="initBG()">
+  <img id="icon" src="icon.ico"/>
+  <canvas id="canvas" width="19" height="19"></canvas>
+</body>
 </html>

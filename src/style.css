@@ -1,3 +1,4 @@
+/*prefs page*/
 #prefs {
   text-align: center;
   border: solid blue 1;
@@ -8,9 +9,14 @@
       left top,
       color-stop(0, rgb(255,255,255)),
       color-stop(0.55, rgb(51,102,153)));
-
 }
 
+#prefs .error {
+  color:red;
+  font-weight: bold;
+}
+
+/*popup*/
 #popup {
   width: 150px;
 }
@@ -28,6 +34,14 @@ ul#headBar {
 ul#headBar li {
   display : inline;
   padding : 0 0.5em; 
+}
+
+ul#headBar li.left {
+  float: left;
+}
+
+ul#headBar li.right {
+  float: right;
 }
 
 #headBar > li {

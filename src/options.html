@@ -4,7 +4,16 @@
 <link rel="StyleSheet" href="style.css" type="text/css"/>
 <script src="prefs.js"></script>
 <script src="web.js"></script>
+<script src="behaviour.js"></script>
 <script type="text/javascript">
+
+function setVisible(element, isVisible) {
+  if (isVisible) {
+    element.style.display = 'block';
+  } else {
+    element.style.display = 'none';
+  }
+}
 
 // Restores select box state to saved value from localStorage.
 function initControls() {
@@ -20,34 +29,25 @@ function initControls() {
     //TODO il faut redémarrer tout une suite un update, sinon on va devoir attend la un temps égale à la valeur t-1, soit potentiellement LONGTEMPS!
   };
   refTimeInput.onkeyup=refTimeInput.onchange;
-  
+  /*
   var directLinkInput = document.getElementById('USE_DIRECT_LINK_PREF');
   directLinkInput.checked = getPref(USE_DIRECT_LINK_PREF);
   directLinkInput.onchange = function (event) {
     setPref(USE_DIRECT_LINK_PREF, this.value);
-    init();
-  };
+    initBrowserAction();
+  };*/
   
   var onlyFavsInput = document.getElementById('ONLY_FAVS_PREF');
   onlyFavsInput.checked = getPref(ONLY_FAVS_PREF);
   onlyFavsInput.onchange = function (event) {
     setPref(ONLY_FAVS_PREF, this.value);
+    initBrowserActionTitle();
   };
   
   var aniIconInput = document.getElementById('ANIMATED_ICON_PREF');
   aniIconInput.checked = getPref(ANIMATED_ICON_PREF);
-  if (getPref(ANIMATED_ICON_PREF)) {
-    document.getElementById('subAnimPrefs').style.display = 'block';
-  } else {
-    document.getElementById('subAnimPrefs').style.display = 'none';
-  }
   aniIconInput.onchange = function (event) {
     setPref(ANIMATED_ICON_PREF, this.value);
-    if (this.value) {
-      document.getElementById('subAnimPrefs').style.display = 'block';
-    } else {
-      document.getElementById('subAnimPrefs').style.display = 'none';
-    }
   };
   
   
@@ -56,21 +56,22 @@ function initControls() {
 </head>
 <body onload="initControls()">
   <div id="prefs">
-    <label for="REFRESH_TIME_PREF">Temps de rafra&icirc;chissement  en secondes :</label>
-    <input type="text" name="REFRESH_TIME_PREF" id="REFRESH_TIME_PREF"/>
-    <br/>
-    <div id="REFRESH_TIME_PREF.error"></div>
-    <br/>
-    <label for="ONLY_FAVS_PREF" title="Si d&eacute;coch&eacute;, rafra&icirc;chit les drapeaux cyans.">Rafra&icirc;chir uniquement les favoris.</label>
-    <input type="checkbox" name="ONLY_FAVS_PREF" id="ONLY_FAVS_PREF"/>
-    <br/>
-    <label for="USE_DIRECT_LINK_PREF">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris.</label>
-    <input type="checkbox" name="USE_DIRECT_LINK_PREF" id="USE_DIRECT_LINK_PREF"/>
-    <br/>
-    <label for="ANIMATED_ICON_PREF">Animer l'icone de l'extension si il y a des topics non lus.</label>
-    <input type="checkbox" name="ANIMATED_ICON_PREF" id="ANIMATED_ICON_PREF"/>
-    <br/>
-    <div id="subAnimPrefs" display="none">
+    <div>
+      <span><label for="REFRESH_TIME_PREF">Temps de rafra&icirc;chissement  en secondes :</label></span>
+      <span><input type="text" name="REFRESH_TIME_PREF" id="REFRESH_TIME_PREF"/></span>
+      <div id="REFRESH_TIME_PREF.error" class="error"></div>
+    </div>
+    <div>
+      <span><label for="ONLY_FAVS_PREF" title="Si d&eacute;coch&eacute;, rafra&icirc;chit les drapeaux cyans.">Rafra&icirc;chir uniquement les favoris :</label></span>
+      <span><input type="checkbox" name="ONLY_FAVS_PREF" id="ONLY_FAVS_PREF"/></span>
+    </div>
+    <div>
+      <span><label for="USE_DIRECT_LINK_PREF" title="Si d&eacute;coch&eacute;, affichage de la popup.">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris :</label></span>
+      <span><input type="checkbox" name="USE_DIRECT_LINK_PREF" id="USE_DIRECT_LINK_PREF"/></span>
+    </div>
+    <div>
+      <span><label for="ANIMATED_ICON_PREF">Animer l'icone de l'extension si il y a des topics non lus :</label></span>
+      <span><input type="checkbox" name="ANIMATED_ICON_PREF" id="ANIMATED_ICON_PREF"/></span>
     </div>
   </div>
 </body>

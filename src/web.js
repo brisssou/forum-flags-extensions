@@ -1,5 +1,8 @@
-var HFR_MY_DRAPS = "http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
-var HFR_MY_FAVS = "http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
+var HFR = "http://forum.hardware.fr";
+var HFR_MY_DRAPS = HFR + "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
+var HFR_MY_FAVS = HFR + "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
+
+
 
 var requestFailureCount = 0;  // used for exponential backoff
 var requestTimeout = 1000 * 2;  // 2 seconds
@@ -20,35 +23,9 @@ function getPatern() {
   if (getPref(ONLY_FAVS_PREF)) {
     return "/favoris.gif\" title=\"Aller au dernier message lu sur ce sujet (";
   } else {
-    return "sujetCase7";
+    return "sujetCase5";
   }
 }
-
-function goToPage(url) {
-  chrome.tabs.getAllInWindow(undefined, function(tabs){
-
-  for (var i = 0, tab; tab = tabs[i]; i++) {
-      if (tab.url && tab.url == url) {
-        chrome.tabs.update(tab.id, {selected: true});
-        return;
-      }
-    }
-    chrome.tabs.create({url: url});
-  });
-}
-
-function goToHfr(){
-  goToPage(getUsedURL());
-}
-
-function updateBadge(nbUnread) {
-  if (nbUnread && nbUnread != null && parseInt(nbUnread) != NaN && parseInt(nbUnread) > 0) {
-    chrome.browserAction.setBadgeText({text:""+nbUnread});
-  } else {
-    chrome.browserAction.setBadgeText({text:""});
-  }
-}
-
 
 function getUnreadCount(onSuccess, onError) {
   var xhr = new XMLHttpRequest();
@@ -81,9 +58,15 @@ function getUnreadCount(onSuccess, onError) {
 		    var unreadCount = 0;
         var patern = getPatern();
 		    var lastIndx = content.indexOf(patern, lastIndx);
+        /*if (lastIndx !=-1 && !getPref(ONLY_FAVS_PREF)) {
+          alert(content.substring(lastIndx + 21, content.indexOf("\">", lastIndx + 21)));
+        }*/
 		    while (lastIndx !=-1) {
 			    unreadCount++;
 			    lastIndx = content.indexOf(patern, lastIndx + 1);
+        /*  if (lastIndx !=-1 && !getPref(ONLY_FAVS_PREF)) {
+            alert(content.substring(lastIndx + 21, content.indexOf("\">", lastIndx + 21)));
+          }*/
 		    }
 		    handleSuccess(unreadCount);
 		    return;
@@ -101,13 +84,5 @@ function getUnreadCount(onSuccess, onError) {
   } catch(e) {
 	  console.error(e);
 	  handleError();
-  }
-}
-
-function init() {
-  if (getPref(USE_DIRECT_LINK_PREF)) {
-  	chrome.browserAction.setPopup({popup:""});
-  } else {
-  	chrome.browserAction.setPopup({popup:"pop.html"});
   }
 }
