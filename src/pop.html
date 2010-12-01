@@ -1,25 +1,33 @@
 <html>
 <head>
 <link rel="StyleSheet" href="style.css" type="text/css"/>
-<script src="pop.js"></script>
 <script src="web.js"></script>
 <script src="prefs.js"></script>
 <script src="behaviour.js"></script>
 <script type="text/javascript">
   function initPopup() {
-    var entriesDiv = document.getElementById('entries');
     var innerHtml = "";
     var entry;
-    alert(popupContent.entries);
+    var popupContent = chrome.extension.getBackgroundPage().popupContent;
+    innerHtml += "<ul>";
     for (var i = 0; i < popupContent.entries.length; i++) {
       entry = popupContent.entries[i];
+      innerHtml += "<li><a href=\"javascript:goToPage('";
+      innerHtml += getFullUrl(entry.href);
+      innerHtml += "')\">";
       innerHtml += entry.title;
-      innerHtml += entry.href;
-      innerHtml += "<br/>";
-      entry = popupContent.next();
+      innerHtml += "</a></li>";
     }
-    alert(innerHtml);
-    entriesDiv.innerHtml = innerHtml;
+    innerHtml += "</ul>";
+    document.getElementById('entries').innerHTML = innerHtml;
+  }
+
+  function openAll() {
+    var popupContent = chrome.extension.getBackgroundPage().popupContent;
+    for (var i = 0; i < popupContent.entries.length; i++) {
+      entry = popupContent.entries[i];
+      goToPage(getFullUrl(entry.href));
+    }
   }
 </script>
 </head>
@@ -27,10 +35,12 @@
 <div id="popup">
   <ul id="headBar">
     <li class="left"><a href="javascript:goToHfr()">HFR</a></li>
+    <li class="left"><a href="javascript:openAll()">Tout ouvrir</a></li>
+    <li class="left"><a href="javascript:startRequest()">Refresh</a></li>
     <li class="right"><a href="javascript:goToPage('options.html')">Options</a></li>
   </ul>
-</div>
-<div id="entries">
+  <div id="entries">
+  </div>
 </div>
 </body>
 </html>

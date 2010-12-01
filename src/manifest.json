@@ -1,13 +1,14 @@
 ﻿{
   "name": "HFR - Mes sujets",
   "version": "0.4",
-  "description": "Vérifie si les sujets drapalisés ont de nouveaux messages.",
+  "description": "Vérifie si les sujets drapalisés sur forum.hardware.fr ont de nouveaux messages.",
   "background_page": "bg.html",
   "options_page": "options.html",
   "browser_action": {
     "default_icon": "icon.ico",
     "badge": ""
   },
+  "icons": { "128": "icon128.png" },
   "permissions": ["tabs","http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0"
   ],
   "update_url": "http://hfr-drap4chrome.googlecode.com/files/updates.xml"

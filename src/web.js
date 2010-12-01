@@ -2,12 +2,11 @@ var HFR = "http://forum.hardware.fr";
 var HFR_MY_DRAPS = HFR + "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
 var HFR_MY_FAVS = HFR + "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
 
-
+var UNREAD_REX= /title="Sujet n°\d+">([^<]+).+sujetCase5"><a href="([^"]+)/g;
 
 var requestFailureCount = 0;  // used for exponential backoff
 var requestTimeout = 1000 * 2;  // 2 seconds
 
-//var UNREAD_QUERY = "['namespace-uri()='http://www.w3.org/1999/xhtml' and name()='td' and @class='sujetCase9']";
 
 var bg = chrome.extension.getBackgroundPage();
 
@@ -19,12 +18,8 @@ function getUsedURL() {
   }
 }
 
-function getPatern() {
-  if (getPref(ONLY_FAVS_PREF)) {
-    return "/favoris.gif\" title=\"Aller au dernier message lu sur ce sujet (";
-  } else {
-    return "sujetCase5";
-  }
+function getFullUrl(url) {
+  return HFR + url;
 }
 
 function getUnreadCount(onSuccess, onError) {
@@ -56,20 +51,12 @@ function getUnreadCount(onSuccess, onError) {
 	    if (xhr.responseText) {
 		    var content = xhr.responseText;
 		    var unreadCount = 0;
-        var patern = getPatern();
-		    var lastIndx = content.indexOf(patern, lastIndx);
 		    popupContent.clear();
-        /*if (lastIndx !=-1 && !getPref(ONLY_FAVS_PREF)) {
-          alert(content.substring(lastIndx + 21, content.indexOf("\">", lastIndx + 21)));
-        }*/
-		    while (lastIndx !=-1) {
+        var matches = null;
+        while (matches = UNREAD_REX.exec(content)) {
 			    unreadCount++;
-		      popupContent.add('entry'+unreadCount, 'bla bla bla');
-			    lastIndx = content.indexOf(patern, lastIndx + 1);
-        /*  if (lastIndx !=-1 && !getPref(ONLY_FAVS_PREF)) {
-            alert(content.substring(lastIndx + 21, content.indexOf("\">", lastIndx + 21)));
-          }*/
-		    }
+          popupContent.add(matches[1], matches[2]);
+        }
 		    handleSuccess(unreadCount);
 		    return;
 	    }
@@ -88,3 +75,22 @@ function getUnreadCount(onSuccess, onError) {
 	  handleError();
   }
 }
+
+	function scheduleRequest() {
+		window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000);
+	}
+	
+	function startRequest() {
+	  getUnreadCount(
+		function(count) {
+		  //loadingAnimation.stop();
+		  updateBadge(count);
+		  scheduleRequest();
+		},
+		function() {
+		  //loadingAnimation.stop();
+		  //showLoggedOut();
+		  scheduleRequest();
+		}
+	  );
+	}

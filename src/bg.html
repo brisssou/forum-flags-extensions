@@ -2,40 +2,15 @@
 <head>
 <script src="prefs.js"></script>
 <script src="web.js"></script>
+<script src="pop.js"></script>
 <script src="behaviour.js"></script>
 <script type="text/javascript">
 
-  var popupContent = new function() {
-    this.entries: new Array();
-    
-    function add(title, href) {
-      this.entries.push({title:title, href:href});
-    },
-    
-    clear: function() {
-      this.entries = new Array();
-    }
-    
-  };
-
-	function scheduleRequest() {
-		window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000);
-	}
-	
-	function startRequest() {
-	  getUnreadCount(
-		function(count) {
-		  //loadingAnimation.stop();
-		  updateBadge(count);
-		  scheduleRequest();
-		},
-		function() {
-		  //loadingAnimation.stop();
-		  //showLoggedOut();
-		  scheduleRequest();
-		}
-	  );
-	}
+  var popupContent = new PopupContent();
+  var canvas;
+  var canvasContext;
+  var iconImage;
+  
 
   function initBG() {
     iconImage = document.getElementById('icon')
