@@ -58,11 +58,13 @@ function getUnreadCount(onSuccess, onError) {
 		    var unreadCount = 0;
         var patern = getPatern();
 		    var lastIndx = content.indexOf(patern, lastIndx);
+		    popupContent.clear();
         /*if (lastIndx !=-1 && !getPref(ONLY_FAVS_PREF)) {
           alert(content.substring(lastIndx + 21, content.indexOf("\">", lastIndx + 21)));
         }*/
 		    while (lastIndx !=-1) {
 			    unreadCount++;
+		      popupContent.add('entry'+unreadCount, 'bla bla bla');
 			    lastIndx = content.indexOf(patern, lastIndx + 1);
         /*  if (lastIndx !=-1 && !getPref(ONLY_FAVS_PREF)) {
             alert(content.substring(lastIndx + 21, content.indexOf("\">", lastIndx + 21)));

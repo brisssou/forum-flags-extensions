@@ -29,13 +29,13 @@ function initControls() {
     //TODO il faut redémarrer tout une suite un update, sinon on va devoir attend la un temps égale à la valeur t-1, soit potentiellement LONGTEMPS!
   };
   refTimeInput.onkeyup=refTimeInput.onchange;
-  /*
+  
   var directLinkInput = document.getElementById('USE_DIRECT_LINK_PREF');
   directLinkInput.checked = getPref(USE_DIRECT_LINK_PREF);
   directLinkInput.onchange = function (event) {
     setPref(USE_DIRECT_LINK_PREF, this.value);
     initBrowserAction();
-  };*/
+  };
   
   var onlyFavsInput = document.getElementById('ONLY_FAVS_PREF');
   onlyFavsInput.checked = getPref(ONLY_FAVS_PREF);
