@@ -10,6 +10,5 @@
   },
   "icons": { "128": "icon128.png" },
   "permissions": ["tabs","http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0","http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0"
-  ],
-  "update_url": "http://hfr-drap4chrome.googlecode.com/files/updates.xml"
+  ]
 }
