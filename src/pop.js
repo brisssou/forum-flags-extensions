@@ -1,11 +1,11 @@
-class PopupContent () {
-  entries: new Array(),
+function PopupContent () {
+  this.entries = new Array(),
   
-  add: function(title, href) {
+  PopupContent.prototype.add = function(title, href) {
     this.entries.push({title:title, href:href});
   },
   
-  clear: function() {
+  PopupContent.prototype.clear = function() {
     this.entries = new Array();
   }
   

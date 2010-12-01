@@ -43,14 +43,12 @@ function updateBadge(nbUnread) {
   }
 }
 
-/*to rotate the browser action icon, (not so) shamelessly copied from google Exemples*/
+/*to rotate the browser action icon, (not so) shamelessly copied from google Examples*/
   
 var rotation = 0;
 var animationFrames = 36;
 var animationSpeed = 10; // ms
-var canvas;
-var canvasContext;
-var iconImage;
+
 
 function ease(x) {
   return (1-Math.sin(Math.PI/2+x*Math.PI))/2;
@@ -69,6 +67,10 @@ function animateFlip() {
 }
 
 function drawIconAtRotation() {
+  var bgPage = chrome.extension.getBackgroundPage();
+  var canvas = bgPage.canvas;
+  var canvasContext = bgPage.canvasContext;
+  var iconImage = bgPage.iconImage;
   canvasContext.save();
   canvasContext.clearRect(0, 0, canvas.width, canvas.height);
   canvasContext.translate(
@@ -80,6 +82,6 @@ function drawIconAtRotation() {
       -Math.ceil(canvas.height/2));
   canvasContext.restore();
 
-  chrome.browserAction.setIcon({imageData:canvasContext.getImageData(0, 0,
-      canvas.width,canvas.height)});
+  var imageData = canvasContext.getImageData(0, 0, canvas.width,canvas.height);
+  chrome.browserAction.setIcon({imageData: imageData});
 }

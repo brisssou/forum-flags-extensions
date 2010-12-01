@@ -18,7 +18,9 @@
 
 /*popup*/
 #popup {
-  width: 150px;
+  width: 350px;
+  height: 200px;
+  font-size: 10pt;
 }
 
 #popup * {
@@ -48,3 +50,19 @@ ul#headBar li.right {
   font-size : 8pt; 
 }
 
+#entries {
+  position: absolute;
+  height: 185px;
+  overflow: auto;
+  margin-top: 15px;
+}
+
+#entries  a {
+  text-decoration:none;
+  color: black;
+  margin-bottom: 15px;
+}
+
+#entries  a:hover{
+  text-decoration:underline;
+}
