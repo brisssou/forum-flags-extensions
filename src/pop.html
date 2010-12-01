@@ -6,14 +6,31 @@
 <script src="prefs.js"></script>
 <script src="behaviour.js"></script>
 <script type="text/javascript">
+  function initPopup() {
+    var entriesDiv = document.getElementById('entries');
+    var innerHtml = "";
+    var entry;
+    alert(popupContent.entries);
+    for (var i = 0; i < popupContent.entries.length; i++) {
+      entry = popupContent.entries[i];
+      innerHtml += entry.title;
+      innerHtml += entry.href;
+      innerHtml += "<br/>";
+      entry = popupContent.next();
+    }
+    alert(innerHtml);
+    entriesDiv.innerHtml = innerHtml;
+  }
 </script>
 </head>
-<body>
+<body onload="initPopup()">
 <div id="popup">
   <ul id="headBar">
     <li class="left"><a href="javascript:goToHfr()">HFR</a></li>
     <li class="right"><a href="javascript:goToPage('options.html')">Options</a></li>
   </ul>
+</div>
+<div id="entries">
 </div>
 </body>
 </html>

@@ -1,16 +1,12 @@
-public class PopupContentEntry {
-  public var entries = new Array();
+class PopupContent () {
+  entries: new Array(),
   
-  function addEntry(title, href) {
-    entries.push({title:title, href:href});
-  }
+  add: function(title, href) {
+    this.entries.push({title:title, href:href});
+  },
   
-  function getNext(){
-    return entries.shift();
-  }
-  
-  function clear() {
-    entries = new Array();
+  clear: function() {
+    this.entries = new Array();
   }
   
 }
