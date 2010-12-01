@@ -1,0 +1,11 @@
+
+* First commit
+--Cette ligne, et les suivantes ci-dessous, seront ignorées--
+
+A    build
+AM   build/hfr-drap4chrome.crx
+A    build/hfr-drap4chrome.pem
+A    src
+AM   src/icon.ico
+A    src/bg.html
+A    src/manifest.json

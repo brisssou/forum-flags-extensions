@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<gupdate xmlns='http://www.google.com/update2/response' protocol='2.0'>
+  <app appid='edpafoghobjpgfmhdnjojiiogafchjdf'>
+    <updatecheck codebase='http://hfr-drap4chrome.googlecode.com/files/hfr-drap4chrome.crx' version='0.1' />
+    <updatecheck codebase='http://hfr-drap4chrome.googlecode.com/files/hfr-drap4chrome_0.2.crx' version='0.2' />
+    <updatecheck codebase='http://hfr-drap4chrome.googlecode.com/files/hfr-drap4chrome_0.3.crx' version='0.3' />
+    <updatecheck codebase='http://hfr-drap4chrome.googlecode.com/files/hfr-drap4chrome_0.3.1.crx' version='0.3.1' />
+  </app>
+</gupdate>
+
