@@ -1,9 +1,12 @@
 
-function initBrowserAction() {
+function initBehaviour() {
   if (getPref(USE_DIRECT_LINK_PREF)) {
   	chrome.browserAction.setPopup({popup:""});
   } else {
   	chrome.browserAction.setPopup({popup:"pop.html"});
+  }
+  if (getPref(USE_CONTEXT_MENU_PREF)) {
+    chrome.contextMenus.create({title:"Rafraîssement HFR", onclick:startRequest});
   }
 }
 
@@ -83,5 +86,6 @@ function drawIconAtRotation() {
   canvasContext.restore();
 
   var imageData = canvasContext.getImageData(0, 0, canvas.width,canvas.height);
-  chrome.browserAction.setIcon({imageData: imageData});
+  if (imageData instanceof ImageData)
+    chrome.browserAction.setIcon({imageData: imageData});
 }

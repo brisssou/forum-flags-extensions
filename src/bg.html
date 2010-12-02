@@ -11,6 +11,7 @@
   var canvasContext;
   var iconImage;
   
+  var requestTimeoutId = new Array();
 
   function initBG() {
     iconImage = document.getElementById('icon')
@@ -18,10 +19,10 @@
     canvasContext = canvas.getContext('2d');
     chrome.browserAction.onClicked.addListener(goToHfr);
     //chrome.browserAction.onClicked.addListener(startRequest);
-    initBrowserAction();
+    initBehaviour();
     startRequest();
-    chrome.contextMenus.create({title:"MAJ HFR", onclick:startRequest});
   }
+  
 </script>
 </head>
 <body onload="initBG()">
