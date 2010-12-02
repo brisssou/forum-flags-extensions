@@ -6,7 +6,9 @@ function initBehaviour() {
   	chrome.browserAction.setPopup({popup:"pop.html"});
   }
   if (getPref(USE_CONTEXT_MENU_PREF)) {
-    chrome.contextMenus.create({title:"Rafraîssement HFR", onclick:startRequest});
+    chrome.contextMenus.create({title:"Rafra&icirc;chissement HFR", onclick:startRequest});
+  } else {
+    chrome.contextMenus.removeAll();
   }
 }
 
