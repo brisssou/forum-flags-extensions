@@ -51,6 +51,7 @@ function getUnreadCount(onSuccess, onError) {
 	    if (xhr.responseText) {
 		    var content = xhr.responseText;
 		    var unreadCount = 0;
+		    var popupContent = chrome.extension.getBackgroundPage().popupContent;
 		    popupContent.clear();
         var matches = null;
         while (matches = UNREAD_REX.exec(content)) {
@@ -76,21 +77,25 @@ function getUnreadCount(onSuccess, onError) {
   }
 }
 
-	function scheduleRequest() {
-		window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000);
+function scheduleRequest() {
+	window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000);
+}
+
+function startRequest() {
+  getUnreadCount(
+	function(count) {
+	  //loadingAnimation.stop();
+	  updateBadge(count);
+	  // si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
+	  if(initPopup) {
+	    initPopup();
+	  }
+	  scheduleRequest();
+	},
+	function() {
+	  //loadingAnimation.stop();
+	  //showLoggedOut();
+	  scheduleRequest();
 	}
-	
-	function startRequest() {
-	  getUnreadCount(
-		function(count) {
-		  //loadingAnimation.stop();
-		  updateBadge(count);
-		  scheduleRequest();
-		},
-		function() {
-		  //loadingAnimation.stop();
-		  //showLoggedOut();
-		  scheduleRequest();
-		}
-	  );
-	}
+  );
+}
