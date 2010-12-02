@@ -53,7 +53,7 @@ function initControls() {
   var contextMenuInput = document.getElementById('USE_CONTEXT_MENU_PREF');
   contextMenuInput.checked = getPref(USE_CONTEXT_MENU_PREF);
   contextMenuInput.onchange = function (event) {
-    setPref(ANIMATED_ICON_PREF, this.value);
+    setPref(USE_CONTEXT_MENU_PREF, this.value);
     initBehaviour();
   };
   
