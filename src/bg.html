@@ -20,6 +20,7 @@
     //chrome.browserAction.onClicked.addListener(startRequest);
     initBrowserAction();
     startRequest();
+    chrome.contextMenus.create({title:"MAJ HFR", onclick:startRequest});
   }
 </script>
 </head>
