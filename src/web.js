@@ -78,7 +78,14 @@ function getUnreadCount(onSuccess, onError) {
 }
 
 function scheduleRequest() {
-	window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000);
+  var bgPage = chrome.extension.getBackgroundPage();
+  if (bgPage.requestTimeoutId.length != 0) {
+    for (var i = 0; i < bgPage.requestTimeoutId.length;  bgPage.window.clearTimeout(bgPage.requestTimeoutId[i++]));
+    bgPage.requestTimeoutId = new Array();
+    console.log("requestTimeoutId was not null");
+  }
+	bgPage.requestTimeoutId.push(bgPage.window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000));
+	console.log("request scheduled for " + getPref(REFRESH_TIME_PREF) + "s");
 }
 
 function startRequest() {
@@ -87,7 +94,7 @@ function startRequest() {
 	  //loadingAnimation.stop();
 	  updateBadge(count);
 	  // si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
-	  if(initPopup) {
+	  if(window.initPopup) {
 	    initPopup();
 	  }
 	  scheduleRequest();

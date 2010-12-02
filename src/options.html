@@ -26,9 +26,7 @@ function initControls() {
     } else {
       setPref(REFRESH_TIME_PREF, refTime);
     }
-    //on redémarre un cycle, tant pis pour celui en cour, ça en fera un orphelin
-    // TODO c'est quand même pourri cette histoire d'ophelin.
-    startRequest();
+    chrome.extension.getBackgroundPage().startRequest();
   };
   refTimeInput.onkeyup=refTimeInput.onchange;
   
@@ -36,7 +34,7 @@ function initControls() {
   directLinkInput.checked = getPref(USE_DIRECT_LINK_PREF);
   directLinkInput.onchange = function (event) {
     setPref(USE_DIRECT_LINK_PREF, this.value);
-    initBrowserAction();
+    initBehaviour();
   };
   
   var onlyFavsInput = document.getElementById('ONLY_FAVS_PREF');
@@ -50,6 +48,13 @@ function initControls() {
   aniIconInput.checked = getPref(ANIMATED_ICON_PREF);
   aniIconInput.onchange = function (event) {
     setPref(ANIMATED_ICON_PREF, this.value);
+  };
+  
+  var contextMenuInput = document.getElementById('USE_CONTEXT_MENU_PREF');
+  contextMenuInput.checked = getPref(USE_CONTEXT_MENU_PREF);
+  contextMenuInput.onchange = function (event) {
+    setPref(ANIMATED_ICON_PREF, this.value);
+    initBehaviour();
   };
   
   
@@ -70,6 +75,10 @@ function initControls() {
     <div>
       <span><label for="USE_DIRECT_LINK_PREF" title="Si d&eacute;coch&eacute;, affichage de la popup.">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris :</label></span>
       <span><input type="checkbox" name="USE_DIRECT_LINK_PREF" id="USE_DIRECT_LINK_PREF"/></span>
+    </div>
+    <div>
+      <span><label for="USE_CONTEXT_MENU_PREF" title="Le menu appra&icirc;t au click droit sur une page.">Utiliser le menu contextuel pour rafra&icirc;chir :</label></span>
+      <span><input type="checkbox" name="USE_CONTEXT_MENU_PREF" id="USE_CONTEXT_MENU_PREF"/></span>
     </div>
     <div>
       <span><label for="ANIMATED_ICON_PREF">Animer l'icone de l'extension si il y a des topics non lus :</label></span>
