@@ -57,6 +57,12 @@ function initControls() {
     initBehaviour();
   };
   
+  var newTabInput = document.getElementById('NEW_TAB_PREF');
+  newTabInput.checked = getPref(NEW_TAB_PREF);
+  newTabInput.onchange = function (event) {
+    setPref(NEW_TAB_PREF, this.value);
+  };
+  
   
 }
 </script>
@@ -83,6 +89,10 @@ function initControls() {
     <div>
       <span><label for="ANIMATED_ICON_PREF">Animer l'icone de l'extension si il y a des topics non lus :</label></span>
       <span><input type="checkbox" name="ANIMATED_ICON_PREF" id="ANIMATED_ICON_PREF"/></span>
+    </div>
+    <div>
+      <span><label for="NEW_TAB_PREF" title="Ne sera pas pris en compte pour l'action 'Ouvrir tout'.">Ouverture des liens dans un nouvel onglet :</label></span>
+      <span><input type="checkbox" name="NEW_TAB_PREF" id="NEW_TAB_PREF"/></span>
     </div>
   </div>
 </body>

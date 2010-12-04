@@ -6,7 +6,7 @@ function initBehaviour() {
   	chrome.browserAction.setPopup({popup:"pop.html"});
   }
   if (getPref(USE_CONTEXT_MENU_PREF)) {
-    chrome.contextMenus.create({title:"Rafra&icirc;chissement HFR", onclick:startRequest});
+    chrome.contextMenus.create({title:"Rafraîchissement HFR", onclick:startRequest});
   } else {
     chrome.contextMenus.removeAll();
   }
@@ -22,21 +22,39 @@ function initBrowserActionTitle() {
   chrome.browserAction.setTitle({title:tooltip});
 }
 
-function goToPage(url) {
+function goToPage(url, readNewTabPref) {
+  if (readNewTabPref == null) readNewTabPref = false;
   chrome.tabs.getAllInWindow(undefined, function(tabs){
 
-  for (var i = 0, tab; tab = tabs[i]; i++) {
+    for (var i = 0, tab; tab = tabs[i]; i++) {
       if (tab.url && tab.url == url) {
-        chrome.tabs.update(tab.id, {selected: true});
+        chrome.tabs.update(tab.id, {selected: true, url:url});
         return;
       }
     }
-    chrome.tabs.create({url: url});
+    if (readNewTabPref && !getPref(NEW_TAB_PREF)) {
+      chrome.tabs.getSelected(undefined, function(tab){
+    	  chrome.tabs.update(tab.id, {selected: true, url:url});
+      });
+    } else {
+      chrome.tabs.create({url: url});
+    }
   });
+  chrome.extension.getBackgroundPage().startRequest();
 }
 
 function goToHfr(){
-  goToPage(getUsedURL());
+  goToPage(getUsedURL(), true);
+}
+
+function openAll() {
+  var popupContent = chrome.extension.getBackgroundPage().popupContent;
+  var entry;
+  for (var i = 0; i < popupContent.entries.length; i++) {
+    entry = popupContent.entries[i];
+    goToPage(getFullUrl(htmlDecode(entry.href)), false);
+  }
+  chrome.extension.getBackgroundPage().startRequest();
 }
 
 function updateBadge(nbUnread) {

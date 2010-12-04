@@ -3,20 +3,33 @@
 <link rel="StyleSheet" href="style.css" type="text/css"/>
 <script src="web.js"></script>
 <script src="prefs.js"></script>
+<script src="pop.js"></script>
 <script src="behaviour.js"></script>
 <script type="text/javascript">
   function initPopup() {
     var innerHtml = "";
     var entry;
+    var catPrev = null;
+    var catCur = null;
     var popupContent = chrome.extension.getBackgroundPage().popupContent;
     innerHtml += "<ul>";
     for (var i = 0; i < popupContent.entries.length; i++) {
       entry = popupContent.entries[i];
+      catCur = entry.cat;
+      if (catCur != catPrev){
+        if (catPrev != null) {
+        	innerHtml += "</li></ul>";
+        }
+    	innerHtml += "<li>";
+        innerHtml += cats[catCur];
+    	innerHtml += "<ul>";
+      }
       innerHtml += "<li><a href=\"javascript:goToPage('";
       innerHtml += getFullUrl(entry.href);
-      innerHtml += "')\">";
+      innerHtml += "', true)\">-&nbsp;";
       innerHtml += entry.title;
       innerHtml += "</a></li>";
+      catPrev = catCur;
     }
     innerHtml += "</ul>";
     document.getElementById('entries').innerHTML = innerHtml;
@@ -28,23 +41,15 @@
     return e.childNodes[0].nodeValue;
   }
   
-  function openAll() {
-    var popupContent = chrome.extension.getBackgroundPage().popupContent;
-    var entry;
-    for (var i = 0; i < popupContent.entries.length; i++) {
-      entry = popupContent.entries[i];
-      goToPage(getFullUrl(htmlDecode(entry.href)));
-    }
-  }
 </script>
 </head>
 <body onload="initPopup()">
 <div id="popup">
   <ul id="headBar">
-    <li class="right"><a href="javascript:goToHfr();chrome.extension.getBackgroundPage().startRequest()">HFR</a></li>
+    <li class="right"><a href="javascript:goToHfr()">HFR</a></li>
     <li class="right"><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
-    <li class="right"><a href="javascript:openAll();chrome.extension.getBackgroundPage().startRequest()">Tout ouvrir</a></li>
-    <li class="left"><a href="javascript:goToPage('options.html');">Options</a></li>
+    <li class="right"><a href="javascript:openAll()">Tout ouvrir</a></li>
+    <li class="left"><a href="javascript:goToPage('options.html', false);">Options</a></li>
   </ul>
   <div id="entries">
   </div>

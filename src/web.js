@@ -25,55 +25,55 @@ function getFullUrl(url) {
 function getUnreadCount(onSuccess, onError) {
   var xhr = new XMLHttpRequest();
   var abortTimerId = window.setTimeout(function() {
-	    xhr.abort();  // synchronously calls onreadystatechange
+      xhr.abort();  // synchronously calls onreadystatechange
     }, requestTimeout);
 
   function handleSuccess(count) {
-	  requestFailureCount = 0;
-	  window.clearTimeout(abortTimerId);
-	  if (onSuccess)
-	    onSuccess(count);
+    requestFailureCount = 0;
+    window.clearTimeout(abortTimerId);
+    if (onSuccess)
+      onSuccess(count);
   }
 
   function handleError() {
-	  ++requestFailureCount;
-	  window.clearTimeout(abortTimerId);
-	  if (onError)
-	    onError();
+    ++requestFailureCount;
+    window.clearTimeout(abortTimerId);
+    if (onError)
+      onError();
   }
 
   try {
     updateBadge();
-	  xhr.onreadystatechange = function(){
-	    if (xhr.readyState != 4)
-		  return;
+    xhr.onreadystatechange = function(){
+      if (xhr.readyState != 4)
+      return;
 
-	    if (xhr.responseText) {
-		    var content = xhr.responseText;
-		    var unreadCount = 0;
-		    var popupContent = chrome.extension.getBackgroundPage().popupContent;
-		    popupContent.clear();
+      if (xhr.responseText) {
+        var content = xhr.responseText;
+        var unreadCount = 0;
+        var popupContent = chrome.extension.getBackgroundPage().popupContent;
+        popupContent.clear();
         var matches = null;
         while (matches = UNREAD_REX.exec(content)) {
-			    unreadCount++;
+          unreadCount++;
           popupContent.add(matches[1], matches[2]);
         }
-		    handleSuccess(unreadCount);
-		    return;
-	    }
+        handleSuccess(unreadCount);
+        return;
+      }
 
-	    handleError();
-	  }
+      handleError();
+    };
 
-	  xhr.onerror = function(error) {
-	    handleError();
-	  }
+    xhr.onerror = function(error) {
+      handleError();
+    };
 
-	  xhr.open("GET", getUsedURL(), true);
-	  xhr.send(null);
+    xhr.open("GET", getUsedURL(), true);
+    xhr.send(null);
   } catch(e) {
-	  console.error(e);
-	  handleError();
+    console.error(e);
+    handleError();
   }
 }
 
@@ -84,25 +84,25 @@ function scheduleRequest() {
     bgPage.requestTimeoutId = new Array();
     console.log("requestTimeoutId was not null");
   }
-	bgPage.requestTimeoutId.push(bgPage.window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000));
-	console.log("request scheduled for " + getPref(REFRESH_TIME_PREF) + "s");
+  bgPage.requestTimeoutId.push(bgPage.window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000));
+  console.log("request scheduled for " + getPref(REFRESH_TIME_PREF) + "s");
 }
 
 function startRequest() {
   getUnreadCount(
-	function(count) {
-	  //loadingAnimation.stop();
-	  updateBadge(count);
-	  // si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
-	  if(window.initPopup) {
-	    initPopup();
-	  }
-	  scheduleRequest();
-	},
-	function() {
-	  //loadingAnimation.stop();
-	  //showLoggedOut();
-	  scheduleRequest();
-	}
+  function(count) {
+    //loadingAnimation.stop();
+    updateBadge(count);
+    // si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
+    if(window.initPopup) {
+      initPopup();
+    }
+    scheduleRequest();
+  },
+  function() {
+    //loadingAnimation.stop();
+    //showLoggedOut();
+    scheduleRequest();
+  }
   );
 }

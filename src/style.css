@@ -29,32 +29,49 @@
   border: none;
 }
 
-ul#headBar {
+#headBar {
   list-style-type: none;
 }
 
-ul#headBar li {
+#headBar li {
   display : inline;
   padding : 0 0.5em; 
 }
 
-ul#headBar li.left {
+#headBar li.left {
   float: left;
 }
 
-ul#headBar li.right {
+#headBar li.right {
   float: right;
 }
 
-#headBar > li {
+#headBar li {
   font-size : 8pt; 
 }
 
 #entries {
   position: absolute;
   height: 185px;
+  width: 100%;
   overflow: auto;
   margin-top: 15px;
+  list-style-type: disc;
+}
+
+#entries ul {
+  font-weight: bold;
+  color: white;
+  background-color: #369;
+  width: 100%;
+  text-align: center;
+}
+
+#entries ul ul {
+  font-weight: normal;
+  color: black;
+  background-color: white;
+  text-align: left;
 }
 
 #entries  a {
