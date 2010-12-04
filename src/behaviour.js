@@ -40,7 +40,7 @@ function goToPage(url, readNewTabPref) {
       chrome.tabs.create({url: url});
     }
   });
-  chrome.extension.getBackgroundPage().startRequest();
+  window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
 }
 
 function goToHfr(){
@@ -54,7 +54,7 @@ function openAll() {
     entry = popupContent.entries[i];
     goToPage(getFullUrl(htmlDecode(entry.href)), false);
   }
-  chrome.extension.getBackgroundPage().startRequest();
+  window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
 }
 
 function updateBadge(nbUnread) {
