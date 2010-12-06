@@ -11,7 +11,8 @@
     var entry;
     var catPrev = null;
     var catCur = null;
-    var popupContent = chrome.extension.getBackgroundPage().popupContent;
+    var bgPage = chrome.extension.getBackgroundPage();
+    var popupContent = bgPage.popupContent;
     innerHtml += "<ul>";
     for (var i = 0; i < popupContent.entries.length; i++) {
       entry = popupContent.entries[i];
