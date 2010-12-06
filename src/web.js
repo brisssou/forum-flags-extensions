@@ -90,19 +90,18 @@ function scheduleRequest() {
 
 function startRequest() {
   getUnreadCount(
-  function(count) {
-    //loadingAnimation.stop();
-    updateBadge(count);
-    // si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
-    if(window.initPopup) {
-      initPopup();
-    }
-    scheduleRequest();
-  },
-  function() {
-    //loadingAnimation.stop();
-    //showLoggedOut();
-    scheduleRequest();
-  }
+	function(count) {
+	  //loadingAnimation.stop();
+	  updateBadge(count);
+	  // si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
+	  var popup = chrome.extension.getViews({type:'popup'})[0];
+	  if (popup != null) popup.initPopup();
+	  scheduleRequest();
+	},
+	function() {
+	  //loadingAnimation.stop();
+	  //showLoggedOut();
+	  scheduleRequest();
+	}
   );
 }
