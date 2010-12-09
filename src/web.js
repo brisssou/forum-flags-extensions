@@ -11,7 +11,7 @@ var requestTimeout = 1000 * 2;  // 2 seconds
 var bg = chrome.extension.getBackgroundPage();
 
 function getUsedURL() {
-  if (getPref(ONLY_FAVS_PREF)) {
+  if (getPref(ONLY_FAVS)) {
     return HFR_MY_FAVS;
   } else {
     return HFR_MY_DRAPS;
@@ -55,6 +55,7 @@ function getUnreadCount(onSuccess, onError) {
         popupContent.clear();
         var matches = null;
         while (matches = UNREAD_REX.exec(content)) {
+          debug("found one");
           unreadCount++;
           popupContent.add(matches[1], matches[2]);
         }
@@ -72,7 +73,7 @@ function getUnreadCount(onSuccess, onError) {
     xhr.open("GET", getUsedURL(), true);
     xhr.send(null);
   } catch(e) {
-    console.error(e);
+    error(e);
     handleError();
   }
 }
@@ -82,10 +83,10 @@ function scheduleRequest() {
   if (bgPage.requestTimeoutId.length != 0) {
     for (var i = 0; i < bgPage.requestTimeoutId.length;  bgPage.window.clearTimeout(bgPage.requestTimeoutId[i++]));
     bgPage.requestTimeoutId = new Array();
-    console.log("requestTimeoutId was not null");
+    debug("requestTimeoutId was not null");
   }
-  bgPage.requestTimeoutId.push(bgPage.window.setTimeout(startRequest, getPref(REFRESH_TIME_PREF) * 1000));
-  console.log("request scheduled for " + getPref(REFRESH_TIME_PREF) + "s");
+  bgPage.requestTimeoutId.push(bgPage.window.setTimeout(startRequest, getPref(REFRESH_TIME) * 1000));
+  debug("request scheduled for " + getPref(REFRESH_TIME) + "s");
 }
 
 function startRequest() {
