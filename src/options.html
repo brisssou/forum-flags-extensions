@@ -64,6 +64,12 @@ function initControls() {
     setPref(NEW_TAB, this.value);
   };
   
+  var debugOnInput = document.getElementById('DEBUG_ON');
+  debugOnInput.checked = getPref(DEBUG_ON);
+  debugOnInput.onchange = function (event) {
+    setPref(DEBUG_ON, this.value);
+  };
+  
   
 }
 </script>
