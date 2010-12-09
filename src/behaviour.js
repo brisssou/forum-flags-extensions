@@ -1,11 +1,11 @@
 
 function initBehaviour() {
-  if (getPref(USE_DIRECT_LINK_PREF)) {
+  if (getPref(USE_DIRECT_LINK)) {
   	chrome.browserAction.setPopup({popup:""});
   } else {
   	chrome.browserAction.setPopup({popup:"pop.html"});
   }
-  if (getPref(USE_CONTEXT_MENU_PREF)) {
+  if (getPref(USE_CONTEXT_MENU)) {
     chrome.contextMenus.create({title:"Rafraîchissement HFR", onclick:startRequest});
   } else {
     chrome.contextMenus.removeAll();
@@ -14,7 +14,7 @@ function initBehaviour() {
 
 function initBrowserActionTitle() {
   var tooltip;
-  if (getPref(ONLY_FAVS_PREF)) {
+  if (getPref(ONLY_FAVS)) {
     tooltip = "Favoris";
   } else {
     tooltip = "Drapeaux cyans";
@@ -32,7 +32,7 @@ function goToPage(url, readNewTabPref) {
         return;
       }
     }
-    if (readNewTabPref && !getPref(NEW_TAB_PREF)) {
+    if (readNewTabPref && !getPref(NEW_TAB)) {
       chrome.tabs.getSelected(undefined, function(tab){
     	  chrome.tabs.update(tab.id, {selected: true, url:url});
       });
@@ -60,7 +60,7 @@ function openAll() {
 function updateBadge(nbUnread) {
   if (nbUnread && nbUnread != null && parseInt(nbUnread) != NaN && parseInt(nbUnread) > 0) {
     chrome.browserAction.setBadgeText({text:""+nbUnread});
-    if (getPref(ANIMATED_ICON_PREF)) animateFlip();
+    if (getPref(ANIMATED_ICON)) animateFlip();
   } else {
     chrome.browserAction.setBadgeText({text:""});
   }
