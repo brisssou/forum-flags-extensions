@@ -13,5 +13,5 @@ function error(msg) {
 }
 
 function log(lvl, msg) {
-  console.log("["lvl +"] "+msg);
+  console.log("[" + lvl + "] "+msg);
 }

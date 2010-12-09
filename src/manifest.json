@@ -1,6 +1,6 @@
 ﻿{
   "name": "HFR - Mes sujets",
-  "version": "0.5.1",
+  "version": "0.5.2",
   "description": "Vérifie si les sujets drapalisés sur forum.hardware.fr ont de nouveaux messages.",
   "background_page": "bg.html",
   "options_page": "options.html",
@@ -12,7 +12,6 @@
   "permissions": [
     "tabs",
     "contextMenus",
-    "http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0",
-    "http://forum.hardware.fr/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0"
+    "http://forum.hardware.fr/forum1f.php"
   ]
 }
