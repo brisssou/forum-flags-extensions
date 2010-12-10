@@ -1,8 +1,9 @@
 var HFR = "http://forum.hardware.fr";
-var HFR_MY_DRAPS = HFR + "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
-var HFR_MY_FAVS = HFR + "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
+var PPC = "http://www.presence-pc.com/forum";
+var MY_DRAPS = "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
+var MY_FAVS = "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
 
-var UNREAD_REX= /title="Sujet n°\d+">([^<]+).+sujetCase5"><a href="([^"]+)/g;
+var UNREAD_REX= /title="Sujet n°\d+">([.\n\r\u2028\u2029^<]+).+sujetCase5"><a href="([^"]+)/g;
 
 var requestFailureCount = 0;  // used for exponential backoff
 var requestTimeout = 1000 * 2;  // 2 seconds
@@ -12,9 +13,9 @@ var bg = chrome.extension.getBackgroundPage();
 
 function getUsedURL() {
   if (getPref(ONLY_FAVS)) {
-    return HFR_MY_FAVS;
+    return MY_FAVS;
   } else {
-    return HFR_MY_DRAPS;
+    return MY_DRAPS;
   }
 }
 
@@ -70,7 +71,7 @@ function getUnreadCount(onSuccess, onError) {
       handleError();
     };
 
-    xhr.open("GET", getUsedURL(), true);
+    xhr.open("GET", HFR + getUsedURL(), true);
     xhr.send(null);
   } catch(e) {
     error(e);
