@@ -18,13 +18,18 @@ cats[6] = 'Achats &amp; Ventes';
 cats[8] = 'Emploi &amp; &Eacute;tudes';
 cats[9] = 'Seti et projets distribu&eacute;s';
 cats[13] = 'Discussions';
+cats['prive'] = 'Messages privés';
 
 function PopupContent () {
   this.entries = new Array(),
+  this.mpsNb = 0,
   
-  PopupContent.prototype.add = function(title, href) {
-    var cat = href.substring(href.indexOf('&amp;cat=')+'&amp;cat='.length,href.indexOf('&amp;subcat='));
-    this.entries.push({title:title, cat:cat, href:href});
+  PopupContent.prototype.add = function(title, cat, post, href) {
+    this.entries.push({title:title, cat:cat, post:post, href:href});
+  },
+  
+  PopupContent.prototype.setMps = function(mpsNb) {
+    this.mpsNb = mpsNb;
   },
   
   PopupContent.prototype.clear = function() {

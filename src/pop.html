@@ -7,6 +7,15 @@
 <script src="log.js"></script>
 <script src="behaviour.js"></script>
 <script type="text/javascript">
+
+
+  var DIRECT_CAT_LINK = "http://forum.hardware.fr/forum1.php?config=hfr.inc&owntopic=1&cat=";
+  
+  function mute(cat, post, title) {
+    _mute(cat, post, title);
+    initPopup();
+  }
+  
   function initPopup() {
     var innerHtml = "";
     var entry;
@@ -15,23 +24,45 @@
     var bgPage = chrome.extension.getBackgroundPage();
     var popupContent = bgPage.popupContent;
     innerHtml += "<ul>";
+    if (popupContent.mpsNb > 0) {
+      catCur = 'prive';
+      innerHtml += "<li id=\"mp\"><a href=\"javascript:goToPage('";
+      innerHtml += "http://forum.hardware.fr/forum1.php?config=hfr.inc&cat=";
+      innerHtml += catCur;
+      innerHtml += "', true)\">";
+      innerHtml += popupContent.mpsNb;
+      innerHtml += ' ';
+      if (popupContent.mpsNb > 1) {
+        innerHtml += 'Messages Privés';
+      } else {
+        innerHtml += 'Message Privé';
+      }
+      innerHtml += "</a></li>";
+    }
     for (var i = 0; i < popupContent.entries.length; i++) {
       entry = popupContent.entries[i];
-      catCur = entry.cat;
-      if (catCur != catPrev){
-        if (catPrev != null) {
-        	innerHtml += "</li></ul>";
+      if (!isMuted(entry.cat, entry.post)) {
+        catCur = entry.cat;
+        if (catCur != catPrev){
+          if (catPrev != null) {
+            innerHtml += "</li></ul>";
+          }
+          innerHtml += "<li><a href=\"javascript:goToPage('";
+          innerHtml += DIRECT_CAT_LINK;
+          innerHtml += catCur;
+          innerHtml += "', true)\">";
+          innerHtml += cats[catCur];
+          innerHtml += "</a><ul>";
         }
-    	innerHtml += "<li>";
-        innerHtml += cats[catCur];
-    	innerHtml += "<ul>";
+        innerHtml += "<li><a href=\"javascript:goToPage('";
+        innerHtml += getFullUrl(entry.href);
+        innerHtml += "', true)\">-&nbsp;";
+        innerHtml += entry.title;
+        innerHtml += "</a><a href=\"javascript:mute(";
+        innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title
+        innerHtml += "\')\"><img src=\"mute.png\"/></a></li>";
+        catPrev = catCur;
       }
-      innerHtml += "<li><a href=\"javascript:goToPage('";
-      innerHtml += getFullUrl(entry.href);
-      innerHtml += "', true)\">-&nbsp;";
-      innerHtml += entry.title;
-      innerHtml += "</a></li>";
-      catPrev = catCur;
     }
     innerHtml += "</ul>";
     document.getElementById('entries').innerHTML = innerHtml;
