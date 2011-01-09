@@ -69,10 +69,13 @@ function getUnreadCount(onSuccess, onError) {
             popupContent.add(matches[1], urlMatch[1], urlMatch[3], url);
           }
         }
-        var mpsNb = parseInt(MP_REX.exec(content)[1]);
-        debug("found "+mpsNb+" private messages");
-        unreadCount += mpsNb;
-        popupContent.setMps(mpsNb);
+        var mps = MP_REX.exec(content);
+        if (mps != null) {
+          var mpsNb = parseInt(MP_REX.exec(content)[1]);
+          debug("found "+mpsNb+" private messages");
+          unreadCount += mpsNb;
+          popupContent.setMps(mpsNb);
+        }
         handleSuccess(unreadCount);
         return;
       }
