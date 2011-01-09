@@ -16,6 +16,9 @@
   font-weight: bold;
 }
 
+#muted  li{
+  list-style-type: none;
+}
 /*popup*/
 #popup {
   width: 350px;
@@ -67,6 +70,14 @@
   text-align: center;
 }
 
+#entries img {
+  float: right;
+}
+
+#mp {
+  background-color: red;
+}
+
 #entries ul ul {
   font-weight: normal;
   color: black;
@@ -80,6 +91,6 @@
   margin-bottom: 15px;
 }
 
-#entries  a:hover{
-  text-decoration:underline;
+#entries  a:hover {
+  text-decoration: underline;
 }

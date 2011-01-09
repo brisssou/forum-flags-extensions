@@ -1,9 +1,12 @@
 var HFR = "http://forum.hardware.fr";
-var PPC = "http://www.presence-pc.com/forum";
-var MY_DRAPS = "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
-var MY_FAVS = "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
+var HFR_MY_DRAPS = HFR + "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
+var HFR_MY_FAVS = HFR + "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
+var HFR_MP = HFR + "/forum1f.php?config=hfr.inc&cat=prive";
 
-var UNREAD_REX= /title="Sujet n°\d+">([.\n\r\u2028\u2029^<]+).+sujetCase5"><a href="([^"]+)/g;
+var UNREAD_REX = /title="Sujet n°\d+">([^<]+).+sujetCase5"><a href="([^"]+)/g;
+var MP_REX = /class="red">Vous avez (\d) nouveau/;
+
+var ENTRY_URL_REX = /cat=(\d+)&amp;subcat=(\d+)&amp;post=(\d+)&amp;page=(\d+)/;
 
 var requestFailureCount = 0;  // used for exponential backoff
 var requestTimeout = 1000 * 2;  // 2 seconds
@@ -13,9 +16,9 @@ var bg = chrome.extension.getBackgroundPage();
 
 function getUsedURL() {
   if (getPref(ONLY_FAVS)) {
-    return MY_FAVS;
+    return HFR_MY_FAVS;
   } else {
-    return MY_DRAPS;
+    return HFR_MY_DRAPS;
   }
 }
 
@@ -55,11 +58,21 @@ function getUnreadCount(onSuccess, onError) {
         var popupContent = chrome.extension.getBackgroundPage().popupContent;
         popupContent.clear();
         var matches = null;
+        var muted = getPref(MUTED_TOPICS).split('|');;
         while (matches = UNREAD_REX.exec(content)) {
           debug("found one");
-          unreadCount++;
-          popupContent.add(matches[1], matches[2]);
+          var url = matches[2];
+          var urlMatch = ENTRY_URL_REX.exec(url);
+          if (!isMuted(urlMatch[1], urlMatch[3])) {
+            debug("... but a muted one");
+            unreadCount++;
+            popupContent.add(matches[1], urlMatch[1], urlMatch[3], url);
+          }
         }
+        var mpsNb = parseInt(MP_REX.exec(content)[1]);
+        debug("found "+mpsNb+" private messages");
+        unreadCount += mpsNb;
+        popupContent.setMps(mpsNb);
         handleSuccess(unreadCount);
         return;
       }
@@ -71,7 +84,7 @@ function getUnreadCount(onSuccess, onError) {
       handleError();
     };
 
-    xhr.open("GET", HFR + getUsedURL(), true);
+    xhr.open("GET", getUsedURL(), true);
     xhr.send(null);
   } catch(e) {
     error(e);
