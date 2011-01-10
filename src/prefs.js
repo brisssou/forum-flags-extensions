@@ -30,7 +30,7 @@ function setPref(name, value) {
 
 function _mute(cat, topic, title) {
   if (! isMuted(cat, topic)) {
-    setPref(MUTED_TOPICS, getPref(MUTED_TOPICS) + cat + '#' + topic + '#' + title.replace(/'/,"&eapos;") + '|');
+    setPref(MUTED_TOPICS, getPref(MUTED_TOPICS) + cat + '#' + topic + '#' + title + '|');
   }
 }
 function _unmute(cat, topic) {

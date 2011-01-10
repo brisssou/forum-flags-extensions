@@ -6,7 +6,7 @@ var HFR_MP = HFR + "/forum1f.php?config=hfr.inc&cat=prive";
 var UNREAD_REX = /title="Sujet n°\d+">([^<]+).+sujetCase5"><a href="([^"]+)/g;
 var MP_REX = /class="red">Vous avez (\d) nouveau/;
 
-var ENTRY_URL_REX = /cat=(\d+)&amp;subcat=(\d+)&amp;post=(\d+)&amp;page=(\d+)/;
+var ENTRY_URL_REX = /cat=(\d+)&amp;(subcat=(\d+)&amp;)?post=(\d+)&amp;page=(\d+)/;
 
 var requestFailureCount = 0;  // used for exponential backoff
 var requestTimeout = 1000 * 2;  // 2 seconds
@@ -63,11 +63,12 @@ function getUnreadCount(onSuccess, onError) {
           debug("found one");
           var url = matches[2];
           var urlMatch = ENTRY_URL_REX.exec(url);
-          if (!isMuted(urlMatch[1], urlMatch[3])) {
-            debug("... but a muted one");
+          if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
             unreadCount++;
-            popupContent.add(matches[1], urlMatch[1], urlMatch[3], url);
-          }
+            popupContent.add(matches[1], urlMatch[1], urlMatch[4], url);
+          } else {
+            debug("... but a muted one");
+	  }
         }
         var mps = MP_REX.exec(content);
         if (mps != null) {
