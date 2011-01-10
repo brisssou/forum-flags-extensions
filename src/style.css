@@ -74,6 +74,10 @@
   float: right;
 }
 
+#entries a {
+  margin-right: 18px;
+}
+
 #mp {
   background-color: red;
 }
