@@ -82,14 +82,21 @@
   background-color: red;
 }
 
-#entries ul ul {
+#entries ul>li>ul {
   font-weight: normal;
   color: black;
   background-color: white;
   text-align: left;
 }
 
-#entries  a {
+#entries ul>li>a {
+  color: white;
+}
+#entries ul>li>ul>li>a {
+  color: black;
+}
+
+#entries a {
   text-decoration:none;
   color: black;
   margin-bottom: 15px;
