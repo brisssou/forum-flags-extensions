@@ -59,7 +59,7 @@
         innerHtml += "', true)\">-&nbsp;";
         innerHtml += entry.title;
         innerHtml += "</a><a href=\"javascript:mute(";
-        innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace("'","\\'")
+        innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")
         innerHtml += "\')\"><img src=\"mute.png\"/></a></li>";
         catPrev = catCur;
       }
