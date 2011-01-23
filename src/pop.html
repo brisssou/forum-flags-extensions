@@ -1,6 +1,7 @@
 <html>
 <head>
 <link rel="StyleSheet" href="style.css" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu">
 <script src="web.js"></script>
 <script src="prefs.js"></script>
 <script src="pop.js"></script>
@@ -51,16 +52,32 @@
           innerHtml += DIRECT_CAT_LINK;
           innerHtml += catCur;
           innerHtml += "', true)\">";
-          innerHtml += cats[catCur];
+          innerHtml += bgPage.cats[catCur];
           innerHtml += "</a><ul>";
         }
         innerHtml += "<li><a href=\"javascript:goToPage('";
         innerHtml += getFullUrl(entry.href);
-        innerHtml += "', true)\">-&nbsp;";
+        innerHtml += "', true)\"";
+        var linkTitle = "";
+        if (entry.nbUnread>0) {
+          linkTitle += entry.nbUnread + " nouvelle";
+          if (entry.nbUnread>1) {
+            linkTitle += "s";
+          }
+          linkTitle += " page";
+          if (entry.nbUnread>1) {
+            linkTitle += "s";
+          }
+        } else {
+          linkTitle += "Pas de nouvelle page";
+        }
+        innerHtml += " title=\"";
+        innerHtml += linkTitle;
+        innerHtml += "\">-&nbsp;";
         innerHtml += entry.title;
-        innerHtml += "</a><a href=\"javascript:mute(";
+        innerHtml += "</a><a class=\"mute\" href=\"javascript:mute(";
         innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")
-        innerHtml += "\')\"><img src=\"mute.png\"/></a></li>";
+        innerHtml += "\')\"><img src=\"mute.gif\" title=\"STFU!\"/></a></li>";
         catPrev = catCur;
       }
     }
