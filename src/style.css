@@ -93,12 +93,15 @@
   float: right;
 }
 
-#entries a {
-  margin-right: 18px;
-}
-
 #entries ul>li>ul>li>a:first-child {
   color: black;
+}
+
+#entries ul>li>ul>li>a:first-child>span {
+  margin-right: 18px;
+  overflow: hidden;
+  height:17px;
+  width:180px;
 }
 /*
 #entries ul>li>ul>li>a.mute {

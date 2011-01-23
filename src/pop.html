@@ -73,9 +73,9 @@
         }
         innerHtml += " title=\"";
         innerHtml += linkTitle;
-        innerHtml += "\">-&nbsp;";
+        innerHtml += "\"><span>-&nbsp;";
         innerHtml += entry.title;
-        innerHtml += "</a><a class=\"mute\" href=\"javascript:mute(";
+        innerHtml += "</span></a><a class=\"mute\" href=\"javascript:mute(";
         innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")
         innerHtml += "\')\"><img src=\"mute.gif\" title=\"STFU!\"/></a></li>";
         catPrev = catCur;
