@@ -1,3 +1,7 @@
+* {
+  font-family: "ubuntu";
+}
+
 /*prefs page*/
 #prefs {
   text-align: center;
@@ -70,14 +74,6 @@
   text-align: center;
 }
 
-#entries img {
-  float: right;
-}
-
-#entries a {
-  margin-right: 18px;
-}
-
 #mp {
   background-color: red;
 }
@@ -92,10 +88,24 @@
 #entries ul>li>a {
   color: white;
 }
-#entries ul>li>ul>li>a {
-  color: black;
+
+#entries img {
+  float: right;
 }
 
+#entries a {
+  margin-right: 18px;
+}
+
+#entries ul>li>ul>li>a:first-child {
+  color: black;
+}
+/*
+#entries ul>li>ul>li>a.mute {
+  float: right;
+  vertical-align: middle;
+}
+*/
 #entries a {
   text-decoration:none;
   color: black;
