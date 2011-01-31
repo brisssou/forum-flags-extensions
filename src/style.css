@@ -89,12 +89,13 @@
   color: white;
 }
 
-#entries img {
-  float: right;
+#entries ul>li>ul>li>a{
+  color: black;
 }
 
-#entries ul>li>ul>li>a:first-child {
-  color: black;
+/*
+#entries img {
+  float: right;
 }
 
 #entries ul>li>ul>li>a:first-child>span {
@@ -103,7 +104,6 @@
   height:17px;
   width:180px;
 }
-/*
 #entries ul>li>ul>li>a.mute {
   float: right;
   vertical-align: middle;

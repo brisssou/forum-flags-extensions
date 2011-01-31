@@ -55,7 +55,9 @@
           innerHtml += bgPage.cats[catCur];
           innerHtml += "</a><ul>";
         }
-        innerHtml += "<li><a href=\"javascript:goToPage('";
+        innerHtml += "<li><a class=\"mute\" href=\"javascript:mute(";
+        innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")
+        innerHtml += "\')\"><img src=\"mute.gif\" title=\"STFU!\"/></a>&nbsp;<a href=\"javascript:goToPage('";
         innerHtml += getFullUrl(entry.href);
         innerHtml += "', true)\"";
         var linkTitle = "";
@@ -73,11 +75,9 @@
         }
         innerHtml += " title=\"";
         innerHtml += linkTitle;
-        innerHtml += "\"><span>-&nbsp;";
+        innerHtml += "\">";
         innerHtml += entry.title;
-        innerHtml += "</span></a><a class=\"mute\" href=\"javascript:mute(";
-        innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")
-        innerHtml += "\')\"><img src=\"mute.gif\" title=\"STFU!\"/></a></li>";
+        innerHtml += "</a></li>";
         catPrev = catCur;
       }
     }
