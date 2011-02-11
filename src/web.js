@@ -76,6 +76,7 @@ function getUnreadCount(onSuccess, onError) {
         var mps = MP_REX.exec(content);
         if (mps != null) {
           var mpsNb = parseInt(MP_REX.exec(content)[1]);
+          if (mpsNb == NaN) mpsNb = 0;
           debug("found "+mpsNb+" private messages");
           unreadCount += mpsNb;
           popupContent.setMps(mpsNb);

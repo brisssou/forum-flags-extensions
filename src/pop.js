@@ -12,6 +12,7 @@ function PopupContent () {
   
   PopupContent.prototype.clear = function() {
     this.entries = new Array();
+    this.mpsNb = 0;
   }
   
 }
