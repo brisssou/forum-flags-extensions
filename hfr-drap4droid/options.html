@@ -38,6 +38,13 @@ function initControls() {
     setPref(USE_DIRECT_LINK, this.value);
     initBehaviour();
   };
+
+  var openCat = document.getElementById('OPEN_CAT');
+  openCat.checked = getPref(OPEN_CAT);
+  openCat.onchange = function (event) {
+    setPref(OPEN_CAT, this.value);
+    initBehaviour();
+  };
   
   var onlyFavsInput = document.getElementById('ONLY_FAVS');
   onlyFavsInput.checked = getPref(ONLY_FAVS);
@@ -112,6 +119,10 @@ function unmute(cat, topic) {
     <div>
       <span><label for="USE_DIRECT_LINK" title="Si d&eacute;coch&eacute;, affichage de la popup.">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris :</label></span>
       <span><input type="checkbox" name="USE_DIRECT_LINK" id="USE_DIRECT_LINK"/></span>
+    </div>
+    <div>
+      <span><label for="OPEN_CAT" title="Si d&eacute;coch&eacute;, affiche la page de favoris de la cat&eacute;gorie.">Le click sur le nom de la cat&eacute;gorie, dans la popUp, ouvre tous les topics non lus de la cat.</label></span>
+      <span><input type="checkbox" name="OPEN_CAT" id="OPEN_CAT"/></span>
     </div>
     <div>
       <span><label for="USE_CONTEXT_MENU" title="Le menu appra&icirc;t au click droit sur une page.">Utiliser le menu contextuel pour rafra&icirc;chir :</label></span>

@@ -57,6 +57,18 @@ function openAll() {
   window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
 }
 
+function openCat(cat) {
+	  var popupContent = chrome.extension.getBackgroundPage().popupContent;
+	  var entry;
+	  for (var i = 0; i < popupContent.entries.length; i++) {
+	    entry = popupContent.entries[i];
+	    if (entry.cat == cat) {
+		    goToPage(getFullUrl(htmlDecode(entry.href)), false);
+		  }
+	  }
+	  window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
+	}
+
 function updateBadge(nbUnread) {
   if (nbUnread && nbUnread != null && parseInt(nbUnread) != NaN && parseInt(nbUnread) > 0) {
     chrome.browserAction.setBadgeText({text:""+nbUnread});
