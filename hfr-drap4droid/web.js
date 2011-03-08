@@ -2,10 +2,11 @@ var HFR = "http://forum.hardware.fr";
 var HFR_MY_DRAPS = HFR + "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
 var HFR_MY_FAVS = HFR + "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
 var HFR_MP = HFR + "/forum1f.php?config=hfr.inc&cat=prive";
-
-var UNREAD_REX = /title="Sujet n°\d+">([^<]+).+>(?:(\d+)<\/a>)*.+sujetCase5"><a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+//</a></td><td class="sujetCase4"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=165&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0" class="cCatTopic">165</a></td><td class="sujetCase5"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=158&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0#t627721"><img src="http://forum-images.hardware.fr/themes_static/images_forum/1/favoris.gif" title="Aller au dernier message lu sur ce sujet (p.158)
+var UNREAD_REX = /title="Sujet n.\d+">([^<]+).+sujetCase5"><a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+var NB_PAGES_REX = /cCatTopic">(\d+)<\/a>/;
 var MP_REX = /class="red">Vous avez (\d) nouveau/;
-//<select name="cat" onchange="document.getElementById('goto').submit()"><option value="1" >Hardware</option><option value="16" >Hardware - Périphériques</option><option value="15" >Ordinateurs portables</option><option value="23" >Technologies Mobiles</option><option value="2" >Overclocking, Cooling &amp; Tuning</option><option value="25" >Apple</option><option value="3" >Video &amp; Son</option><option value="14" >Photo numérique</option><option value="5" >Jeux Video</option><option value="4" >Windows &amp; Software</option><option value="22" >Réseaux grand public / SoHo</option><option value="21" >Systèmes &amp; Réseaux Pro</option><option value="11" >OS Alternatifs</option><option value="10" >Programmation</option><option value="12" >Graphisme</option><option value="6" >Achats &amp; Ventes</option><option value="8" >Emploi &amp; Etudes</option><option value="9" >Seti et projets distribués</option><option value="13" >Discussions</option><option value="prive" >Messages privés</option></select><input type="hidden" name="config" value="hfr.inc" /><input type="submit" value="Go" /></div></form> 
+
 var CATS_MASTER_REX = /<select name="cat"(.+)<\/select>/;
 var CATS_REX = /<option value="([^"]+)" >([^"]+)<\/option>/g;
 
@@ -64,17 +65,16 @@ function getUnreadCount(onSuccess, onError) {
         var muted = getPref(MUTED_TOPICS).split('|');
         while (matches = UNREAD_REX.exec(content)) {
           debug("found one");
-          var url = matches[3];
+          var url = matches[2];
           var urlMatch = ENTRY_URL_REX.exec(url);
           if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
             unreadCount++;
-            var topicNbPages;
-            if (matches[2] == null) {
-              topicNbPages = 1;
-            } else {
-              topicNbPages = matches[2];
+            var topicNbPages = 1;
+            var nbPages = null;
+            if (nbPages = NB_PAGES_REX.exec(matches[0])) {
+              topicNbPages = parseInt(nbPages[1]);
             }
-            popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, parseInt(matches[2]) - parseInt(matches[4]));
+            popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, topicNbPages - parseInt(matches[3]));
           } else {
             debug("... but a muted one");
           }
