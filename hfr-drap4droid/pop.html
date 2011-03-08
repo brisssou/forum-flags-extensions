@@ -25,6 +25,7 @@
     var bgPage = chrome.extension.getBackgroundPage();
     var popupContent = bgPage.popupContent;
     innerHtml += "<ul>";
+    var openCat = getPref(OPEN_CAT);
     if (popupContent.mpsNb > 0) {
       catCur = 'prive';
       innerHtml += "<li id=\"mp\"><a href=\"javascript:goToPage('";
@@ -48,10 +49,17 @@
           if (catPrev != null) {
             innerHtml += "</li></ul>";
           }
-          innerHtml += "<li><a href=\"javascript:goToPage('";
-          innerHtml += DIRECT_CAT_LINK;
-          innerHtml += catCur;
-          innerHtml += "', true)\">";
+          innerHtml += "<li><a href=\"javascript:";
+          if (openCat) {
+        	  innerHtml += "openCat(";
+	          innerHtml += catCur;
+          } else {
+        	  innerHtml += "goToPage('";
+	          innerHtml += DIRECT_CAT_LINK;
+	          innerHtml += catCur;
+	          innerHtml += "', true";
+          }
+          innerHtml += ")\">";
           innerHtml += bgPage.cats[catCur];
           innerHtml += "</a><ul>";
         }

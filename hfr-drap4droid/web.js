@@ -80,13 +80,22 @@ function getUnreadCount(onSuccess, onError) {
           }
         }
         var mps = MP_REX.exec(content);
+        var badgeBackGroundColor;
         if (mps != null) {
           var mpsNb = parseInt(MP_REX.exec(content)[1]);
           if (mpsNb == NaN) mpsNb = 0;
           debug("found "+mpsNb+" private messages");
           unreadCount += mpsNb;
           popupContent.setMps(mpsNb);
+          if (mpsNb > 0) {
+        	  badgeBackGroundColor = [0,0,255,255];
+          } else {
+        	  badgeBackGroundColor = [255,0,0,255];
+          }
+        } else {
+      	  badgeBackGroundColor = [255,0,0,255];
         }
+        chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
         if (bg.cats == null || bg.cats.length == 0) {
           bg.cats = new Array();
           matches = CATS_MASTER_REX.exec(content);

@@ -6,6 +6,7 @@ var ANIMATED_ICON = "animated_icon";
 var USE_CONTEXT_MENU = "use_contest_menu";
 var NEW_TAB = "new_tab_menu";
 var DEBUG_ON = "debug_on";
+var OPEN_CAT = "open_cat";
 var MUTED_TOPICS = "muted_topics";
 
 var PREFS_DEFAULT = new Object();
@@ -16,6 +17,7 @@ PREFS_DEFAULT[ANIMATED_ICON] = false;
 PREFS_DEFAULT[USE_CONTEXT_MENU] = false;
 PREFS_DEFAULT[NEW_TAB] = true;
 PREFS_DEFAULT[DEBUG_ON] = false;
+PREFS_DEFAULT[OPEN_CAT] = true;
 PREFS_DEFAULT[MUTED_TOPICS] = '';
 
 function getPref(name) {
