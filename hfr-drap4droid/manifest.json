@@ -1,14 +1,14 @@
 ﻿{
   "name": "HFR - Mes sujets",
-  "version": "0.7.4",
+  "version": "0.7.6",
   "description": "Vérifie si les sujets drapalisés sur forum.hardware.fr ont de nouveaux messages.",
   "background_page": "bg.html",
   "options_page": "options.html",
   "browser_action": {
-    "default_icon": "icon.ico",
+    "default_icon": "icon.png",
     "badge": ""
   },
-  "icons": { "128": "icon128.png" },
+  "icons": { "128": "128.png", "64": "64.png" },
   "permissions": [
     "tabs",
     "contextMenus",
