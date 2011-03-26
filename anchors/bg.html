@@ -1,5 +1,5 @@
 <html>
-<script type="text/javascript" src="jquery-1.5.min.js"></script>
+<script type="text/javascript" src="jquery-1.3.2.min.js"></script>
 <script type="text/javascript" src="jquery.qtip-1.0.0-rc3.min.js"></script>
 <script type="text/javascript" src="anchors.js"></script>
 <script type="text/javascript">
@@ -9,26 +9,29 @@ var ANCHORS_WITH_NAME_AND_ELEMENTS_WITH_ID = 2;
 var state = NO_TOOLTIP;
 var loaded = false;
 chrome.browserAction.onClicked.addListener(function(tab) {
-
-  //if (!loaded) {
-    chrome.tabs.executeScript(null, {file: "jquery-1.5.min.js"});
+alert("cliked");
+  if (!loaded) {
+    alert("not loaded");
+    chrome.tabs.executeScript(null, {file: "jquery-1.3.2.min.js"});
     chrome.tabs.executeScript(null, {file: "jquery.qtip-1.0.0-rc3.min.js"});
-  //  loaded = true;  
-  //}
+    loaded = true;  
+  }
     
-  //if (state == NO_TOOLTIP) {                                      
-    chrome.tabs.executeScript(null, {file: "destroy.js"});  
+  if (state == NO_TOOLTIP) {    
+    alert("NO_TOOLTIP");                                    
     chrome.tabs.executeScript(null, {file: "anchors.js"});
-  /*  state = ANCHORS_WITH_NAME;
+    state = ANCHORS_WITH_NAME;
   } else if (state == ANCHORS_WITH_NAME) {
+    alert("ANCHORS_WITH_NAME");    
     chrome.tabs.executeScript(null, {file: "ids.js"});      
     state = ANCHORS_WITH_NAME_AND_ELEMENTS_WITH_ID;  
   } else if (state == ANCHORS_WITH_NAME_AND_ELEMENTS_WITH_ID) {
+    alert("ANCHORS_WITH_NAME_AND_ELEMENTS_WITH_ID");    
     chrome.tabs.executeScript(null, {file: "destroy.js"});  
     state = NO_TOOLTIP;
   } else {
     alert("WHAT HAVE YOU DONE?!?");
-  } */
+  }
 });
 </script>
 </html>
