@@ -1,0 +1,17 @@
+﻿{
+  "name": "HFR - Mes sujets",
+  "version": "0.7.7",
+  "description": "Vérifie si les sujets drapalisés sur forum.hardware.fr ont de nouveaux messages.",
+  "background_page": "bg.html",
+  "options_page": "options.html",
+  "browser_action": {
+    "default_icon": "icon.png",
+    "badge": ""
+  },
+  "icons": { "128": "128.png", "64": "64.png" },
+  "permissions": [
+    "tabs",
+    "contextMenus",
+    "http://forum.hardware.fr/forum1f.php", "http://www.presence-pc.com/forum/forum1f.php"
+  ]
+}
