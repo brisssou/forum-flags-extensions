@@ -8,9 +8,9 @@ $("a[name]").each(function() {
   else
     url = results[1];
   
-  
   $(this).qtip({
    content: url+'#'+$(this).attr('name'),
-   show: {ready :true}
+   show: {ready :true},
+   hide: { when: 'destroy', fixed: true }
   })
 });

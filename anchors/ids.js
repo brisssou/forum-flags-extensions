@@ -1,4 +1,4 @@
-$("!a *[id]").each(function() {
+$("*[id!^=gtasks_]").each(function() {
   var url;
   var regexS = "(^[^#]*)";
   var regex = new RegExp( regexS );
@@ -8,9 +8,9 @@ $("!a *[id]").each(function() {
   else
     url = results[1];
   
-  
   $(this).qtip({
    content: url+'#'+$(this).attr('id'),
-   show: {ready :true}
+   show: {ready :true},
+   hide: { when: 'destroy', fixed: true }
   })
 });
