@@ -1,4 +1,4 @@
-﻿{
+ {
   "name": "HFR - Mes sujets",
   "version": "0.7.8",
   "description": "Vérifie si les sujets drapalisés sur forum.hardware.fr ont de nouveaux messages.",
@@ -12,6 +12,6 @@
   "permissions": [
     "tabs",
     "contextMenus",
-    "http://forum.hardware.fr/forum1f.php", "http://www.presence-pc.com/forum/forum1f.php"
+    "http://forum.hardware.fr/forum1f.php"
   ]
 }
