@@ -1,6 +1,6 @@
 function PopupContent () {
   this.entries = new Array(),
-  this.mpsNb = 0,
+  this.mpsNb = 0
   
   PopupContent.prototype.add = function(title, cat, post, href, nbUnread) {
     this.entries.push({title:title, cat:cat, post:post, href:href, nbUnread:nbUnread});
