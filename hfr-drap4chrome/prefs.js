@@ -8,6 +8,7 @@ var NEW_TAB = "new_tab_menu";
 var DEBUG_ON = "debug_on";
 var OPEN_CAT = "open_cat";
 var MUTED_TOPICS = "muted_topics";
+var BG_COLOR = "bg_color";
 
 var PREFS_DEFAULT = new Object();
 PREFS_DEFAULT[USE_DIRECT_LINK] = false;
@@ -19,6 +20,7 @@ PREFS_DEFAULT[NEW_TAB] = true;
 PREFS_DEFAULT[DEBUG_ON] = false;
 PREFS_DEFAULT[OPEN_CAT] = true;
 PREFS_DEFAULT[MUTED_TOPICS] = '';
+PREFS_DEFAULT[BG_COLOR] = '#2F3740';
 
 function getPref(name) {
   var value = localStorage[name];
