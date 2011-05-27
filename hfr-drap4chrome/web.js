@@ -10,7 +10,7 @@ var MP_REX = /class="red">Vous avez (\d*) nouveau/;
 var BG_COLOR_REX = /<input name="inputcouleurTabHeader" .* value="(.*)"/
 
 var CATS_MASTER_REX = /<select name="cat"(.+)<\/select>/;
-var CATS_REX = /<option value="([^"]+)" >([^"]+)<\/option>/g;
+var CATS_REX = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 
 var ENTRY_URL_REX = /cat=(\d+)&amp;(subcat=(\d+)&amp;)?post=(\d+)&amp;page=(\d+)/;
 
