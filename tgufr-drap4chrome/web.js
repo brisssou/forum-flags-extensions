@@ -4,7 +4,7 @@ var HFR_MY_FAVS = HFR +  "/forum/forum1f.php?config=hfr.inc&owntopic=3&new=0&noj
 var HFR_MP = HFR + "/forum/forum1f.php?config=hfr.inc&cat=prive";
 var HFR_SETUP_THEME = HFR + "/forum/setperso.php?config=hfr.inc";
 //</a></td><td class="sujetCase4"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=165&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0" class="cCatTopic">165</a></td><td class="sujetCase5"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=158&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0#t627721"><img src="http://forum-images.hardware.fr/themes_static/images_forum/1/favoris.gif" title="Aller au dernier message lu sur ce sujet (p.158)
-var UNREAD_REX = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p[\s\S](\d+)\)/g;
+var UNREAD_REX = /title="Sujet n.\d+">([^<]+)[\s\S]+(?!tr>)sujetCase5">[\s\S]+(?!tr>)<a href="([^"]+)[\s\S]+(?!tr>)Aller au dernier message lu sur ce sujet \(p.(\d+)\)(?!tr)/g;
 var NB_PAGES_REX = /cCatTopic">(\d+)<\/a>/;
 var MP_REX = />Messages priv.s \((\d+)\)<\/a>/;
 var BG_COLOR_REX = /<input name="inputcouleurTabHeader" [\s\S]* value="([\s\S]*)"/
