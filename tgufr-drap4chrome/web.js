@@ -1,10 +1,13 @@
 var HFR = "http://www.infos-du-net.com";
-var HFR_MY_DRAPS = HFR + "/forum/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
-var HFR_MY_FAVS = HFR +  "/forum/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
-var HFR_MP = HFR + "/forum/forum1f.php?config=hfr.inc&cat=prive";
-var HFR_SETUP_THEME = HFR + "/forum/setperso.php?config=hfr.inc";
+var HFR_MY_DRAPS = HFR + "/forum/forum1f.php?config=infosdunet.inc&owntopic=1&new=0&nojs=0";
+var HFR_MY_FAVS = HFR +  "/forum/forum1f.php?config=infosdunet.inc&owntopic=3&new=0&nojs=0";
+var HFR_MP = HFR + "/forum/forum1.php?config=infosdunet.inc&cat=prive";
+var HFR_SETUP_THEME = HFR + "/forum/setperso.php?config=infosdunet.inc";
+var DIRECT_CAT_LINK = HFR + "/forum/forum1.php?config=infosdunet.inc&owntopic=1&cat=";
+
 //</a></td><td class="sujetCase4"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=165&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0" class="cCatTopic">165</a></td><td class="sujetCase5"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=158&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0#t627721"><img src="http://forum-images.hardware.fr/themes_static/images_forum/1/favoris.gif" title="Aller au dernier message lu sur ce sujet (p.158)
-var UNREAD_REX = /title="Sujet n.\d+">([^<]+)[\s\S]+(?!tr>)sujetCase5">[\s\S]+(?!tr>)<a href="([^"]+)[\s\S]+(?!tr>)Aller au dernier message lu sur ce sujet \(p.(\d+)\)(?!tr)/g;
+var UNREAD_REX_PACK = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+var UNREAD_REX = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
 var NB_PAGES_REX = /cCatTopic">(\d+)<\/a>/;
 var MP_REX = />Messages priv.s \((\d+)\)<\/a>/;
 var BG_COLOR_REX = /<input name="inputcouleurTabHeader" [\s\S]* value="([\s\S]*)"/
@@ -113,22 +116,26 @@ function getUnreadCount(onSuccess, onError) {
         var unreadCount = 0;
         var popupContent = chrome.extension.getBackgroundPage().popupContent;
         popupContent.clear();
-        var matches = null;
+        var matches_pack = null;
         var muted = getPref(MUTED_TOPICS).split('|');
-        while (matches = UNREAD_REX.exec(content)) {
-          debug("found one");
-          var url = matches[2];
-          var urlMatch = ENTRY_URL_REX.exec(url);
-          if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
-            unreadCount++;
-            var topicNbPages = 1;
-            var nbPages = null;
-            if (nbPages = NB_PAGES_REX.exec(matches[0])) {
-              topicNbPages = parseInt(nbPages[1]);
+        while (matches_pack = UNREAD_REX_PACK.exec(content)) {
+          var pack = matches_pack[0].replace(/[\n\r\t]/g,' ').replace(/<\/tr>/g,'\n</tr>');
+          var matches = null;
+          while (matches = UNREAD_REX.exec(pack)) {
+            debug("found one");
+            var url = matches[2];
+            var urlMatch = ENTRY_URL_REX.exec(url);
+            if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
+              unreadCount++;
+              var topicNbPages = 1;
+              var nbPages = null;
+              if (nbPages = NB_PAGES_REX.exec(matches[0])) {
+                topicNbPages = parseInt(nbPages[1]);
+              }
+              popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, topicNbPages - parseInt(matches[3]));
+            } else {
+              debug("... but a muted one");
             }
-            popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, topicNbPages - parseInt(matches[3]));
-          } else {
-            debug("... but a muted one");
           }
         }
         var mps = MP_REX.exec(content);
