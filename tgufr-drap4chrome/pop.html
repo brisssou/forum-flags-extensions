@@ -10,7 +10,7 @@
 <script type="text/javascript">
 
 
-  var DIRECT_CAT_LINK = "http://forum.hardware.fr/forum1.php?config=hfr.inc&owntopic=1&cat=";
+  
   
   function mute(cat, post, title) {
     _mute(cat, post, title);
@@ -30,15 +30,14 @@
     if (popupContent.mpsNb > 0) {
       catCur = 'prive';
       innerHtml += "<li id=\"mp\"><a href=\"javascript:goToPage('";
-      innerHtml += "http://forum.hardware.fr/forum1.php?config=hfr.inc&cat=";
-      innerHtml += catCur;
+      innerHtml += HFR_MP;
       innerHtml += "', true)\">";
       innerHtml += popupContent.mpsNb;
       innerHtml += ' ';
       if (popupContent.mpsNb > 1) {
-        innerHtml += 'Messages Privés';
+        innerHtml += 'Messages Priv&eacute;s';
       } else {
-        innerHtml += 'Message Privé';
+        innerHtml += 'Message Priv&eacute;';
       }
       innerHtml += "</a></li>";
     }
@@ -105,7 +104,7 @@
 <body onload="initPopup()">
 <div id="popup">
   <ul id="headBar">
-    <li class="right"><a href="javascript:goToHfr()">HFR</a></li>
+    <li class="right"><a href="javascript:goToHfr()">TGUFR/IDN</a></li>
     <li class="right"><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
     <li class="right"><a href="javascript:openAll()">Tout ouvrir</a></li>
     <li class="left"><a href="javascript:goToPage('options.html', false);">Options</a></li>
