@@ -1,0 +1,117 @@
+<html>
+<head>
+<link rel="StyleSheet" href="style.css" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu">
+<script src="web.js"></script>
+<script src="prefs.js"></script>
+<script src="pop.js"></script>
+<script src="log.js"></script>
+<script src="behaviour.js"></script>
+<script type="text/javascript">
+
+
+  
+  
+  function mute(cat, post, title) {
+    _mute(cat, post, title);
+    initPopup();
+  }
+  
+  function initPopup() {
+    var innerHtml = "";
+    var entry;
+    var catPrev = null;
+    var catCur = null;
+    var bgPage = chrome.extension.getBackgroundPage();
+    var popupContent = bgPage.popupContent;
+    var bgColor = getPref(BG_COLOR);
+    innerHtml += "<ul style=\"background-color: "+bgColor+"\">";
+    var openCat = getPref(OPEN_CAT);
+    if (popupContent.mpsNb > 0) {
+      catCur = 'prive';
+      innerHtml += "<li id=\"mp\"><a href=\"javascript:goToPage('";
+      innerHtml += HFR_MP;
+      innerHtml += "', true)\">";
+      innerHtml += popupContent.mpsNb;
+      innerHtml += ' ';
+      if (popupContent.mpsNb > 1) {
+        innerHtml += 'Messages Priv&eacute;s';
+      } else {
+        innerHtml += 'Message Priv&eacute;';
+      }
+      innerHtml += "</a></li>";
+    }
+    for (var i = 0; i < popupContent.entries.length; i++) {
+      entry = popupContent.entries[i];
+      if (!isMuted(entry.cat, entry.post)) {
+        catCur = entry.cat;
+        if (catCur != catPrev){
+          if (catPrev != null) {
+            innerHtml += "</li></ul>";
+          }
+          innerHtml += "<li><a href=\"javascript:";
+          if (openCat) {
+        	  innerHtml += "openCat(";
+	          innerHtml += catCur;
+          } else {
+        	  innerHtml += "goToPage('";
+	          innerHtml += DIRECT_CAT_LINK;
+	          innerHtml += catCur;
+	          innerHtml += "', true";
+          }
+          innerHtml += ")\">";
+          innerHtml += bgPage.cats[catCur];
+          innerHtml += "</a><ul>";
+        }
+        innerHtml += "<li><a class=\"mute\" href=\"javascript:mute(";
+        innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")
+        innerHtml += "\')\"><img src=\"mute.gif\" title=\"STFU!\"/></a>&nbsp;<a href=\"javascript:goToPage('";
+        innerHtml += getFullUrl(entry.href);
+        innerHtml += "', true)\"";
+        var linkTitle = "";
+        if (entry.nbUnread>0) {
+          linkTitle += entry.nbUnread + " nouvelle";
+          if (entry.nbUnread>1) {
+            linkTitle += "s";
+          }
+          linkTitle += " page";
+          if (entry.nbUnread>1) {
+            linkTitle += "s";
+          }
+        } else {
+          linkTitle += "Pas de nouvelle page";
+        }
+        innerHtml += " title=\"";
+        innerHtml += linkTitle;
+        innerHtml += "\">";
+        innerHtml += entry.title;
+        innerHtml += "</a></li>";
+        catPrev = catCur;
+      }
+    }
+    innerHtml += "</ul>";
+    document.getElementById('entries').innerHTML = innerHtml;
+  }
+
+  function htmlDecode(input){
+    var e = document.createElement('div');
+    e.innerHTML = input;
+    return e.childNodes[0].nodeValue;
+  }
+  
+</script>
+</head>
+<body onload="initPopup()">
+<div id="popup">
+  <ul id="headBar">
+    <li class="right"><a href="javascript:goToHfr()">THFR/PPC</a></li>
+    <li class="right"><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
+    <li class="right"><a href="javascript:openAll()">Tout ouvrir</a></li>
+    <li class="left"><a href="javascript:goToPage('options.html', false);">Options</a></li>
+  </ul>
+  <div id="entries">
+  </div>
+</div>
+</body>
+</html>
+
