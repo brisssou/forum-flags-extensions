@@ -1,0 +1,8 @@
+<!ENTITY hfr-drap4ff.label "Your localized menuitem">
+<!ENTITY hfr-drap4ffContext.label "Your Menuitem">
+<!ENTITY hfr-drap4ffContext.accesskey "Y">
+<!ENTITY hfr-drap4ffToolbarButton.label "Your Toolbar Button">
+<!ENTITY hfr-drap4ffToolbarButton.tooltip "This is your toolbar button!">
+<!ENTITY hfr-drap4ffSidebar.label "Your Sidebar">
+<!ENTITY hfr-drap4ffToolbar.name  "example">
+<!ENTITY hfr-drap4ffToolbar.label "This is an example toolbar. You can hide it under View &gt; toolbars &gt; &hfr-drap4ffToolbar.name;">

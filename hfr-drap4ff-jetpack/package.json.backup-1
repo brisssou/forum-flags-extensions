@@ -1,0 +1,8 @@
+{
+    "name": "HFR - Mes sujets", 
+    "license": "WTF 1.1", 
+    "author": "brice.laurencin", 
+    "version": "0.1", 
+    "fullName": "HFR - Mes sujets", 
+    "description": "Vérifie si les sujets drapalisés sur forum.hardware.fr ont de nouveaux messages."
+}
