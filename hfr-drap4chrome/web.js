@@ -10,7 +10,7 @@ var MP_REX = /class="red">Vous avez (\d*) nouveau/;
 var BG_COLOR_REX = /<input name="inputcouleurTabHeader" .* value="(.*)"/
 
 var CATS_MASTER_REX = /<select name="cat"(.+)<\/select>/;
-var CATS_REX = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+var CATS_REX = /<option value="([^"]+)" >([^<]+)/g;
 
 var ENTRY_URL_REX = /cat=(\d+)&amp;(subcat=(\d+)&amp;)?post=(\d+)&amp;page=(\d+)/;
 
@@ -148,7 +148,7 @@ function getUnreadCount(onSuccess, onError) {
       	  badgeBackGroundColor = [255,0,0,255];
         }
         chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
-        if (bg.cats == null || bg.cats.length == 0) {
+        if (bg.cats == null || bg.cats.length < 3) {
           bg.cats = new Array();
           matches = CATS_MASTER_REX.exec(content);
           if (matches!=null) {

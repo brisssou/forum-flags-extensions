@@ -36,9 +36,9 @@
       innerHtml += popupContent.mpsNb;
       innerHtml += ' ';
       if (popupContent.mpsNb > 1) {
-        innerHtml += 'Messages Privés';
+        innerHtml += 'Messages Priv&eacute;s';
       } else {
-        innerHtml += 'Message Privé';
+        innerHtml += 'Message Priv&eacute;';
       }
       innerHtml += "</a></li>";
     }
@@ -92,6 +92,7 @@
     }
     innerHtml += "</ul>";
     document.getElementById('entries').innerHTML = innerHtml;
+    document.getElementById('entries').style.maxHeight=screen.availHeight*.45;
   }
 
   function htmlDecode(input){
@@ -99,17 +100,20 @@
     e.innerHTML = input;
     return e.childNodes[0].nodeValue;
   }
-  
 </script>
 </head>
 <body onload="initPopup()">
 <div id="popup">
-  <ul id="headBar">
-    <li class="right"><a href="javascript:goToHfr()">HFR</a></li>
-    <li class="right"><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
-    <li class="right"><a href="javascript:openAll()">Tout ouvrir</a></li>
-    <li class="left"><a href="javascript:goToPage('options.html', false);">Options</a></li>
-  </ul>
+  <div id="headbar">
+    <ul id="right">
+      <li><a href="javascript:goToHfr()">HFR</a></li>
+      <li><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
+      <li><a href="javascript:openAll()">Tout ouvrir</a></li>
+    </ul>
+    <ul id="left">
+      <li><a href="javascript:goToPage('options.html', false);">Options</a></li>
+    </ul>
+  </div>
   <div id="entries">
   </div>
 </div>
