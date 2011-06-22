@@ -24,7 +24,8 @@ PREFS_DEFAULT[BG_COLOR] = '#2F3740';
 
 function getPref(name) {
   var value = localStorage[name];
-  if (value == null) return PREFS_DEFAULT[name];
+  if (value == null) value = PREFS_DEFAULT[name];
+  if (value == 'true' || value == 'false') value = eval(value);
   return value;
 }
 
