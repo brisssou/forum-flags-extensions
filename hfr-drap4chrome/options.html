@@ -52,47 +52,47 @@ function initControls() {
   var directLinkInput = document.getElementById('USE_DIRECT_LINK');
   directLinkInput.checked = getPref(USE_DIRECT_LINK);
   directLinkInput.onchange = function (event) {
-    setPref(USE_DIRECT_LINK, this.value);
+    setPref(USE_DIRECT_LINK, this.checked);
     initBehaviour();
   };
 
   var openCat = document.getElementById('OPEN_CAT');
   openCat.checked = getPref(OPEN_CAT);
   openCat.onchange = function (event) {
-    setPref(OPEN_CAT, this.value);
+    setPref(OPEN_CAT, this.checked);
     initBehaviour();
   };
   
   var onlyFavsInput = document.getElementById('ONLY_FAVS');
   onlyFavsInput.checked = getPref(ONLY_FAVS);
   onlyFavsInput.onchange = function (event) {
-    setPref(ONLY_FAVS, this.value);
+    setPref(ONLY_FAVS, this.checked);
     initBrowserActionTitle();
   };
   
   var aniIconInput = document.getElementById('ANIMATED_ICON');
   aniIconInput.checked = getPref(ANIMATED_ICON);
   aniIconInput.onchange = function (event) {
-    setPref(ANIMATED_ICON, this.value);
+    setPref(ANIMATED_ICON, this.checked);
   };
   
   var contextMenuInput = document.getElementById('USE_CONTEXT_MENU');
   contextMenuInput.checked = getPref(USE_CONTEXT_MENU);
   contextMenuInput.onchange = function (event) {
-    setPref(USE_CONTEXT_MENU, this.value);
+    setPref(USE_CONTEXT_MENU, this.checked);
     initBehaviour();
   };
   
   var newTabInput = document.getElementById('NEW_TAB');
   newTabInput.checked = getPref(NEW_TAB);
   newTabInput.onchange = function (event) {
-    setPref(NEW_TAB, this.value);
+    setPref(NEW_TAB, this.checked);
   };
   
   var debugOnInput = document.getElementById('DEBUG_ON');
   debugOnInput.checked = getPref(DEBUG_ON);
   debugOnInput.onchange = function (event) {
-    setPref(DEBUG_ON, this.value);
+    setPref(DEBUG_ON, this.checked);
   };
   initMuted();
 }
