@@ -1,6 +1,6 @@
  {
   "name": "HFR - Mes sujets",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "Vérifie si les sujets drapalisés sur forum.hardware.fr ont de nouveaux messages.",
   "background_page": "bg.html",
   "options_page": "options.html",
