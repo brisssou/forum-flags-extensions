@@ -24,13 +24,30 @@ function initControls() {
   refTimeInput.onchange = function(event) {
     var refTime = parseInt(this.value);
     if (isNaN(refTime)) {
-      document.getElementById("REFRESH_TIME.error").innerHtml = "des entiers seulement, merci!";
+      document.getElementById("REFRESH_TIME.error").innerText = "Des entiers seulement, merci!";
+    } else if (refTime < 300) {
+      document.getElementById("REFRESH_TIME.error").innerText = "Merci de ne pas jouer au bourrin. 300 secondes minimum.";
     } else {
+      document.getElementById("REFRESH_TIME.error").innerText = "";
       setPref(REFRESH_TIME, refTime);
     }
     chrome.extension.getBackgroundPage().startRequest();
   };
   refTimeInput.onkeyup=refTimeInput.onchange;
+  
+  var maxOpenAllInput = document.getElementById("MAX_OPEN_ALL");
+  maxOpenAllInput.value = getPref(MAX_OPEN_ALL);
+  maxOpenAllInput.onchange = function(event) {
+    var maxOpenAll = parseInt(this.value);
+    if (isNaN(maxOpenAll)) {
+      document.getElementById("MAX_OPEN_ALL.error").innerText = "Des entiers seulement, merci!";
+    } else {
+      document.getElementById("MAX_OPEN_ALL.error").innerText = "";
+      setPref(MAX_OPEN_ALL, maxOpenAll);
+    }
+    chrome.extension.getBackgroundPage().startRequest();
+  };
+  maxOpenAllInput.onkeyup=maxOpenAllInput.onchange;
 
   var bgColorInput = document.getElementById("BG_COLOR");
   bgColorInput.value = getPref(BG_COLOR);
@@ -128,6 +145,11 @@ function unmute(cat, topic) {
       <span><label for="REFRESH_TIME">Temps de rafra&icirc;chissement  en secondes :</label></span>
       <span><input type="text" name="REFRESH_TIME" id="REFRESH_TIME"/></span>
       <div id="REFRESH_TIME.error" class="error"></div>
+    </div>
+    <div>
+      <span><label for="MAX_OPEN_ALL" title="En cas de 'Tout ouvrir' ou de click sur une cat&eacute;togie, une confirmation sera demand&eacute;e au-del&agrave; de ce nombre.">Nombre max. d'onglets ouverts sans avertissement :</label></span>
+      <span><input type="text" name="MAX_OPEN_ALL" id="MAX_OPEN_ALL"/></span>
+      <div id="MAX_OPEN_ALL.error" class="error"></div>
     </div>
     <div>
       <span><label for="ONLY_FAVS" title="Si d&eacute;coch&eacute;, rafra&icirc;chit les drapeaux cyans.">Rafra&icirc;chir uniquement les favoris :</label></span>
