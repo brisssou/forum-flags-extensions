@@ -50,19 +50,23 @@
           if (catPrev != null) {
             innerHtml += "</li></ul>";
           }
-          innerHtml += "<li><a href=\"javascript:";
-          if (openCat) {
-        	  innerHtml += "openCat(";
-	          innerHtml += catCur;
-          } else {
-        	  innerHtml += "goToPage('";
-	          innerHtml += DIRECT_CAT_LINK;
-	          innerHtml += catCur;
-	          innerHtml += "', true";
+          innerHtml += "<li>"
+          if (getPref(SHOW_CAT)) {
+            innerHtml += "<a href=\"javascript:";
+            if (openCat) {
+        	    innerHtml += "openCat(";
+	            innerHtml += catCur;
+            } else {
+        	    innerHtml += "goToPage('";
+	            innerHtml += DIRECT_CAT_LINK;
+	            innerHtml += catCur;
+	            innerHtml += "', true";
+            }
+            innerHtml += ")\">";
+            innerHtml += bgPage.cats[catCur];
+            innerHtml += "</a>"
           }
-          innerHtml += ")\">";
-          innerHtml += bgPage.cats[catCur];
-          innerHtml += "</a><ul>";
+          innerHtml += "<ul>";
         }
         innerHtml += "<li><a class=\"mute\" href=\"javascript:mute(";
         innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")

@@ -63,12 +63,17 @@ function openCat(cat) {
   if (getPref(OPEN_CAT)) {
     var popupContent = chrome.extension.getBackgroundPage().popupContent;
     var entry;
-    if (popupContent.entries.length < getPref(MAX_OPEN_ALL) || confirm('Vous allez ouvrir '+popupContent.entries.length+' onglets. C\'est beaucoup. Êtes-vous sûr ?')) {
-      for (var i = 0; i < popupContent.entries.length; i++) {
-        entry = popupContent.entries[i];
-        if (entry.cat == cat) {
-          goToPage(getFullUrl(htmlDecode(entry.href)), false);
-        }
+    var entries = new Array();
+    for (var i = 0; i < popupContent.entries.length; i++) {
+      entry = popupContent.entries[i];
+      if (entry.cat == cat) {
+        entries.push(getFullUrl(htmlDecode(entry.href)));
+      }
+    }
+    
+    if (entries.length < getPref(MAX_OPEN_ALL) || confirm('Vous allez ouvrir '+entries.length+' onglets. C\'est beaucoup. Êtes-vous sûr ?')) {
+      for (var i = 0; i < entries.length; i++) {
+        goToPage(entries[i], false);
       }
     }
 	  window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
