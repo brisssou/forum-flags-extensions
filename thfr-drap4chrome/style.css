@@ -25,8 +25,8 @@
 }
 /*popup*/
 #popup {
+  max-height: 360px;
   width: 350px;
-  height: 200px;
   font-size: 10pt;
 }
 
@@ -58,15 +58,13 @@
 }
 
 #entries {
-  position: absolute;
-  height: 185px;
   width: 95%;
-  overflow: auto;
-  margin-top: 15px;
-  list-style-type: disc;
+  margin: auto;
+  margin-top: 35px;
 }
 
 #entries ul {
+  list-style-type: none;
   font-weight: bold;
   color: white;
   background-color: #2F3740;
