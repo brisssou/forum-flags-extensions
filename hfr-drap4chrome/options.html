@@ -64,6 +64,7 @@ function initControls() {
   var setDefaultColorA = document.getElementById('setDefaultColor');
   setDefaultColorA.onclick = function() {
     bgColorInput.value = PREFS_DEFAULT[BG_COLOR];
+    setPref(BG_COLOR, bgColorInput.value);
   }
 
   var directLinkInput = document.getElementById('USE_DIRECT_LINK');
@@ -128,6 +129,32 @@ function initControls() {
     }
   };
   
+  var getTopics = document.getElementById('GET_TOPICS');
+  getTopics.checked = getPref(GET_TOPICS);
+  if (getTopics.checked) {
+      document.getElementById('SHOW_CAT.div').style.visibility = 'visible';
+      document.getElementById('ONLY_FAVS.div').style.visibility = 'visible';
+    } else {
+      document.getElementById('ONLY_FAVS.div').style.visibility = 'hidden';
+      document.getElementById('SHOW_CAT.div').style.visibility = 'hidden';
+  }
+  getTopics.onchange = function (event) {
+    setPref(GET_TOPICS, this.checked);
+    if (getTopics.checked) {
+      document.getElementById('SHOW_CAT.div').style.visibility = 'visible';
+      document.getElementById('ONLY_FAVS.div').style.visibility = 'visible';
+    } else {
+      document.getElementById('ONLY_FAVS.div').style.visibility = 'hidden';
+      document.getElementById('SHOW_CAT.div').style.visibility = 'hidden';
+    }
+  };
+  
+  var getMps = document.getElementById('GET_MPS');
+  getMps.checked = getPref(GET_MPS);
+  getMps.onchange = function (event) {
+    setPref(GET_MPS, this.checked);
+  };
+  
   initMuted();
 }
 
@@ -164,20 +191,28 @@ function unmute(cat, topic) {
       <div id="REFRESH_TIME.error" class="error"></div>
     </div>
     <div>
+      <span><label for="GET_TOPICS">R&eacute;cup&eacute;rer le nombre de topics non lus :</label></span>
+      <span><input type="checkbox" name="GET_TOPICS" id="GET_TOPICS"/></span>
+    </div>
+    <div>
+      <span><label for="GET_MPS">R&eacute;cup&eacute;rer le nombre de messages priv&eacute;s non lus :</label></span>
+      <span><input type="checkbox" name="GET_MPS" id="GET_MPS"/></span>
+    </div>
+    <div>
       <span><label for="MAX_OPEN_ALL" title="En cas de 'Tout ouvrir' ou de click sur une cat&eacute;gorie, une confirmation sera demand&eacute;e au-del&agrave; de ce nombre.">Nombre max. d'onglets ouverts sans avertissement :</label></span>
       <span><input type="text" name="MAX_OPEN_ALL" id="MAX_OPEN_ALL"/></span>
       <div id="MAX_OPEN_ALL.error" class="error"></div>
     </div>
-    <div>
-      <span><label for="ONLY_FAVS" title="Si d&eacute;coch&eacute;, rafra&icirc;chit les drapeaux cyans.">Rafra&icirc;chir uniquement les favoris :</label></span>
+    <div id="ONLY_FAVS.div">
+      <span><label for="ONLY_FAVS" title="Si d&eacute;coch&eacute;, rafra&icirc;chit les drapeaux cyans et les favoris.">Rafra&icirc;chir uniquement les favoris :</label></span>
       <span><input type="checkbox" name="ONLY_FAVS" id="ONLY_FAVS"/></span>
     </div>
     <div>
       <span><label for="USE_DIRECT_LINK" title="Si d&eacute;coch&eacute;, affichage de la popup.">Le click sur l'ic&ocirc;ne envoie directement sur la page des favoris :</label></span>
       <span><input type="checkbox" name="USE_DIRECT_LINK" id="USE_DIRECT_LINK"/></span>
     </div>
-    <div>
-      <span><label for="SHOW_CAT">Afficher le noms des cat&eacute;gories dans la popup :</label></span>
+    <div id="SHOW_CAT.div">
+      <span><label for="SHOW_CAT">Afficher le nom des cat&eacute;gories dans la popup :</label></span>
       <span><input type="checkbox" name="SHOW_CAT" id="SHOW_CAT"/></span>
     </div>
     <div id="OPEN_CAT.div">

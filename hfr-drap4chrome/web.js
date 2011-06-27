@@ -9,6 +9,9 @@ var NB_PAGES_REX = /cCatTopic">(\d+)<\/a>/;
 var MP_REX = /class="red">Vous avez (\d*) nouveau/;
 var BG_COLOR_REX = /<input name="inputcouleurTabHeader" .* value="(.*)"/
 
+
+var DIRECT_CAT_LINK = "http://forum.hardware.fr/forum1.php?config=hfr.inc&owntopic=1&cat=";
+
 var CATS_MASTER_REX = /<select name="cat"(.+)<\/select>/;
 var CATS_REX = /<option value="([^"]+)" >([^<]+)/g;
 
@@ -113,39 +116,39 @@ function getUnreadCount(onSuccess, onError) {
         var unreadCount = 0;
         var popupContent = chrome.extension.getBackgroundPage().popupContent;
         popupContent.clear();
+        var badgeBackGroundColor = [255,0,0,255];
         var matches = null;
-        var muted = getPref(MUTED_TOPICS).split('|');
-        while (matches = UNREAD_REX.exec(content)) {
-          debug("found one");
-          var url = matches[2];
-          var urlMatch = ENTRY_URL_REX.exec(url);
-          if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
-            unreadCount++;
-            var topicNbPages = 1;
-            var nbPages = null;
-            if (nbPages = NB_PAGES_REX.exec(matches[0])) {
-              topicNbPages = parseInt(nbPages[1]);
+        if (getPref(GET_TOPICS)) {
+          var muted = getPref(MUTED_TOPICS).split('|');
+          while (matches = UNREAD_REX.exec(content)) {
+            debug("found one");
+            var url = matches[2];
+            var urlMatch = ENTRY_URL_REX.exec(url);
+            if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
+              unreadCount++;
+              var topicNbPages = 1;
+              var nbPages = null;
+              if (nbPages = NB_PAGES_REX.exec(matches[0])) {
+                topicNbPages = parseInt(nbPages[1]);
+              }
+              popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, topicNbPages - parseInt(matches[3]));
+            } else {
+              debug("... but a muted one");
             }
-            popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, topicNbPages - parseInt(matches[3]));
-          } else {
-            debug("... but a muted one");
           }
         }
-        var mps = MP_REX.exec(content);
-        var badgeBackGroundColor;
-        if (mps != null) {
-          var mpsNb = parseInt(MP_REX.exec(content)[1]);
-          if (mpsNb == NaN) mpsNb = 0;
-          debug("found "+mpsNb+" private messages");
-          unreadCount += mpsNb;
-          popupContent.setMps(mpsNb);
-          if (mpsNb > 0) {
-        	  badgeBackGroundColor = [0,0,255,255];
-          } else {
-        	  badgeBackGroundColor = [255,0,0,255];
+        if (getPref(GET_MPS)) {
+          var mps = MP_REX.exec(content);
+          if (mps != null) {
+            var mpsNb = parseInt(MP_REX.exec(content)[1]);
+            if (mpsNb == NaN) mpsNb = 0;
+            debug("found "+mpsNb+" private messages");
+            unreadCount += mpsNb;
+            popupContent.setMps(mpsNb);
+            if (mpsNb > 0) {
+        	    badgeBackGroundColor = [0,0,255,255];
+            }
           }
-        } else {
-      	  badgeBackGroundColor = [255,0,0,255];
         }
         chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
         if (bg.cats == null || bg.cats.length < 3) {
