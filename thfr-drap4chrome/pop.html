@@ -10,6 +10,7 @@
 <script type="text/javascript">
 
 
+
   
   
   function mute(cat, post, title) {
@@ -49,19 +50,23 @@
           if (catPrev != null) {
             innerHtml += "</li></ul>";
           }
-          innerHtml += "<li><a href=\"javascript:";
-          if (openCat) {
-        	  innerHtml += "openCat(";
-	          innerHtml += catCur;
-          } else {
-        	  innerHtml += "goToPage('";
-	          innerHtml += DIRECT_CAT_LINK;
-	          innerHtml += catCur;
-	          innerHtml += "', true";
+          innerHtml += "<li>"
+          if (getPref(SHOW_CAT)) {
+            innerHtml += "<a href=\"javascript:";
+            if (openCat) {
+        	    innerHtml += "openCat(";
+	            innerHtml += catCur;
+            } else {
+        	    innerHtml += "goToPage('";
+	            innerHtml += DIRECT_CAT_LINK;
+	            innerHtml += catCur;
+	            innerHtml += "', true";
+            }
+            innerHtml += ")\">";
+            innerHtml += bgPage.cats[catCur];
+            innerHtml += "</a>"
           }
-          innerHtml += ")\">";
-          innerHtml += bgPage.cats[catCur];
-          innerHtml += "</a><ul>";
+          innerHtml += "<ul>";
         }
         innerHtml += "<li><a class=\"mute\" href=\"javascript:mute(";
         innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")
@@ -91,6 +96,7 @@
     }
     innerHtml += "</ul>";
     document.getElementById('entries').innerHTML = innerHtml;
+    document.getElementById('entries').style.maxHeight=screen.availHeight*.45;
   }
 
   function htmlDecode(input){
@@ -98,17 +104,23 @@
     e.innerHTML = input;
     return e.childNodes[0].nodeValue;
   }
-  
+
 </script>
 </head>
 <body onload="initPopup()">
 <div id="popup">
-  <ul id="headBar">
-    <li class="right"><a href="javascript:goToHfr()">THFR/PPC</a></li>
-    <li class="right"><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
-    <li class="right"><a href="javascript:openAll()">Tout ouvrir</a></li>
-    <li class="left"><a href="javascript:goToPage('options.html', false);">Options</a></li>
-  </ul>
+  <div id="headbar">
+    <ul id="right">
+      <li><a href="javascript:openAll()">Tout ouvrir</a></li>
+
+      <li><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
+      <li><a href="javascript:goToHfr()">Tom's Hardware FR</a></li>
+
+    </ul>
+    <ul id="left">
+      <li><a href="javascript:goToPage('options.html', false);">Options</a></li>
+    </ul>
+  </div>
   <div id="entries">
   </div>
 </div>

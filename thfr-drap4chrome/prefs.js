@@ -9,22 +9,31 @@ var DEBUG_ON = "debug_on";
 var OPEN_CAT = "open_cat";
 var MUTED_TOPICS = "muted_topics";
 var BG_COLOR = "bg_color";
+var MAX_OPEN_ALL = "max_open_all";
+var SHOW_CAT = "show_cat";
+var GET_TOPICS = "get_topics";
+var GET_MPS = "get_mps";
 
 var PREFS_DEFAULT = new Object();
-PREFS_DEFAULT[USE_DIRECT_LINK] = false;
+PREFS_DEFAULT[USE_DIRECT_LINK] = 'false';
 PREFS_DEFAULT[REFRESH_TIME] = 500;
-PREFS_DEFAULT[ONLY_FAVS] = false;
-PREFS_DEFAULT[ANIMATED_ICON] = false;
-PREFS_DEFAULT[USE_CONTEXT_MENU] = false;
-PREFS_DEFAULT[NEW_TAB] = true;
-PREFS_DEFAULT[DEBUG_ON] = false;
-PREFS_DEFAULT[OPEN_CAT] = true;
+PREFS_DEFAULT[ONLY_FAVS] = 'false';
+PREFS_DEFAULT[ANIMATED_ICON] = 'true';
+PREFS_DEFAULT[USE_CONTEXT_MENU] = 'false';
+PREFS_DEFAULT[NEW_TAB] = 'true';
+PREFS_DEFAULT[DEBUG_ON] = 'false';
+PREFS_DEFAULT[OPEN_CAT] = 'true';
 PREFS_DEFAULT[MUTED_TOPICS] = '';
-PREFS_DEFAULT[BG_COLOR] = '#2F3740';
+PREFS_DEFAULT[BG_COLOR] = '#AF261E';
+PREFS_DEFAULT[MAX_OPEN_ALL] = 10;
+PREFS_DEFAULT[SHOW_CAT] = 'true';
+PREFS_DEFAULT[GET_TOPICS] = 'true';
+PREFS_DEFAULT[GET_MPS] = 'true';
 
 function getPref(name) {
   var value = localStorage[name];
-  if (value == null) return PREFS_DEFAULT[name];
+  if (value == null) value = PREFS_DEFAULT[name];
+  if (value == 'true' || value == 'false') value = eval(value);
   return value;
 }
 

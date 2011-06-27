@@ -32,57 +32,7 @@ function getUsedURL() {
 }
 
 function getFullUrl(url) {
-  return HFR + url;
-}
-
-function getDefaultColorFromTheme(onSuccess, onError) {
-  var xhr = new XMLHttpRequest();
-  var abortTimerId = window.setTimeout(function() {
-      xhr.abort();
-    }, requestTimeout);
-
-  function handleSuccess(color) {
-    requestFailureCount = 0;
-    window.clearTimeout(abortTimerId);
-    if (onSuccess)
-      onSuccess(color);
-  }
-
-  function handleError() {
-    ++requestFailureCount;
-    window.clearTimeout(abortTimerId);
-    if (onError)
-      onError();
-  }
-
-  try {
-    xhr.onreadystatechange = function(){
-      if (xhr.readyState != 4)
-      return;
-
-      if (xhr.responseText) {
-        var content = xhr.responseText;
-        var bgColor = BG_COLOR_REX.exec(content);
-        if (bgColor != null) {
-          debug("found "+bgColor[1]+" as the theme background color");
-        }
-        handleSuccess(bgColor[1]);
-        return;
-      }
-
-      handleError();
-    };
-
-    xhr.onerror = function(error) {
-      handleError();
-    };
-
-    xhr.open("GET", HFR_SETUP_THEME, true);
-    xhr.send(null);
-  } catch(e) {
-    error(e);
-    handleError();
-  }
+  return HFR + url+"#xtor=RSS-9990"+"#xtor=RSS-9990";
 }
 
 function getUnreadCount(onSuccess, onError) {
@@ -116,46 +66,46 @@ function getUnreadCount(onSuccess, onError) {
         var unreadCount = 0;
         var popupContent = chrome.extension.getBackgroundPage().popupContent;
         popupContent.clear();
+        var badgeBackGroundColor = [255,0,0,255];
         var matches_pack = null;
-        var muted = getPref(MUTED_TOPICS).split('|');
-        while (matches_pack = UNREAD_REX_PACK.exec(content)) {
-          var pack = matches_pack[0].replace(/[\n\r\t]/g,' ').replace(/<\/tr>/g,'\n</tr>');
-          var matches = null;
-          while (matches = UNREAD_REX.exec(pack)) {
-            debug("found one");
-            var url = matches[2];
-            var urlMatch = ENTRY_URL_REX.exec(url);
-            if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
-              unreadCount++;
-              var topicNbPages = 1;
-              var nbPages = null;
-              if (nbPages = NB_PAGES_REX.exec(matches[0])) {
-                topicNbPages = parseInt(nbPages[1]);
+        if (getPref(GET_TOPICS)) {
+          var muted = getPref(MUTED_TOPICS).split('|');
+          while (matches_pack = UNREAD_REX_PACK.exec(content)) {
+            var pack = matches_pack[0].replace(/[\n\r\t]/g,' ').replace(/<\/tr>/g,'\n</tr>');
+            var matches = null;
+            while (matches = UNREAD_REX.exec(pack)) {
+              debug("found one");
+              var url = matches[2];
+              var urlMatch = ENTRY_URL_REX.exec(url);
+              if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
+                unreadCount++;
+                var topicNbPages = 1;
+                var nbPages = null;
+                if (nbPages = NB_PAGES_REX.exec(matches[0])) {
+                  topicNbPages = parseInt(nbPages[1]);
+                }
+                popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, topicNbPages - parseInt(matches[3]));
+              } else {
+                debug("... but a muted one");
               }
-              popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, topicNbPages - parseInt(matches[3]));
-            } else {
-              debug("... but a muted one");
             }
           }
         }
-        var mps = MP_REX.exec(content);
-        var badgeBackGroundColor;
-        if (mps != null) {
-          var mpsNb = parseInt(MP_REX.exec(content)[1]);
-          if (mpsNb == NaN) mpsNb = 0;
-          debug("found "+mpsNb+" private messages");
-          unreadCount += mpsNb;
-          popupContent.setMps(mpsNb);
-          if (mpsNb > 0) {
-        	  badgeBackGroundColor = [0,0,255,255];
-          } else {
-        	  badgeBackGroundColor = [255,0,0,255];
+        if (getPref(GET_MPS)) {
+          var mps = MP_REX.exec(content);
+          if (mps != null) {
+            var mpsNb = parseInt(MP_REX.exec(content)[1]);
+            if (mpsNb == NaN) mpsNb = 0;
+            debug("found "+mpsNb+" private messages");
+            unreadCount += mpsNb;
+            popupContent.setMps(mpsNb);
+            if (mpsNb > 0) {
+        	    badgeBackGroundColor = [0,0,255,255];
+            }
           }
-        } else {
-      	  badgeBackGroundColor = [255,0,0,255];
         }
         chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
-        if (bg.cats == null || bg.cats.length == 0) {
+        if (bg.cats == null || bg.cats.length < 3) {
           bg.cats = new Array();
           matches = CATS_MASTER_REX.exec(content);
           if (matches!=null) {
