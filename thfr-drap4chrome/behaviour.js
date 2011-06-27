@@ -1,4 +1,4 @@
-
+﻿
 function initBehaviour() {
   if (getPref(USE_DIRECT_LINK)) {
   	chrome.browserAction.setPopup({popup:""});
@@ -6,7 +6,7 @@ function initBehaviour() {
   	chrome.browserAction.setPopup({popup:"pop.html"});
   }
   if (getPref(USE_CONTEXT_MENU)) {
-    chrome.contextMenus.create({title:"Rafra&icirc;chissement THFR/PPC", onclick:startRequest});
+    chrome.contextMenus.create({title:"Rafraîchissement Tom's Hardware France", onclick:startRequest});
   } else {
     chrome.contextMenus.removeAll();
   }
@@ -25,9 +25,9 @@ function initBrowserActionTitle() {
 function goToPage(url, readNewTabPref) {
   if (readNewTabPref == null) readNewTabPref = false;
   chrome.tabs.getAllInWindow(undefined, function(tabs){
-
+  url += "#xtor=RSS-9990"
     for (var i = 0, tab; tab = tabs[i]; i++) {
-      if (tab.url && tab.url == url) {
+      if (tab.url && (tab.url == url || tab.url+"#xtor=RSS-9990" == url)) {
         chrome.tabs.update(tab.id, {selected: true, url:url});
         return;
       }
@@ -50,27 +50,36 @@ function goToHfr(){
 function openAll() {
   var popupContent = chrome.extension.getBackgroundPage().popupContent;
   var entry;
-  for (var i = 0; i < popupContent.entries.length; i++) {
-    entry = popupContent.entries[i];
-    goToPage(getFullUrl(htmlDecode(entry.href)), false);
+  if (popupContent.entries.length < getPref(MAX_OPEN_ALL) || confirm('Vous allez ouvrir '+popupContent.entries.length+' onglets. C\'est beaucoup. Êtes-vous sûr ?')) {
+    for (var i = 0; i < popupContent.entries.length; i++) {
+      entry = popupContent.entries[i];
+      goToPage(getFullUrl(htmlDecode(entry.href)), false);
+    }
   }
   window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
 }
 
 function openCat(cat) {
   if (getPref(OPEN_CAT)) {
-    goToPage(DIRECT_CAT_LINK + cat, false);
-  } else {
     var popupContent = chrome.extension.getBackgroundPage().popupContent;
     var entry;
+    var entries = new Array();
     for (var i = 0; i < popupContent.entries.length; i++) {
       entry = popupContent.entries[i];
       if (entry.cat == cat) {
-        goToPage(getFullUrl(htmlDecode(entry.href)), false); 
+        entries.push(getFullUrl(htmlDecode(entry.href)));
       }
     }
+    
+    if (entries.length < getPref(MAX_OPEN_ALL) || confirm('Vous allez ouvrir '+entries.length+' onglets. C\'est beaucoup. Êtes-vous sûr ?')) {
+      for (var i = 0; i < entries.length; i++) {
+        goToPage(entries[i], false);
+      }
+    }
+	  window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
+  } else {
+    goToPage(DIRECT_CAT_LINK + cat, false);
   }
-  window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
 }
 
 function updateBadge(nbUnread) {
