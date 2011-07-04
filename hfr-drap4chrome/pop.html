@@ -23,7 +23,9 @@
     var bgColor = getPref(BG_COLOR);
     innerHtml += "<ul style=\"background-color: "+bgColor+"\">";
     var openCat = getPref(OPEN_CAT);
+    var thingsToOpen = false;
     if (popupContent.mpsNb > 0) {
+      thingsToOpen = true;
       catCur = 'prive';
       innerHtml += "<li id=\"mp\"><a href=\"javascript:goToPage('";
       innerHtml += "http://forum.hardware.fr/forum1.php?config=hfr.inc&cat=";
@@ -41,6 +43,7 @@
     for (var i = 0; i < popupContent.entries.length; i++) {
       entry = popupContent.entries[i];
       if (!isMuted(entry.cat, entry.post)) {
+        thingsToOpen = true;
         catCur = entry.cat;
         if (catCur != catPrev){
           if (catPrev != null) {
@@ -93,6 +96,11 @@
     innerHtml += "</ul>";
     document.getElementById('entries').innerHTML = innerHtml;
     document.getElementById('entries').style.maxHeight=screen.availHeight*.45;
+    if (thingsToOpen) {
+      document.getElementById('openAll').style.display='inline';
+    } else {
+      document.getElementById('openAll').style.display='none';
+    }
   }
 
   function htmlDecode(input){
@@ -106,7 +114,7 @@
 <div id="popup">
   <div id="headbar">
     <ul id="right">
-      <li><a href="javascript:openAll()">Tout ouvrir</a></li>
+      <li><a href="javascript:openAll()" id="openAll">Tout ouvrir</a></li>
       <li><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
       <li><a href="javascript:goToHfr()">HFR</a></li>
     </ul>
