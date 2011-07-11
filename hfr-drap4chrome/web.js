@@ -1,8 +1,8 @@
-var HFR = "http://forum.hardware.fr";
-var HFR_MY_DRAPS = HFR + "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
-var HFR_MY_FAVS = HFR + "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
-var HFR_MP = HFR + "/forum1f.php?config=hfr.inc&cat=prive";
-var HFR_SETUP_THEME = HFR + "/setperso.php?config=hfr.inc";
+var HFR_ = "http://forum.hardware.fr";
+var HFR_MY_DRAPS = HFR_ + "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
+var HFR_MY_FAVS = HFR_ + "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
+var HFR_MP = HFR_ + "/forum1f.php?config=hfr.inc&cat=prive";
+var HFR_SETUP_THEME = HFR_ + "/setperso.php?config=hfr.inc";
 //</a></td><td class="sujetCase4"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=165&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0" class="cCatTopic">165</a></td><td class="sujetCase5"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=158&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0#t627721"><img src="http://forum-images.hardware.fr/themes_static/images_forum/1/favoris.gif" title="Aller au dernier message lu sur ce sujet (p.158)
 var UNREAD_REX = /title="Sujet n.\d+">([^<]+).+sujetCase5"><a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
 var NB_PAGES_REX = /cCatTopic">(\d+)<\/a>/;
@@ -32,7 +32,7 @@ function getUsedURL() {
 }
 
 function getFullUrl(url) {
-  return HFR + url;
+  return HFR_ + url;
 }
 
 function getDefaultColorFromTheme(onSuccess, onError) {
@@ -109,50 +109,33 @@ function getUnreadCount(onSuccess, onError) {
     updateBadge();
     xhr.onreadystatechange = function(){
       if (xhr.readyState != 4)
-      return;
-
+        return;
+      var HFR = new Hfr();
       if (xhr.responseText) {
         var content = xhr.responseText;
         var unreadCount = 0;
         var popupContent = chrome.extension.getBackgroundPage().popupContent;
         popupContent.clear();
         var badgeBackGroundColor = [255,0,0,255];
-        var matches = null;
         if (getPref(GET_TOPICS)) {
-          var muted = getPref(MUTED_TOPICS).split('|');
-          while (matches = UNREAD_REX.exec(content)) {
-            debug("found one");
-            var url = matches[2];
-            var urlMatch = ENTRY_URL_REX.exec(url);
-            if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
-              unreadCount++;
-              var topicNbPages = 1;
-              var nbPages = null;
-              if (nbPages = NB_PAGES_REX.exec(matches[0])) {
-                topicNbPages = parseInt(nbPages[1]);
-              }
-              popupContent.add(matches[1], urlMatch[1], urlMatch[4], url, topicNbPages - parseInt(matches[3]));
-            } else {
-              debug("... but a muted one");
-            }
-          }
+          var unreads = HFR.parseUnread(content, getPref(MUTED_TOPICS).split('|'))
+          popupContent.addAll(unreads);
+          unreadCount = unreads.length;
         }
         if (getPref(GET_MPS)) {
-          var mps = MP_REX.exec(content);
-          if (mps != null) {
-            var mpsNb = parseInt(MP_REX.exec(content)[1]);
-            if (mpsNb == NaN) mpsNb = 0;
-            debug("found "+mpsNb+" private messages");
-            unreadCount += mpsNb;
-            popupContent.setMps(mpsNb);
-            if (mpsNb > 0) {
-        	    badgeBackGroundColor = [0,0,255,255];
-            }
+          var mpsNb = HFR.parseMps(content)
+          unreadCount += mpsNb
+          popupContent.setMps(mpsNb);
+          if (mpsNb > 0) {
+            badgeBackGroundColor = [0,0,255,255];
+          } else {
+        	  badgeBackGroundColor = [255,0,0,255];
           }
         }
         chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
         if (bg.cats == null || bg.cats.length < 3) {
           bg.cats = new Array();
+          //parseCats(content) #return cats Array
           matches = CATS_MASTER_REX.exec(content);
           if (matches!=null) {
             var catsString = matches[0];
