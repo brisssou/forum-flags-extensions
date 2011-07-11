@@ -1,34 +1,104 @@
-function Site () {
-  this.name = '',
-  /*
-var HFR_MY_DRAPS = HFR + "/forum1f.php?config=hfr.inc&owntopic=1&new=0&nojs=0";
-var HFR_MY_FAVS = HFR + "/forum1f.php?config=hfr.inc&owntopic=3&new=0&nojs=0";
-var HFR_MP = HFR + "/forum1f.php?config=hfr.inc&cat=prive";
-var HFR_SETUP_THEME = HFR + "/setperso.php?config=hfr.inc";
-//</a></td><td class="sujetCase4"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=165&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0" class="cCatTopic">165</a></td><td class="sujetCase5"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=158&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0#t627721"><img src="http://forum-images.hardware.fr/themes_static/images_forum/1/favoris.gif" title="Aller au dernier message lu sur ce sujet (p.158)
-var UNREAD_REX = /title="Sujet n.\d+">([^<]+).+sujetCase5"><a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
-var NB_PAGES_REX = /cCatTopic">(\d+)<\/a>/;
-var MP_REX = /class="red">Vous avez (\d*) nouveau/;
-var BG_COLOR_REX = /<input name="inputcouleurTabHeader" .* value="(.*)"/
-
-var CATS_MASTER_REX = /<select name="cat"(.+)<\/select>/;
-var CATS_REX = /<option value="([^"]+)" >([^<]+)/g;
-
-var ENTRY_URL_REX = /cat=(\d+)&amp;(subcat=(\d+)&amp;)?post=(\d+)&amp;page=(\d+)/;
-  */
-  this.mpsNb = 0
+function Site (name, hostAndBase, config) {
+  this.name = name;
+  this.hostAndBase = hostAndBase;
+  this.config = config;
   
-  PopupContent.prototype.add = function(title, cat, post, href, nbUnread) {
-    this.entries.push({title:title, cat:cat, post:post, href:href, nbUnread:nbUnread});
-  },
-  
-  PopupContent.prototype.setMps = function(mpsNb) {
-    this.mpsNb = mpsNb;
-  },
-  
-  PopupContent.prototype.clear = function() {
-    this.entries = new Array();
-    this.mpsNb = 0;
+  Site.prototype.getBaseUrl = function() {
+    return "http://"+this.hostAndBase+"/forum1.php?config="+this.config;
   }
-  
+  Site.prototype.getOwnUrl = function(own) {
+    return this.getBaseUrl()+"&owntopic="+own
+  }
+  Site.prototype.getOwnCatUrl = function(cat) {
+    return this.getOwnUrl(1)+"&cat="+cat;
+  }
+  Site.prototype.getCatUrl = function(cat) {
+    return this.getOwnUrl(1)+"&cat="+cat;
+  }
+  Site.prototype.getDrapsUrl = function() {
+    return this.getOwnUrl(1);
+  }
+  Site.prototype.getFavsUrl = function() {
+    return this.getOwnUrl(3);
+  }
+  Site.prototype.getMpsUrl = function() {
+    return this.getCatUrl('prive');
+  }
+  /*To Be implemented*/
+  Site.prototype.getSetupUrl = function() {
+    return null;
+  }
+  Site.prototype.parseUnread = function(content, muted, popupContent) {
+    return null;
+  }
+  Site.prototype.parseMps = function(content) {
+    return null;
+  }
+  Site.prototype.parseCats = function(content) {
+    return null;
+  }
 }
+
+function Hfr() {
+  Hfr.prototype = new Site('HRF', "forum.hardware.fr", "hfr.inc");
+  this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5"><a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+  this.entryUrlRex = /cat=(\d+)&amp;(subcat=(\d+)&amp;)?post=(\d+)&amp;page=(\d+)/;
+  this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
+  this.mpRex = /class="red">Vous avez (\d*) nouveau/;
+  this.bgColorRex = /<input name="inputcouleurTabHeader" .* value="(.*)"/;
+  this.catsMasterRex = /<select name="cat"(.+)<\/select>/;
+  this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
+  Hfr.getSetupUrl = function() {
+    return "http://"+this.hostAndBase+"/setperso.php?config="+this.config;
+  }
+  Hfr.prototype.parseUnread = function(content, muted) {
+    var matches = null;
+    var unreads = Array();
+    while (matches = this.unreadRex.exec(content)) {
+      debug("found one");
+      var url = matches[2];
+      var urlMatch = this.entryUrlRex.exec(url);
+      if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
+        var topicNbPages = 1;
+        var nbPages = null;
+        if (nbPages = this.nbPagesRex.exec(matches[0])) {
+          topicNbPages = parseInt(nbPages[1]);
+        }
+        unreads.push({title:matches[1], cat:urlMatch[1], post:urlMatch[4], href:url, nbUnread:topicNbPages - parseInt(matches[3])});
+      } else {
+        debug("... but a muted one");
+      }
+    }
+    return unreads;
+  }
+  Hfr.prototype.parseMps = function(content) {
+    var mps = this.mpRex.exec(content);
+    var mpsNb = 0;
+    if (mps != null) {
+      mpsNb = parseInt(mps[1]);
+      if (mpsNb == NaN) mpsNb = 0;
+      debug("found "+mpsNb+" private messages");
+    }
+    return mpsNb;
+  }
+}
+  /*
+  var HFR = "http://www.infos-du-net.com";
+var HFR_MY_DRAPS = HFR + "/forum/forum1f.php?config=infosdunet.inc&owntopic=1&new=0&nojs=0";
+var HFR_MY_FAVS = HFR +  "/forum/forum1f.php?config=infosdunet.inc&owntopic=3&new=0&nojs=0";
+var HFR_MP = HFR + "/forum/forum1.php?config=infosdunet.inc&cat=prive";
+var HFR_SETUP_THEME = HFR + "/forum/setperso.php?config=infosdunet.inc";
+var DIRECT_CAT_LINK = HFR + "/forum/forum1.php?config=infosdunet.inc&owntopic=1&cat=";
+
+//</a></td><td class="sujetCase4"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=165&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0" class="cCatTopic">165</a></td><td class="sujetCase5"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=158&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0#t627721"><img src="http://forum-images.hardware.fr/themes_static/images_forum/1/favoris.gif" title="Aller au dernier message lu sur ce sujet (p.158)
+var UNREAD_REX_PACK = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+var UNREAD_REX = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+var NB_PAGES_REX = /cCatTopic">(\d+)<\/a>/;
+var MP_REX = />Messages priv.s \((\d+)\)<\/a>/;
+var BG_COLOR_REX = /<input name="inputcouleurTabHeader" [\s\S]* value="([\s\S]*)"/
+
+var CATS_MASTER_REX = /<select.*name="cat"([\s\S]+)<\/select>/;
+var CATS_REX = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+
+var ENTRY_URL_REX = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
+  */
