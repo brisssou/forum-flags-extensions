@@ -7,13 +7,13 @@ function Site (name, hostAndBase, config, defaultColor, minRefreshTime, fragment
   this.fragment = fragment;
   
   Site.prototype.getBaseUrl = function() {
-    return "/forum1f.php?config="+this.config;
+    return "/forum1f.php?config="+this.config+this.fragment;
   }
   Site.prototype.getOwnUrl = function(own) {
     return this.getBaseUrl()+"&owntopic="+own;
   }
   Site.prototype.getOwnCatUrl = function(cat) {
-    return this.getFullUrl("/forum1.php?config="+this.config+"&owntopic=1&cat="+cat);
+    return this.getFullUrl("/forum1.php?config="+this.config+this.fragment+"&owntopic=1&cat="+cat);
   }
   Site.prototype.getDrapsUrl = function() {
     return this.getFullUrl(this.getOwnUrl(1));
@@ -38,7 +38,7 @@ function Site (name, hostAndBase, config, defaultColor, minRefreshTime, fragment
     return null;
   }
   Site.prototype.getFullUrl = function(uri) {
-    return "http://"+this.hostAndBase+uri+this.fragment;
+    return "http://"+this.hostAndBase+uri;
   }
 }
 
