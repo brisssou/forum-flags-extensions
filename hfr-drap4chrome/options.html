@@ -24,10 +24,11 @@ function initControls() {
   refTimeInput.value = getPref(REFRESH_TIME);
   refTimeInput.onchange = function(event) {
     var refTime = parseInt(this.value);
+    var site = chrome.extension.getBackgroundPage().site;
     if (isNaN(refTime)) {
       document.getElementById("REFRESH_TIME.error").innerText = "Des entiers seulement, merci!";
-    } else if (refTime < 300) {
-      document.getElementById("REFRESH_TIME.error").innerText = "Merci de ne pas jouer au bourrin. 300 secondes minimum.";
+    } else if (refTime < site.minRefreshTime) {
+      document.getElementById("REFRESH_TIME.error").innerText = "Merci de ne pas jouer au bourrin. "+site.minRefreshTime+" secondes minimum.";
     } else {
       document.getElementById("REFRESH_TIME.error").innerText = "";
       setPref(REFRESH_TIME, refTime);

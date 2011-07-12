@@ -1,29 +1,28 @@
-function Site (name, hostAndBase, config, defaultColor) {
+function Site (name, hostAndBase, config, defaultColor, minRefreshTime, fragment) {
   this.name = name;
   this.hostAndBase = hostAndBase;
   this.config = config;
   this.defaultColor = defaultColor;
+  this.minRefreshTime = minRefreshTime;
+  this.fragment = fragment;
   
   Site.prototype.getBaseUrl = function() {
-    return "http://"+this.hostAndBase+"/forum1f.php?config="+this.config;
+    return "/forum1f.php?config="+this.config;
   }
   Site.prototype.getOwnUrl = function(own) {
-    return this.getBaseUrl()+"&owntopic="+own
+    return this.getBaseUrl()+"&owntopic="+own;
   }
   Site.prototype.getOwnCatUrl = function(cat) {
-    return this.getOwnUrl(1)+"&cat="+cat;
-  }
-  Site.prototype.getCatUrl = function(cat) {
-    return this.getOwnUrl(1)+"&cat="+cat;
+    return this.getFullUrl("/forum1.php?config="+this.config+"&owntopic=1&cat="+cat);
   }
   Site.prototype.getDrapsUrl = function() {
-    return this.getOwnUrl(1);
+    return this.getFullUrl(this.getOwnUrl(1));
   }
   Site.prototype.getFavsUrl = function() {
-    return this.getOwnUrl(3);
+    return this.getFullUrl(this.getOwnUrl(3));
   }
   Site.prototype.getMpsUrl = function() {
-    return this.getCatUrl('prive');
+    return this.getFullUrl(this.getOwnCatUrl('prive'));
   }
   /*To Be implemented*/
   Site.prototype.getSetupUrl = function() {
@@ -38,8 +37,8 @@ function Site (name, hostAndBase, config, defaultColor) {
   Site.prototype.parseCats = function(content) {
     return null;
   }
-  Site.prototype.getFullUrl = function(url) {
-    return "http://"+this.hostAndBase+url;
+  Site.prototype.getFullUrl = function(uri) {
+    return "http://"+this.hostAndBase+uri+this.fragment;
   }
 }
 
@@ -52,7 +51,7 @@ function Hfr() {
   this.catsMasterRex = /<select name="cat"(.+)<\/select>/;
   this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
 }
-Hfr.prototype = new Site('HFR', "forum.hardware.fr", "hfr.inc", '#2F3740');
+Hfr.prototype = new Site('HFR', "forum.hardware.fr", "hfr.inc", '#2F3740', 120, '&flags4chrome=1');
 Hfr.prototype.getSetupUrl = function() {
   return "http://"+this.hostAndBase+"/setperso.php?config="+this.config;
 }
