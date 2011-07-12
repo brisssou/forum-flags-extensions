@@ -19,6 +19,7 @@
     var catPrev = null;
     var catCur = null;
     var bgPage = chrome.extension.getBackgroundPage();
+    var site = bgPage.site;
     var popupContent = bgPage.popupContent;
     var bgColor = getPref(BG_COLOR);
     innerHtml += "<ul style=\"background-color: "+bgColor+"\">";
@@ -57,8 +58,7 @@
 	            innerHtml += catCur;
             } else {
         	    innerHtml += "goToPage('";
-	            innerHtml += DIRECT_CAT_LINK;
-	            innerHtml += catCur;
+	            innerHtml += site.getOwnCatUrl(catCur);
 	            innerHtml += "', true";
             }
             innerHtml += ")\">";

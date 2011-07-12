@@ -78,7 +78,9 @@ function openCat(cat) {
     }
 	  window.setTimeout(chrome.extension.getBackgroundPage().startRequest(), 500);
   } else {
-    goToPage(DIRECT_CAT_LINK + cat, false);
+    var bgPage = chrome.extension.getBackgroundPage();
+    var site = bgPage.site;
+    goToPage(site.getOwnCatUrl(cat), false);
   }
 }
 
