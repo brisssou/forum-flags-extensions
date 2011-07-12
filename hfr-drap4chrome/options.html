@@ -19,6 +19,7 @@ function setVisible(element, isVisible) {
 
 // Restores select box state to saved value from localStorage.
 function initControls() {
+  var site = chrome.extension.getBackgroundPage().site;
   var refTimeInput = document.getElementById("REFRESH_TIME");
   refTimeInput.value = getPref(REFRESH_TIME);
   refTimeInput.onchange = function(event) {
@@ -49,24 +50,27 @@ function initControls() {
   };
   maxOpenAllInput.onkeyup=maxOpenAllInput.onchange;
 
-  var bgColorInput = document.getElementById("BG_COLOR");
-  bgColorInput.value = getPref(BG_COLOR);
-  bgColorInput.onchange = function(event) {
-    setPref(BG_COLOR, this.value);
-  };
-  bgColorInput.onkeyup=bgColorInput.onchange;
+  if (site.getSetupUrl) {
+    var bgColorInput = document.getElementById("BG_COLOR");
+    bgColorInput.value = getPref(BG_COLOR);
+    bgColorInput.onchange = function(event) {
+      setPref(BG_COLOR, this.value);
+    };
+    bgColorInput.onkeyup=bgColorInput.onchange;
   
-  var getMyColorA = document.getElementById('getMyColor');
-  getMyColorA.onclick = function() {
-    getDefaultColorFromTheme(function(color) { bgColorInput.value = color;bgColorInput.onchange();} );
+    var getMyColorA = document.getElementById('getMyColor');
+    getMyColorA.onclick = function() {
+      getDefaultColorFromTheme(function(color) { bgColorInput.value = color;bgColorInput.onchange();} );
+    }
+  
+    var setDefaultColorA = document.getElementById('setDefaultColor');
+    setDefaultColorA.onclick = function() {
+      bgColorInput.value = PREFS_DEFAULT[BG_COLOR];
+      setPref(BG_COLOR, bgColorInput.value);
+    }
+  } else {
+    document.getElementById("BG_COLOR.div").parentNode.removeChild(document.getElementById("BG_COLOR.div"));
   }
-
-  var setDefaultColorA = document.getElementById('setDefaultColor');
-  setDefaultColorA.onclick = function() {
-    bgColorInput.value = PREFS_DEFAULT[BG_COLOR];
-    setPref(BG_COLOR, bgColorInput.value);
-  }
-
   var directLinkInput = document.getElementById('USE_DIRECT_LINK');
   directLinkInput.checked = getPref(USE_DIRECT_LINK);
   directLinkInput.onchange = function (event) {
@@ -231,7 +235,7 @@ function unmute(cat, topic) {
       <span><label for="NEW_TAB" title="Ne sera pas pris en compte pour l'action 'Ouvrir tout'.">Ouverture des liens dans un nouvel onglet :</label></span>
       <span><input type="checkbox" name="NEW_TAB" id="NEW_TAB"/></span>
     </div>
-    <div>
+    <div id="BG_COLOR.div">
       <span><label for="BG_COLOR">Couleur principale de l'extension (voir <a href="http://forum.hardware.fr/setperso.php?config=hfr.inc">ici</a> pour les codes couleurs) :</label></span>
       <span><input type="text" name="BG_COLOR" id="BG_COLOR"/></span>
       <a id="getMyColor" href="#">R&eacute;cup&eacute;rer la couleur du th&egrave;me perso</a> 

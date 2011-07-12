@@ -1,10 +1,11 @@
-function Site (name, hostAndBase, config) {
+function Site (name, hostAndBase, config, defaultColor) {
   this.name = name;
   this.hostAndBase = hostAndBase;
   this.config = config;
+  this.defaultColor = defaultColor;
   
   Site.prototype.getBaseUrl = function() {
-    return "http://"+this.hostAndBase+"/forum1.php?config="+this.config;
+    return "http://"+this.hostAndBase+"/forum1f.php?config="+this.config;
   }
   Site.prototype.getOwnUrl = function(own) {
     return this.getBaseUrl()+"&owntopic="+own
@@ -37,10 +38,12 @@ function Site (name, hostAndBase, config) {
   Site.prototype.parseCats = function(content) {
     return null;
   }
+  Site.prototype.getFullUrl = function(url) {
+    return "http://"+this.hostAndBase+url;
+  }
 }
 
 function Hfr() {
-  Hfr.prototype = new Site('HRF', "forum.hardware.fr", "hfr.inc");
   this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5"><a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
   this.entryUrlRex = /cat=(\d+)&amp;(subcat=(\d+)&amp;)?post=(\d+)&amp;page=(\d+)/;
   this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
@@ -48,39 +51,58 @@ function Hfr() {
   this.bgColorRex = /<input name="inputcouleurTabHeader" .* value="(.*)"/;
   this.catsMasterRex = /<select name="cat"(.+)<\/select>/;
   this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
-  Hfr.getSetupUrl = function() {
-    return "http://"+this.hostAndBase+"/setperso.php?config="+this.config;
-  }
-  Hfr.prototype.parseUnread = function(content, muted) {
-    var matches = null;
-    var unreads = Array();
-    while (matches = this.unreadRex.exec(content)) {
-      debug("found one");
-      var url = matches[2];
-      var urlMatch = this.entryUrlRex.exec(url);
-      if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
-        var topicNbPages = 1;
-        var nbPages = null;
-        if (nbPages = this.nbPagesRex.exec(matches[0])) {
-          topicNbPages = parseInt(nbPages[1]);
-        }
-        unreads.push({title:matches[1], cat:urlMatch[1], post:urlMatch[4], href:url, nbUnread:topicNbPages - parseInt(matches[3])});
-      } else {
-        debug("... but a muted one");
+}
+Hfr.prototype = new Site('HRF', "forum.hardware.fr", "hfr.inc", '#2F3740');
+Hfr.prototype.getSetupUrl = function() {
+  return "http://"+this.hostAndBase+"/setperso.php?config="+this.config;
+}
+Hfr.prototype.parseUnread = function(content, muted) {
+  var matches = null;
+  var unreads = Array();
+  while (matches = this.unreadRex.exec(content)) {
+    debug("found one");
+    var url = matches[2];
+    var urlMatch = this.entryUrlRex.exec(url);
+    if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
+      var topicNbPages = 1;
+      var nbPages = null;
+      if (nbPages = this.nbPagesRex.exec(matches[0])) {
+        topicNbPages = parseInt(nbPages[1]);
       }
+      unreads.push({title:matches[1], cat:urlMatch[1], post:urlMatch[4], href:url, nbUnread:topicNbPages - parseInt(matches[3])});
+    } else {
+      debug("... but a muted one");
     }
-    return unreads;
   }
-  Hfr.prototype.parseMps = function(content) {
-    var mps = this.mpRex.exec(content);
-    var mpsNb = 0;
-    if (mps != null) {
-      mpsNb = parseInt(mps[1]);
-      if (mpsNb == NaN) mpsNb = 0;
-      debug("found "+mpsNb+" private messages");
+  return unreads;
+}
+Hfr.prototype.parseMps = function(content) {
+  var mps = this.mpRex.exec(content);
+  var mpsNb = 0;
+  if (mps != null) {
+    mpsNb = parseInt(mps[1]);
+    if (mpsNb == NaN) mpsNb = 0;
+    debug("found "+mpsNb+" private messages");
+  }
+  return mpsNb;
+}
+
+Hfr.prototype.parseCats = function(content) {
+  cats = new Array();
+  //parseCats(content) #return cats Array
+  matches = this.catsMasterRex.exec(content);
+  if (matches!=null) {
+    var catsString = matches[0];
+    while (matches = this.catsRex.exec(catsString)) {
+      cats[matches[1]] = matches[2];
+      debug("new cat :"+matches[1]+"/"+matches[2]);
     }
-    return mpsNb;
   }
+  return cats;
+}
+
+Hfr.prototype.parseBgColor = function(content) {
+  return this.bgColorRex.exec(content);
 }
   /*
   var HFR = "http://www.infos-du-net.com";
