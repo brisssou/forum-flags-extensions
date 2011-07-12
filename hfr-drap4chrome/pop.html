@@ -101,6 +101,7 @@
     } else {
       document.getElementById('openAll').style.display='none';
     }
+    document.getElementById('goToSite').innerHTML = chrome.browserAction.getBackgroundPage().site.name
   }
 
   function htmlDecode(input){
@@ -116,7 +117,7 @@
     <ul id="right">
       <li><a href="javascript:openAll()" id="openAll">Tout ouvrir</a></li>
       <li><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
-      <li><a href="javascript:goToHfr()">HFR</a></li>
+      <li><a href="javascript:goToHfr()" id="goToSite"></a></li>
     </ul>
     <ul id="left">
       <li><a href="javascript:goToPage('options.html', false);">Options</a></li>

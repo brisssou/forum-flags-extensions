@@ -1,11 +1,8 @@
 <html>
 <head>
-<script src="prefs.js"></script>
-<script src="web.js"></script>
-<script src="pop.js"></script>
-<script src="behaviour.js"></script>
-<script src="log.js"></script>
+<!-- script Order is meaningful, don't break it! -->
 <script src="site.js"></script>
+<script src="pop.js"></script>
 <script type="text/javascript">
 
   var popupContent = new PopupContent();
@@ -15,6 +12,7 @@
   var cats = new Array();
   
   var requestTimeoutId = new Array();
+  var site = new Hfr();
 
   function initBG() {
     iconImage = document.getElementById('icon')
@@ -27,6 +25,10 @@
   }
   
 </script>
+<script src="prefs.js"></script>
+<script src="web.js"></script>
+<script src="behaviour.js"></script>
+<script src="log.js"></script>
 </head>
 <body onload="initBG()">
   <img id="icon" src="flag.gif"/>
