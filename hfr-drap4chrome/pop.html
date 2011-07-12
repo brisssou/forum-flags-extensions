@@ -101,7 +101,7 @@
     } else {
       document.getElementById('openAll').style.display='none';
     }
-    document.getElementById('goToSite').innerHTML = chrome.browserAction.getBackgroundPage().site.name
+    document.getElementById('goToSite').innerText = chrome.extension.getBackgroundPage().site.name;
   }
 
   function htmlDecode(input){

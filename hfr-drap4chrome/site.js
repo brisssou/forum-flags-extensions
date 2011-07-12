@@ -52,7 +52,7 @@ function Hfr() {
   this.catsMasterRex = /<select name="cat"(.+)<\/select>/;
   this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
 }
-Hfr.prototype = new Site('HRF', "forum.hardware.fr", "hfr.inc", '#2F3740');
+Hfr.prototype = new Site('HFR', "forum.hardware.fr", "hfr.inc", '#2F3740');
 Hfr.prototype.getSetupUrl = function() {
   return "http://"+this.hostAndBase+"/setperso.php?config="+this.config;
 }
