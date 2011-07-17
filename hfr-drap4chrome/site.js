@@ -103,23 +103,75 @@ Hfr.prototype.parseCats = function(content) {
 Hfr.prototype.parseBgColor = function(content) {
   return this.bgColorRex.exec(content);
 }
-  /*
-  var HFR = "http://www.infos-du-net.com";
-var HFR_MY_DRAPS = HFR + "/forum/forum1f.php?config=infosdunet.inc&owntopic=1&new=0&nojs=0";
-var HFR_MY_FAVS = HFR +  "/forum/forum1f.php?config=infosdunet.inc&owntopic=3&new=0&nojs=0";
-var HFR_MP = HFR + "/forum/forum1.php?config=infosdunet.inc&cat=prive";
-var HFR_SETUP_THEME = HFR + "/forum/setperso.php?config=infosdunet.inc";
-var DIRECT_CAT_LINK = HFR + "/forum/forum1.php?config=infosdunet.inc&owntopic=1&cat=";
 
-//</a></td><td class="sujetCase4"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=165&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0" class="cCatTopic">165</a></td><td class="sujetCase5"><a href="/forum2.php?config=hfr.inc&amp;cat=23&amp;subcat=529&amp;post=21184&amp;page=158&amp;p=1&amp;sondage=0&amp;owntopic=1&amp;trash=0&amp;trash_post=0&amp;print=0&amp;numreponse=0&amp;quote_only=0&amp;new=0&amp;nojs=0#t627721"><img src="http://forum-images.hardware.fr/themes_static/images_forum/1/favoris.gif" title="Aller au dernier message lu sur ce sujet (p.158)
-var UNREAD_REX_PACK = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
-var UNREAD_REX = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
-var NB_PAGES_REX = /cCatTopic">(\d+)<\/a>/;
-var MP_REX = />Messages priv.s \((\d+)\)<\/a>/;
-var BG_COLOR_REX = /<input name="inputcouleurTabHeader" [\s\S]* value="([\s\S]*)"/
+function Tgufr() {
+  this.unreadRexPack = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)[\s\S]*sujetCase9[\s\S]*<\/a>/g;
+  this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\).*sujetCase9.*<\/a>/g;
+  this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
+  this.nbPagesRex = /td class="sujetCase9">.*page=(\d+)&/;
+  this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
+  this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
+  this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+}
 
-var CATS_MASTER_REX = /<select.*name="cat"([\s\S]+)<\/select>/;
-var CATS_REX = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+Tgufr.prototype = new Site('Tom\'s Guide France', "www.infos-du-net.com/forum", "infosdunet.inc", '#1C92D2', 120, '&RSS999=1');
 
-var ENTRY_URL_REX = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
-  */
+Tgufr.prototype.parseUnread = function(content, muted) {
+  var matches = null;
+  var unreads = Array();
+  while (matches_pack = this.unreadRexPack.exec(content)) {
+    var pack = matches_pack[0].replace(/[\n\r\t]/g,' ').replace(/<\/tr>/g,'\n</tr>');
+        
+    while (matches = this.unreadRex.exec(pack)) {
+      debug("found one");
+      var url = matches[2];
+      var urlMatch = this.entryUrlRex.exec(url);
+      if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
+        var topicNbPages = 1;
+        var nbPages = null;
+        var matched = matches[0];
+        if (nbPages = this.nbPagesRex.exec(matched)) {
+          topicNbPages = parseInt(nbPages[1]);
+        }
+        unreads.push({title:matches[1], cat:urlMatch[1], post:urlMatch[4], href:url, nbUnread:topicNbPages - parseInt(matches[3])});
+      } else {
+        debug("... but a muted one");
+      }
+    }
+  }
+  return unreads;
+}
+Tgufr.prototype.parseCats = Hfr.prototype.parseCats;
+Tgufr.prototype.parseMps = Hfr.prototype.parseMps;
+
+function Thfr() {
+  this.unreadRexPack = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+  this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+  this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
+  this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
+  this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
+  this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
+  this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+}
+Thfr.prototype = new Site('Tom\'s Hardware France', "www.presence-pc.com/forum", "presencepc.inc", '#2F3740', 120, '&RSS999=1');
+Thfr.prototype.parseUnread = Tgufr.prototype.parseUnread;
+Thfr.prototype.parseCats = Tgufr.prototype.parseCats;
+Thfr.prototype.parseMps = Tgufr.prototype.parseMps;
+
+
+function Thde() {
+  this.unreadRexPack = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+  this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+  this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
+  this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
+  this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
+  this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
+  this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+}
+Thde.prototype = new Site('Tom\'s Hardware Deutschland', "http://www.tomshardware.de/foren", "", '#2F3740', 120, '&RSS999=1');
+Thde.prototype.getDrapsUrl = function() {
+  return this.getFullUrl('/contributed.html');
+}
+Thde.prototype.parseUnread = Tgufr.prototype.parseUnread;
+Thde.prototype.parseCats = Tgufr.prototype.parseCats;
+Thde.prototype.parseMps = Tgufr.prototype.parseMps;
