@@ -160,18 +160,58 @@ Thfr.prototype.parseMps = Tgufr.prototype.parseMps;
 
 
 function Thde() {
-  this.unreadRexPack = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
-  this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+  this.unreadRexPack = /<tr class="hlisting bgtoParticipate">[\s\S]+<div class="mod2 line">/g;
+  this.unreadRex = /<a [^\/]+>([^<]*)<\a>/g;
   this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
   this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
   this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
-  this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
-  this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+  this.catsMasterRex = /<span>Andere Kategorien([\s\S]+)Zone 15/;
+  this.catsRex = /<a[^']*'(.*)'.*>(.*)<\/a>/g;
 }
-Thde.prototype = new Site('Tom\'s Hardware Deutschland', "http://www.tomshardware.de/foren", "", '#2F3740', 120, '&RSS999=1');
+Thde.prototype = new Site('Tom\'s Hardware Deutschland', "www.tomshardware.de/foren", "", '#2F3740', 120, '&RSS999=1');
 Thde.prototype.getDrapsUrl = function() {
   return this.getFullUrl('/contributed.html');
 }
-Thde.prototype.parseUnread = Tgufr.prototype.parseUnread;
-Thde.prototype.parseCats = Tgufr.prototype.parseCats;
+Thde.prototype.parseUnread = function(content, muted) {
+  var matches = null;
+  var unreads = Array();
+  while (matches_pack = this.unreadRexPack.exec(content)) {
+    var pack = matches_pack[0].replace(/[\n\r\t]/g,' ').replace(/<\/tr>/g,'\n</tr>');
+        
+    while (matches = this.unreadRex.exec(pack)) {
+      debug("found one");
+      var url = matches[2];
+      var urlMatch = this.entryUrlRex.exec(url);
+      if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
+        var topicNbPages = 1;
+        var nbPages = null;
+        var matched = matches[0];
+        if (nbPages = this.nbPagesRex.exec(matched)) {
+          topicNbPages = parseInt(nbPages[1]);
+        }
+        unreads.push({title:matches[1], cat:urlMatch[1], post:urlMatch[4], href:url, nbUnread:topicNbPages - parseInt(matches[3])});
+      } else {
+        debug("... but a muted one");
+      }
+    }
+  }
+  return unreads;
+}
+Thde.prototype.parseCats = function(content) {
+  var cats = new Array();
+  //parseCats(content) #return cats Array
+  var matches = this.catsMasterRex.exec(content);
+  if (matches!=null) {
+    var catsString = matches[0];
+    while (matches = this.catsRex.exec(catsString)) {
+      var catHash = matches[1];
+      var catLbl = matches[2];
+      var catUrl = BOM.Utils.decode(catHash);
+      var catId = /foren-(\d+)\.html/.exec(catUrl)[1];
+      cats[catId] = catLbl;
+      debug("new cat :"+catId+"/"+catLbl);
+    }
+  }
+  return cats;
+}
 Thde.prototype.parseMps = Tgufr.prototype.parseMps;

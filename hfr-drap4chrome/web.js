@@ -117,6 +117,8 @@ function getUnreadCount(onSuccess, onError) {
         }
         handleSuccess(unreadCount);
         return;
+      } else {
+        return;
       }
 
       handleError();
