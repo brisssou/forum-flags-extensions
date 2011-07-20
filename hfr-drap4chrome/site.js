@@ -160,8 +160,8 @@ Thfr.prototype.parseMps = Tgufr.prototype.parseMps;
 
 
 function Thde() {
-  this.unreadRexPack = /<tr class="hlisting bgdoneParticipate">[\s\S]+<div class="mod2 line">/g;
-  this.unreadRex = /<a [^\/]+>([^<]*)<\a>/g;
+  this.unreadRexPack = /<tr class="hlisting bgto[^"]+">[\s\S]+<div class="mod2 line">/g;
+  this.unreadRex = /<span class="bgc topicPicto to(?:Read|Participate)">.*<a [^\/]+>([^<]*)<\a>/g;
   this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
   this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
   this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
@@ -171,6 +171,9 @@ function Thde() {
 Thde.prototype = new Site('Tom\'s Hardware Deutschland', "www.tomshardware.de/foren", "", '#2F3740', 120, '&RSS999=1');
 Thde.prototype.getDrapsUrl = function() {
   return this.getFullUrl('/contributed.html');
+}
+Thde.prototype.getFavsUrl = function() {
+  return this.getFullUrl('/read.html');
 }
 Thde.prototype.parseUnread = function(content, muted) {
   var matches = null;
