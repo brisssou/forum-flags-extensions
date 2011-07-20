@@ -160,7 +160,7 @@ Thfr.prototype.parseMps = Tgufr.prototype.parseMps;
 
 
 function Thde() {
-  this.unreadRexPack = /<tr class="hlisting bgtoParticipate">[\s\S]+<div class="mod2 line">/g;
+  this.unreadRexPack = /<tr class="hlisting bgdoneParticipate">[\s\S]+<div class="mod2 line">/g;
   this.unreadRex = /<a [^\/]+>([^<]*)<\a>/g;
   this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
   this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
