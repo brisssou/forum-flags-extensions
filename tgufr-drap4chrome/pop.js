@@ -6,6 +6,10 @@ function PopupContent () {
     this.entries.push({title:title, cat:cat, post:post, href:href, nbUnread:nbUnread});
   },
   
+  PopupContent.prototype.addAll = function(unreads) {
+    this.entries = this.entries.concat(unreads);
+  },
+  
   PopupContent.prototype.setMps = function(mpsNb) {
     this.mpsNb = mpsNb;
   },

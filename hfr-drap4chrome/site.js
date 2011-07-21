@@ -42,6 +42,8 @@ function Site (name, hostAndBase, config, defaultColor, minRefreshTime, fragment
   }
 }
 
+
+
 function Hfr() {
   this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5"><a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
   this.entryUrlRex = /cat=(\d+)&amp;(subcat=(\d+)&amp;)?post=(\d+)&amp;page=(\d+)/;
@@ -104,6 +106,8 @@ Hfr.prototype.parseBgColor = function(content) {
   return this.bgColorRex.exec(content);
 }
 
+
+
 function Tgufr() {
   this.unreadRexPack = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)[\s\S]*sujetCase9[\s\S]*<\/a>/g;
   this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\).*sujetCase9.*<\/a>/g;
@@ -144,6 +148,8 @@ Tgufr.prototype.parseUnread = function(content, muted) {
 Tgufr.prototype.parseCats = Hfr.prototype.parseCats;
 Tgufr.prototype.parseMps = Hfr.prototype.parseMps;
 
+
+
 function Thfr() {
   this.unreadRexPack = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
   this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
@@ -159,10 +165,43 @@ Thfr.prototype.parseCats = Tgufr.prototype.parseCats;
 Thfr.prototype.parseMps = Tgufr.prototype.parseMps;
 
 
-function Thde() {
-  this.unreadRexPack = /<tr class="hlisting bgto[^"]+">[\s\S]+<div class="mod2 line">/g;
-  this.unreadRex = /<span class="bgc topicPicto to(?:Read|Participate)">.*<a [^\/]+>([^<]*)<\a>/g;
+
+function Thuk() {
+  this.unreadRexPack = /title="Thread n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Go to the last post read in this thread \(p.(\d+)\)/g;
+  this.unreadRex = /title="Thread n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Go to the last post read in this thread \(p.(\d+)\)/g;
   this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
+  this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
+  this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
+  this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
+  this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+}
+Thuk.prototype = new Site('Tom\'s Hardware UK', "www.tomshardware.com/forum", "tomshardwareuk.inc", '#2F3740', 120, '&RSS999=1');
+Thuk.prototype.parseUnread = Tgufr.prototype.parseUnread;
+Thuk.prototype.parseCats = Tgufr.prototype.parseCats;
+Thuk.prototype.parseMps = Tgufr.prototype.parseMps;
+
+
+
+function Thus() {
+  this.unreadRexPack = /title="Thread n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Go to the last post read in this thread \(p.(\d+)\)/g;
+  this.unreadRex = /title="Thread n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Go to the last post read in this thread \(p.(\d+)\)/g;
+  this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
+  this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
+  this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
+  this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
+  this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+}
+Thus.prototype = new Site('Tom\'s Hardware', "www.tomshardware.com/forum", "tomshardwareus.inc", '#2F3740', 120, '&RSS999=1');
+Thus.prototype.parseUnread = Tgufr.prototype.parseUnread;
+Thus.prototype.parseCats = Tgufr.prototype.parseCats;
+Thus.prototype.parseMps = Tgufr.prototype.parseMps;
+
+
+
+function Thde() {
+  this.unreadRexPack = /<table class="topicListing tableListing">[\s\S]+<div class="mod2 line">/g;
+  this.unreadRex = /<span class="bgc topicPicto to(?:Read|Participate)">.*<a class="topicTitle" href="([^"]+)">([^<]+)<\/a>.*<a href="#" onmouseover="BOM.Utils.decodeLive\('([^']+)', this\);" class="crLink">/g;
+  this.entryUrlRex = /\/id-(\d+)\//;
   this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
   this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
   this.catsMasterRex = /<span>Andere Kategorien([\s\S]+)Zone 15/;
@@ -183,16 +222,26 @@ Thde.prototype.parseUnread = function(content, muted) {
         
     while (matches = this.unreadRex.exec(pack)) {
       debug("found one");
-      var url = matches[2];
+      /* url = 1
+         title = 2
+         cat_url_hash = 3
+      */
+      var catUrl = BOM.Utils.decode(matches[3])
+      var cat = -1;
+      var catMatch = null;
+      if (catMatch = /\/foren-(\d+)\.html/.exec(catUrl)) {
+        cat = catMatch[1];
+      }
+      var url = matches[1];
       var urlMatch = this.entryUrlRex.exec(url);
-      if (urlMatch != null && !isMuted(urlMatch[1], urlMatch[4])) {
-        var topicNbPages = 1;
+      if (urlMatch != null && !isMuted(cat, urlMatch[1])) {
+        /*var topicNbPages = 1;
         var nbPages = null;
         var matched = matches[0];
         if (nbPages = this.nbPagesRex.exec(matched)) {
           topicNbPages = parseInt(nbPages[1]);
-        }
-        unreads.push({title:matches[1], cat:urlMatch[1], post:urlMatch[4], href:url, nbUnread:topicNbPages - parseInt(matches[3])});
+        }*/
+        unreads.push({title:matches[2], cat:cat, post:0, href:url, nbUnread:0});
       } else {
         debug("... but a muted one");
       }

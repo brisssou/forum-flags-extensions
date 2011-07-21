@@ -12,9 +12,6 @@
   "permissions": [
     "tabs",
     "contextMenus",
-    "http://forum.hardware.fr/",
-    "http://www.infos-du-net.com/",
-    "http://www.presence-pc.com/",
-    "http://www.tomshardware.de/"
+    "http://forum.hardware.fr/"
   ]
 }
