@@ -1,0 +1,17 @@
+ {
+  "name": "Tom's Hardware DE - Mes sujets",
+  "version": "0.0.1",
+  "description": "Prüft, ob Ihre Laufflächen haben neue Beiträge.",
+  "background_page": "bg.html",
+  "options_page": "options.html",
+  "browser_action": {
+    "default_icon": "flag.gif",
+    "badge": ""
+  },
+  "icons": { "128": "128.png", "64": "64.png", "16": "icon.png" },
+  "permissions": [
+    "tabs",
+    "contextMenus",
+    "http://www.tomshardware.de/"
+  ]
+}

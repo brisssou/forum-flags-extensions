@@ -1,0 +1,38 @@
+<html>
+<head>
+<!-- script Order is meaningful, don't break it! -->
+<script src="http://m.bestofmedia.com/sfp/js/global.js"></script>
+<script src="site.js"></script>
+<script src="pop.js"></script>
+<script type="text/javascript">
+
+  var popupContent = new PopupContent();
+  var canvas;
+  var canvasContext;
+  var iconImage;
+  var cats = new Array();
+  
+  var requestTimeoutId = new Array();
+  var site = new Thuk();
+
+  function initBG() {
+    iconImage = document.getElementById('icon')
+    canvas = document.getElementById('canvas');
+    canvasContext = canvas.getContext('2d');
+    chrome.browserAction.onClicked.addListener(goToHfr);
+    //chrome.browserAction.onClicked.addListener(startRequest);
+    initBehaviour();
+    startRequest();
+  }
+  
+</script>
+<script src="prefs.js"></script>
+<script src="web.js"></script>
+<script src="behaviour.js"></script>
+<script src="log.js"></script>
+</head>
+<body onload="initBG()">
+  <img id="icon" src="flag.gif"/>
+  <canvas id="canvas" width="19" height="19"></canvas>
+</body>
+</html>
