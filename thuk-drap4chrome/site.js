@@ -175,7 +175,7 @@ function Thuk() {
   this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
-Thuk.prototype = new Site('Tom\'s Hardware UK', "www.tomshardware.com/forum", "tomshardwareuk.inc", '#AF261E', 120, '&RSS999=1');
+Thuk.prototype = new Site('Tom\'s Hardware UK', "www.tomshardware.co.uk/forum", "tomshardwareuk.inc", '#AF261E', 120, '&RSS999=1');
 Thuk.prototype.parseUnread = Tgufr.prototype.parseUnread;
 Thuk.prototype.parseCats = Tgufr.prototype.parseCats;
 Thuk.prototype.parseMps = Tgufr.prototype.parseMps;
