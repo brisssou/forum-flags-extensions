@@ -1,14 +1,14 @@
  {
-  "name": "Tom's Hardware France - Mes sujets",
+  "name": "Tom's Hardware FR - Mes sujets",
   "version": "0.0.1",
-  "description": "Vérifie si les sujets drapalisés sur tom's guide/info du net ont de nouveaux messages.",
+  "description": "Vérifie si vos sujets de Tom's Hardware.fr ont de nouveaux messages.",
   "background_page": "bg.html",
   "options_page": "options.html",
   "browser_action": {
     "default_icon": "flag.gif",
     "badge": ""
   },
-  "icons": { "128": "128.png", "64": "64.png", "16": "flag.gif" },
+  "icons": { "128": "128.png", "64": "64.png", "16": "icon.png" },
   "permissions": [
     "tabs",
     "contextMenus",

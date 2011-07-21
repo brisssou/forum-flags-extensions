@@ -7,12 +7,7 @@
 <script src="pop.js"></script>
 <script src="log.js"></script>
 <script src="behaviour.js"></script>
-<script type="text/javascript">
-
-
-
-  
-  
+<script type="text/javascript">  
   function mute(cat, post, title) {
     _mute(cat, post, title);
     initPopup();
@@ -24,14 +19,18 @@
     var catPrev = null;
     var catCur = null;
     var bgPage = chrome.extension.getBackgroundPage();
+    var site = bgPage.site;
     var popupContent = bgPage.popupContent;
     var bgColor = getPref(BG_COLOR);
     innerHtml += "<ul style=\"background-color: "+bgColor+"\">";
     var openCat = getPref(OPEN_CAT);
+    var thingsToOpen = false;
     if (popupContent.mpsNb > 0) {
+      thingsToOpen = true;
       catCur = 'prive';
       innerHtml += "<li id=\"mp\"><a href=\"javascript:goToPage('";
-      innerHtml += HFR_MP;
+      innerHtml += "http://forum.hardware.fr/forum1.php?config=hfr.inc&cat=";
+      innerHtml += catCur;
       innerHtml += "', true)\">";
       innerHtml += popupContent.mpsNb;
       innerHtml += ' ';
@@ -45,6 +44,7 @@
     for (var i = 0; i < popupContent.entries.length; i++) {
       entry = popupContent.entries[i];
       if (!isMuted(entry.cat, entry.post)) {
+        thingsToOpen = true;
         catCur = entry.cat;
         if (catCur != catPrev){
           if (catPrev != null) {
@@ -58,8 +58,7 @@
 	            innerHtml += catCur;
             } else {
         	    innerHtml += "goToPage('";
-	            innerHtml += DIRECT_CAT_LINK;
-	            innerHtml += catCur;
+	            innerHtml += site.getOwnCatUrl(catCur);
 	            innerHtml += "', true";
             }
             innerHtml += ")\">";
@@ -97,6 +96,12 @@
     innerHtml += "</ul>";
     document.getElementById('entries').innerHTML = innerHtml;
     document.getElementById('entries').style.maxHeight=screen.availHeight*.45;
+    if (thingsToOpen) {
+      document.getElementById('openAll').style.display='inline';
+    } else {
+      document.getElementById('openAll').style.display='none';
+    }
+    document.getElementById('goToSite').innerText = chrome.extension.getBackgroundPage().site.name;
   }
 
   function htmlDecode(input){
@@ -104,18 +109,15 @@
     e.innerHTML = input;
     return e.childNodes[0].nodeValue;
   }
-
 </script>
 </head>
 <body onload="initPopup()">
 <div id="popup">
   <div id="headbar">
     <ul id="right">
-      <li><a href="javascript:openAll()">Tout ouvrir</a></li>
-
+      <li><a href="javascript:openAll()" id="openAll">Tout ouvrir</a></li>
       <li><a href="javascript:chrome.extension.getBackgroundPage().startRequest()">Rafra&icirc;chir</a></li>
-      <li><a href="javascript:goToHfr()">Tom's Hardware FR</a></li>
-
+      <li><a href="javascript:goToHfr()" id="goToSite"></a></li>
     </ul>
     <ul id="left">
       <li><a href="javascript:goToPage('options.html', false);">Options</a></li>
