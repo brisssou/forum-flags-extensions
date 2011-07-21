@@ -118,7 +118,7 @@ function Tgufr() {
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
 
-Tgufr.prototype = new Site('Tom\'s Guide France', "www.infos-du-net.com/forum", "infosdunet.inc", '#1C92D2', 120, '&RSS999=1');
+Tgufr.prototype = new Site('Tom\'s Guide France', "www.infos-du-net.com", "infosdunet.inc", '#1C92D2', 120, '&RSS999=1');
 
 Tgufr.prototype.parseUnread = function(content, muted) {
   var matches = null;
@@ -147,6 +147,13 @@ Tgufr.prototype.parseUnread = function(content, muted) {
 }
 Tgufr.prototype.parseCats = Hfr.prototype.parseCats;
 Tgufr.prototype.parseMps = Hfr.prototype.parseMps;
+Tgufr.prototype.getBaseUrl = function() {
+    return "/forum/forum1f.php?config="+this.config+this.fragment;
+  }
+Tgufr.prototype.getOwnCatUrl = function(cat) {
+    return this.getFullUrl("/forum/forum1.php?config="+this.config+this.fragment+"&owntopic=1&cat="+cat);
+  }
+
 
 
 
@@ -159,10 +166,30 @@ function Thfr() {
   this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
-Thfr.prototype = new Site('Tom\'s Hardware France', "www.presence-pc.com/forum", "presencepc.inc", '#2F3740', 120, '&RSS999=1');
+Thfr.prototype = new Site('Tom\'s Hardware France', "www.presence-pc.com", "presencepc.inc", '#AF261E', 120, '&RSS999=1');
 Thfr.prototype.parseUnread = Tgufr.prototype.parseUnread;
 Thfr.prototype.parseCats = Tgufr.prototype.parseCats;
 Thfr.prototype.parseMps = Tgufr.prototype.parseMps;
+Thfr.prototype.getBaseUrl = Tgufr.prototype.getBaseUrl;
+Thfr.prototype.getOwnCatUrl = Tgufr.prototype.getOwnCatUrl;
+
+
+
+function ThfrInterne() {
+  this.unreadRexPack = /title="Sujet n.\d+">([^<]+)[\s\S]+sujetCase5">[\s\S]+<a href="([^"]+)[\s\S]+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+  this.unreadRex = /title="Sujet n.\d+">([^<]+).+sujetCase5">.+<a href="([^"]+).+Aller au dernier message lu sur ce sujet \(p.(\d+)\)/g;
+  this.entryUrlRex = /cat=(\d+)&(subcat=(\d+)&)?post=(\d+)&page=(\d+)/;
+  this.nbPagesRex = /cCatTopic">(\d+)<\/a>/;
+  this.mpRex = />Messages priv.s \((\d+)\)<\/a>/;
+  this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
+  this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
+}
+ThfrInterne.prototype = new Site('Tom\'s Hardware France Interne', "www.presence-pc.com", "interne.inc", '#AF261E', 120, '&RSS999=1');
+ThfrInterne.prototype.parseUnread = Thfr.prototype.parseUnread;
+ThfrInterne.prototype.parseCats = Thfr.prototype.parseCats;
+ThfrInterne.prototype.parseMps = Thfr.prototype.parseMps;
+ThfrInterne.prototype.getBaseUrl = Tgufr.prototype.getBaseUrl;
+ThfrInterne.prototype.getOwnCatUrl = Tgufr.prototype.getOwnCatUrl;
 
 
 
@@ -175,10 +202,12 @@ function Thuk() {
   this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
-Thuk.prototype = new Site('Tom\'s Hardware UK', "www.tomshardware.com/forum", "tomshardwareuk.inc", '#2F3740', 120, '&RSS999=1');
+Thuk.prototype = new Site('Tom\'s Hardware UK', "www.tomshardware.co.uk", "tomshardwareuk.inc", '#AF261E', 120, '&RSS999=1');
 Thuk.prototype.parseUnread = Tgufr.prototype.parseUnread;
 Thuk.prototype.parseCats = Tgufr.prototype.parseCats;
 Thuk.prototype.parseMps = Tgufr.prototype.parseMps;
+Thuk.prototype.getBaseUrl = Tgufr.prototype.getBaseUrl;
+Thuk.prototype.getOwnCatUrl = Tgufr.prototype.getOwnCatUrl;
 
 
 
@@ -191,10 +220,12 @@ function Thus() {
   this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
-Thus.prototype = new Site('Tom\'s Hardware', "www.tomshardware.com/forum", "tomshardwareus.inc", '#2F3740', 120, '&RSS999=1');
+Thus.prototype = new Site('Tom\'s Hardware', "www.tomshardware.com", "tomshardwareus.inc", '#AF261E', 120, '&RSS999=1');
 Thus.prototype.parseUnread = Tgufr.prototype.parseUnread;
 Thus.prototype.parseCats = Tgufr.prototype.parseCats;
 Thus.prototype.parseMps = Tgufr.prototype.parseMps;
+Thus.prototype.getBaseUrl = Tgufr.prototype.getBaseUrl;
+Thus.prototype.getOwnCatUrl = Tgufr.prototype.getOwnCatUrl;
 
 
 
@@ -207,12 +238,13 @@ function Thde() {
   this.catsMasterRex = /<span>Andere Kategorien([\s\S]+)Zone 15/;
   this.catsRex = /<a[^']*'(.*)'.*>(.*)<\/a>/g;
 }
-Thde.prototype = new Site('Tom\'s Hardware Deutschland', "www.tomshardware.de/foren", "", '#2F3740', 120, '&RSS999=1');
+Thde.prototype = new Site('Tom\'s Hardware Deutschland', "www.tomshardware.de", "", '#AF261E', 120, '&RSS999=1');
+Thde.prototype.getFullUrl = function(url) { return url;}
 Thde.prototype.getDrapsUrl = function() {
-  return this.getFullUrl('/contributed.html');
+  return 'http://www.tomshardware.de/foren/contributed.html';
 }
 Thde.prototype.getFavsUrl = function() {
-  return this.getFullUrl('/read.html');
+  return 'http://www.tomshardware.de/foren/read.html';
 }
 Thde.prototype.parseUnread = function(content, muted) {
   var matches = null;

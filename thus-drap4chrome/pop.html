@@ -29,8 +29,7 @@
       thingsToOpen = true;
       catCur = 'prive';
       innerHtml += "<li id=\"mp\"><a href=\"javascript:goToPage('";
-      innerHtml += "http://forum.hardware.fr/forum1.php?config=hfr.inc&cat=";
-      innerHtml += catCur;
+      innerHtml += site.getOwnCatUrl(catCur)
       innerHtml += "', true)\">";
       innerHtml += popupContent.mpsNb;
       innerHtml += ' ';
