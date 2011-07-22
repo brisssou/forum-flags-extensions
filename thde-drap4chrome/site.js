@@ -118,7 +118,7 @@ function Tgufr() {
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
 
-Tgufr.prototype = new Site('Tom\'s Guide France', "www.infos-du-net.com", "infosdunet.inc", '#1C92D2', 120, '&RSS999=1');
+Tgufr.prototype = new Site('Tom\'s Guide France', "www.infos-du-net.com", "infosdunet.inc", '#1C92D2', 120, '&xtor=RSS-9990');
 
 Tgufr.prototype.parseUnread = function(content, muted) {
   var matches = null;
@@ -166,7 +166,7 @@ function Thfr() {
   this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
-Thfr.prototype = new Site('Tom\'s Hardware France', "www.presence-pc.com", "presencepc.inc", '#AF261E', 120, '&RSS999=1');
+Thfr.prototype = new Site('Tom\'s Hardware France', "www.presence-pc.com", "presencepc.inc", '#AF261E', 120, '&xtor=RSS-9990');
 Thfr.prototype.parseUnread = Tgufr.prototype.parseUnread;
 Thfr.prototype.parseCats = Tgufr.prototype.parseCats;
 Thfr.prototype.parseMps = Tgufr.prototype.parseMps;
@@ -184,7 +184,7 @@ function ThfrInterne() {
   this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
-ThfrInterne.prototype = new Site('Tom\'s Hardware France Interne', "www.presence-pc.com", "interne.inc", '#AF261E', 120, '&RSS999=1');
+ThfrInterne.prototype = new Site('Tom\'s Hardware France Interne', "www.presence-pc.com", "interne.inc", '#AF261E', 120, '&xtor=RSS-9990');
 ThfrInterne.prototype.parseUnread = Thfr.prototype.parseUnread;
 ThfrInterne.prototype.parseCats = Thfr.prototype.parseCats;
 ThfrInterne.prototype.parseMps = Thfr.prototype.parseMps;
@@ -202,7 +202,7 @@ function Thuk() {
   this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
-Thuk.prototype = new Site('Tom\'s Hardware UK', "www.tomshardware.co.uk", "tomshardwareuk.inc", '#AF261E', 120, '&RSS999=1');
+Thuk.prototype = new Site('Tom\'s Hardware UK', "www.tomshardware.co.uk", "tomshardwareuk.inc", '#AF261E', 120, '&xtor=RSS-9990');
 Thuk.prototype.parseUnread = Tgufr.prototype.parseUnread;
 Thuk.prototype.parseCats = Tgufr.prototype.parseCats;
 Thuk.prototype.parseMps = Tgufr.prototype.parseMps;
@@ -220,7 +220,7 @@ function Thus() {
   this.catsMasterRex = /<select.*name="cat"([\s\S]+)<\/select>/;
   this.catsRex = /<option value="([^"]+)".*>([^"]+)<\/option>/g;
 }
-Thus.prototype = new Site('Tom\'s Hardware', "www.tomshardware.com", "tomshardwareus.inc", '#AF261E', 120, '&RSS999=1');
+Thus.prototype = new Site('Tom\'s Hardware', "www.tomshardware.com", "tomshardwareus.inc", '#AF261E', 120, '&xtor=RSS-9990');
 Thus.prototype.parseUnread = Tgufr.prototype.parseUnread;
 Thus.prototype.parseCats = Tgufr.prototype.parseCats;
 Thus.prototype.parseMps = Tgufr.prototype.parseMps;
@@ -238,7 +238,7 @@ function Thde() {
   this.catsMasterRex = /<span>Andere Kategorien([\s\S]+)Zone 15/;
   this.catsRex = /<a[^']*'(.*)'.*>(.*)<\/a>/g;
 }
-Thde.prototype = new Site('Tom\'s Hardware Deutschland', "www.tomshardware.de", "", '#AF261E', 120, '&RSS999=1');
+Thde.prototype = new Site('Tom\'s Hardware Deutschland', "www.tomshardware.de", "", '#AF261E', 120, '&xtor=RSS-9990');
 Thde.prototype.getFullUrl = function(url) { return url;}
 Thde.prototype.getDrapsUrl = function() {
   return 'http://www.tomshardware.de/foren/contributed.html';
