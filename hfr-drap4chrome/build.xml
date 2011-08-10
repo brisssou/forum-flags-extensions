@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ====================================================================== 
+ 2011-08-03 14:15:18																												
+
+ buildBomExtensions		
+ This script copies code from template-drap4chrome to t[gh].*-drap4chrome.
+ It then updates the version (in manifest.json) and build the extensions.
+ 
+ Every files from template is copied, except for bg.html, and all images.
+ manifest.json is updated
+							 
+ blaurencin																																
+ ====================================================================== -->
+<project name="buildBomExtensions" default="default">
+	<description>
+		This script copies code from template-drap4chrome to t[gh].*-drap4chrome.
+	</description>
+	<taskdef resource="net/sf/antcontrib/antlib.xml">
+		<classpath>
+			<pathelement location="${basedir}/ant_lib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+	<taskdef resource="net/sf/antcontrib/antcontrib.properties">
+		<classpath>
+			<pathelement location="${basedir}/ant_lib/ant-contrib-1.0b3.jar" />
+		</classpath>
+	</taskdef>
+	
+	
+	<property name="src" value="${basedir}/src"/>
+	<property name="pem" value="${basedir}/resources/pem"/>
+	<property name="versionFile" value="${src}/current_version"/>
+	<loadfile property="previousVersion" srcfile="${versionFile}"/>
+	<input addproperty="currentVersion" message="What is the new version? (previous was ${previousVersion})" defaultvalue="${previousVersion}"/>
+	<echo file="${versionFile}" message="${currentVersion}"/>
+	
+	<property name="target" value="${basedir}/target"/>
+	<property name="zip" value="${target}/zip"/>
+	<property name="crx" value="${target}/crx"/>
+	<property name="copy" value="${target}/copy"/>
+	
+	<dirset id="extensions" dir="${src}" includes="*-drap4chrome" excludes="template-drap4chrome" />
+	<fileset id="commonFiles" dir="${src}/template-drap4chrome/">
+		<patternset>
+			<include name="behaviour.js" />
+			<include name="log.js" />
+			<include name="options.html" />
+			<include name="pop.html" />
+			<include name="pop.js" />
+			<include name="prefs.js" />
+			<include name="site.js" />
+			<include name="style.css" />
+			<include name="web.js" />
+			<include name="_locales/**" />
+		</patternset>
+	</fileset>
+		
+
+	<!-- ================================= 
+				target: default							
+			 ================================= -->
+	<target name="default" >
+		<echo>Available targets: clean copy crx zip</echo>
+	</target>
+
+	<target name="copy" description="This script copies code from template-drap4chrome to t[gh].*-drap4chrome.">
+		<echo>Copiing...</echo>
+		<mkdir dir="${copy}"/>
+		<for param="ext-dir">
+			<dirset refid="extensions" />
+			<sequential>
+				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/]*)$" select="\1" global="true" override="true" />
+				<echo message="--Copiing to ${copy}/${ext-dir-name}" />
+				<copy todir="${copy}/${ext-dir-name}">
+					<fileset dir="${src}/${ext-dir-name}" />
+				</copy>
+				<copy todir="${copy}/${ext-dir-name}">
+					<fileset refid="commonFiles" />
+				</copy>
+				<replace file="${copy}/${ext-dir-name}/manifest.json" token="@VERSION@" value="${currentVersion}"/>
+			</sequential>
+		</for>
+		<echo>Done</echo>
+	</target>
+
+	<target name="crx" description="Compiles the extensions as CRXs, available in target/crx." depends="copy">
+		<echo>Creating extensions CRX...</echo>
+		<for param="ext-dir">
+			<dirset refid="extensions" />
+			<sequential>
+				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/]*)$" select="\1" global="true" override="true" />
+				<exec executable="google-chrome" os="Linux">
+					<arg value="--pack-extension=${copy}/${ext-dir-name}" />
+					<arg value="--pack-extension-key=${pem}/${ext-dir-name}.pem" />
+				</exec>
+				<exec executable="chrome" os="Windows">
+					<arg value="--pack-extension=${copy}/${ext-dir-name}" />
+					<arg value="--pack-extension-key=${pem}/${ext-dir-name}.pem" />
+				</exec>
+			</sequential>
+		</for>
+		<mkdir dir="${crx}"/>
+		<move todir="${crx}">
+			<fileset dir="${copy}" includes="*crx"/>
+		</move>
+		<echo>Done</echo>
+	</target>
+
+	<target name="zip" description="Zip the extensions, available in target/zip, so they can be uploaded to Chrome Gallery." depends="copy">
+		<echo>Zipping...</echo>
+		<mkdir dir="${zip}"/>
+		<for param="ext-dir">
+			<dirset refid="extensions" />
+			<sequential>
+				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/]*)$" select="\1" global="true" override="true" />
+				<zip destfile="${zip}/${ext-dir-name}.zip" basedir="${copy}/${ext-dir-name}" />
+			</sequential>
+		</for>
+		<echo>Done</echo>
+	</target>
+
+	<target name="clean" description="This script copies code from template-drap4chrome to t[gh].*-drap4chrome.">
+		<echo message="Cleaning..." />
+		<delete dir="${target}" />
+		<echo message="Done" />
+	</target>
+
+</project>
