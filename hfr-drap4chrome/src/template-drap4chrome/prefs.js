@@ -31,38 +31,38 @@ PREFS_DEFAULT[GET_TOPICS] = 'true';
 PREFS_DEFAULT[GET_MPS] = 'true';
 
 function getPref(name) {
-  var value = localStorage[name];
-  if (value == null) value = PREFS_DEFAULT[name];
-  if (value == 'true' || value == 'false') value = eval(value);
-  return value;
+	var value = localStorage[name];
+	if (value == null) value = PREFS_DEFAULT[name];
+	if (value == 'true' || value == 'false') value = eval(value);
+	return value;
 }
 
 function setPref(name, value) {
-  localStorage[name] = value;
+	localStorage[name] = value;
 }
 
 function _mute(cat, topic, title) {
-  if (! isMuted(cat, topic)) {
-    setPref(MUTED_TOPICS, getPref(MUTED_TOPICS) + cat + '#' + topic + '#' + title + '|');
-  }
+	if (! isMuted(cat, topic)) {
+		setPref(MUTED_TOPICS, getPref(MUTED_TOPICS) + cat + '#' + topic + '#' + title + '|');
+	}
 }
 function _unmute(cat, topic) {
-  if (isMuted(cat, topic)) {
-    var newMuted = '';
-    var muted = null;
-    var mutedTopics = getPref(MUTED_TOPICS).split('|');
-    for (var i = 0; i < mutedTopics.length; i++) {
-      muted = mutedTopics[i];
-      if (muted.indexOf('#') != -1) {
-        var splitted = muted.split('#');
-        if (splitted[0] != cat || splitted[1] != topic)
-          newMuted += splitted[0]+"#"+splitted[1]+"#"+splitted[2]+"|";
-      }
-    }
-    setPref(MUTED_TOPICS, newMuted);
-  }
+	if (isMuted(cat, topic)) {
+		var newMuted = '';
+		var muted = null;
+		var mutedTopics = getPref(MUTED_TOPICS).split('|');
+		for (var i = 0; i < mutedTopics.length; i++) {
+			muted = mutedTopics[i];
+			if (muted.indexOf('#') != -1) {
+				var splitted = muted.split('#');
+				if (splitted[0] != cat || splitted[1] != topic)
+					newMuted += splitted[0]+"#"+splitted[1]+"#"+splitted[2]+"|";
+			}
+		}
+		setPref(MUTED_TOPICS, newMuted);
+	}
 }
 
 function isMuted(cat, topic) {
-  return getPref(MUTED_TOPICS).indexOf(cat + '#' + topic + '#') != -1;
+	return getPref(MUTED_TOPICS).indexOf(cat + '#' + topic + '#') != -1;
 }
