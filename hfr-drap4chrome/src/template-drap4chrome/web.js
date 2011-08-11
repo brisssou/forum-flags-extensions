@@ -154,17 +154,18 @@ function scheduleRequest() {
 	}
 	bgPage.requestTimeoutId.push(bgPage.window.setTimeout(startRequest, getPref(REFRESH_TIME) * 1000));
 	debug("request scheduled for " + getPref(REFRESH_TIME) + "s");
+	debug("Next request will be on "+ new Date(new Date().getTime() + getPref(REFRESH_TIME) * 1000));
 }
 
 function startRequest() {
 	getUnreadCount(
 		function(count) {
+			scheduleRequest();
 			//loadingAnimation.stop();
 			updateBadge(count);
 			// si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
 			var popup = chrome.extension.getViews({type:'popup'})[0];
 			if (popup != null) popup.initPopup();
-			scheduleRequest();
 		},
 		function() {
 			//loadingAnimation.stop();
