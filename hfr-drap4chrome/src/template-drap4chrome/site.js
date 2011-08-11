@@ -37,7 +37,7 @@ function Site (name, hostAndBase, config, defaultColor, minRefreshTime, fragment
 		return this.getFullUrl(this.getOwnUrl(3));
 	};
 	Site.prototype.getMpsUrl = function() {
-		return this.getFullUrl("/forum1.php?config="+this.config+"&owntopic=1&cat=prive");
+		return this.getFullUrl("/forum1.php?config="+this.config+"&cat=prive");
 	};
 	/*To Be implemented*/
 	Site.prototype.getSetupUrl = function() {
