@@ -9,9 +9,9 @@ function info(msg) {
 }
 
 function error(msg) {
-	console.error("[ERROR]", msg);
+	log("ERROR", msg);
 }
 
 function log(lvl, msg) {
-	console.log("[" + lvl + "] "+msg);
+	console.log(new Date() + " [" + lvl + "] "+msg);
 }
