@@ -103,7 +103,7 @@ function getUnreadCount(onSuccess, onError) {
 				var content = xhr.responseText;
 				if (site.notConnectedRex.exec(content)) {
 					webkitNotifications.createNotification(
-					  '64.png',  // icon url - can be relative
+					  '48.png',  // icon url - can be relative
 					  chrome.i18n.getMessage("extName"),  // notification title
 					  chrome.i18n.getMessage("not_connected")  // notification body text
 					).show();
