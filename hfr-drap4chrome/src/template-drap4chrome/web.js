@@ -101,44 +101,55 @@ function getUnreadCount(onSuccess, onError) {
 			if (xhr.responseText) {
 				debug("There is a responseText  - size="+xhr.responseText.length);
 				var content = xhr.responseText;
-				//parse cats if needed
-				if (bg.cats == null || bg.cats.length < 3) {
-					bg.cats = site.parseCats(content);
-				}
-				// do nbunread
-				var unreadCount = 0;
-				var popupContent = bg.popupContent;
-				popupContent.clear();
-				var badgeBackGroundColor = [255,0,0,255];
-				if (getPref(GET_TOPICS)) {
-					debug("parsing topics");
-					var unreads = site.parseUnread(content, getPref(MUTED_TOPICS).split('|'));
-					debug("done parsing topics");
-					popupContent.addAll(unreads);
-					unreadCount = unreads.length;
-				}
-				if (getPref(GET_MPS)) {
-					debug("parsing mps");
-					if (site.parsableMpsUrl) {
-						debug("using specific mp url");
-						var synch = new XMLHttpRequest();
-						synch.open("GET", site.getFullUrl(site.parsableMpsUrl), false);                             
-						synch.send(null);
-						content = synch.responseText;
+				if (site.notConnectedRex.exec(content)) {
+					webkitNotifications.createNotification(
+					  '64.png',  // icon url - can be relative
+					  chrome.i18n.getMessage("extName"),  // notification title
+					  chrome.i18n.getMessage("not_connected")  // notification body text
+					).show();
+					debug("nUser not connected");
+					handleError();
+				} else {
+
+					//parse cats if needed
+					if (bg.cats == null || bg.cats.length < 3) {
+						bg.cats = site.parseCats(content);
 					}
-					var mpsNb = site.parseMps(content);
-					debug("done parsing mps");
-					unreadCount += mpsNb;
-					popupContent.setMps(mpsNb);
-					if (mpsNb > 0) {
-						badgeBackGroundColor = [0,0,255,255];
-					} else {
-						badgeBackGroundColor = [255,0,0,255];
+					// do nbunread
+					var unreadCount = 0;
+					var popupContent = bg.popupContent;
+					popupContent.clear();
+					var badgeBackGroundColor = [255,0,0,255];
+					if (getPref(GET_TOPICS)) {
+						debug("parsing topics");
+						var unreads = site.parseUnread(content, getPref(MUTED_TOPICS).split('|'));
+						debug("done parsing topics");
+						popupContent.addAll(unreads);
+						unreadCount = unreads.length;
 					}
+					if (getPref(GET_MPS)) {
+						debug("parsing mps");
+						if (site.parsableMpsUrl) {
+							debug("using specific mp url");
+							var synch = new XMLHttpRequest();
+							synch.open("GET", site.getFullUrl(site.parsableMpsUrl), false);                             
+							synch.send(null);
+							content = synch.responseText;
+						}
+						var mpsNb = site.parseMps(content);
+						debug("done parsing mps");
+						unreadCount += mpsNb;
+						popupContent.setMps(mpsNb);
+						if (mpsNb > 0) {
+							badgeBackGroundColor = [0,0,255,255];
+						} else {
+							badgeBackGroundColor = [255,0,0,255];
+						}
+					}
+					chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
+					debug("should now handle success");
+					handleSuccess(unreadCount);
 				}
-				chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
-				debug("should now handle success");
-				handleSuccess(unreadCount);
 				return;
 			}
 			debug("no response text...");

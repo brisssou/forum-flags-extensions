@@ -190,7 +190,11 @@
 		"description": "bookmarks"
 	},
 	"cyan_flags": {
-		"message": "Drapeaux cyans'",
+		"message": "Drapeaux cyans",
 		"description": "cyan flags"
+	},
+	"not_connected": {
+		"message": "You are not connected to the forum!",
+		"description": "Not connected message"
 	}
 }
