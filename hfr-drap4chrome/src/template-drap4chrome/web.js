@@ -14,20 +14,20 @@ function getFullUrl(url) {
 
 function getDefaultColorFromTheme(onSuccess, onError) {
 	var xhr = new XMLHttpRequest();
-	var abortTimerId = window.setTimeout(function() {
+	var abortTimerId = bg.window.setTimeout(function() {
 			xhr.abort();
 		}, requestTimeout);
 
 	function handleSuccess(color) {
 		requestFailureCount = 0;
-		window.clearTimeout(abortTimerId);
+		bg.window.clearTimeout(abortTimerId);
 		if (onSuccess)
 			onSuccess(color);
 	}
 
 	function handleError() {
 		++requestFailureCount;
-		window.clearTimeout(abortTimerId);
+		bg.window.clearTimeout(abortTimerId);
 		if (onError)
 			onError();
 	}
@@ -65,21 +65,26 @@ function getDefaultColorFromTheme(onSuccess, onError) {
 }
 
 function getUnreadCount(onSuccess, onError) {
+	debug("requesting unread");
 	var xhr = new XMLHttpRequest();
-	var abortTimerId = window.setTimeout(function() {
+	var abortTimerId = bg.window.setTimeout(function() {
 			xhr.abort();	// synchronously calls onreadystatechange
 		}, requestTimeout);
 
 	function handleSuccess(count) {
+		debug("Handling success");
 		requestFailureCount = 0;
-		window.clearTimeout(abortTimerId);
-		if (onSuccess)
+		bg.window.clearTimeout(abortTimerId);
+		if (onSuccess) {
+			debug("Should now really go to success");
 			onSuccess(count);
+		}
 	}
 
 	function handleError() {
+		debug("Handling error");
 		++requestFailureCount;
-		window.clearTimeout(abortTimerId);
+		bg.window.clearTimeout(abortTimerId);
 		if (onError)
 			onError();
 	}
@@ -87,10 +92,14 @@ function getUnreadCount(onSuccess, onError) {
 	try {
 		updateBadge();
 		xhr.onreadystatechange = function(){
-			if (xhr.readyState != 4)
+			if (xhr.readyState != 4) {
+				debug("state was not 4, it was "+xhr.readyState);
 				return;
+			}
+			debug("state was 4");
 			var site = bg.site;
 			if (xhr.responseText) {
+				debug("There is a responseText  - size="+xhr.responseText.length);
 				var content = xhr.responseText;
 				//parse cats if needed
 				if (bg.cats == null || bg.cats.length < 3) {
@@ -102,19 +111,23 @@ function getUnreadCount(onSuccess, onError) {
 				popupContent.clear();
 				var badgeBackGroundColor = [255,0,0,255];
 				if (getPref(GET_TOPICS)) {
+					debug("parsing topics");
 					var unreads = site.parseUnread(content, getPref(MUTED_TOPICS).split('|'));
+					debug("done parsing topics");
 					popupContent.addAll(unreads);
 					unreadCount = unreads.length;
 				}
 				if (getPref(GET_MPS)) {
-					
+					debug("parsing mps");
 					if (site.parsableMpsUrl) {
+						debug("using specific mp url");
 						var synch = new XMLHttpRequest();
 						synch.open("GET", site.getFullUrl(site.parsableMpsUrl), false);                             
 						synch.send(null);
 						content = synch.responseText;
 					}
 					var mpsNb = site.parseMps(content);
+					debug("done parsing mps");
 					unreadCount += mpsNb;
 					popupContent.setMps(mpsNb);
 					if (mpsNb > 0) {
@@ -124,12 +137,11 @@ function getUnreadCount(onSuccess, onError) {
 					}
 				}
 				chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
+				debug("should now handle success");
 				handleSuccess(unreadCount);
 				return;
-			} else {
-				return;
 			}
-
+			debug("no response text...");
 			handleError();
 		};
 
@@ -146,6 +158,7 @@ function getUnreadCount(onSuccess, onError) {
 }
 
 function scheduleRequest() {
+	debug("Scheduling request");
 	var bgPage = bg;
 	if (bgPage.requestTimeoutId.length != 0) {
 		for (var i = 0; i < bgPage.requestTimeoutId.length;	bgPage.window.clearTimeout(bgPage.requestTimeoutId[i++]));
@@ -158,8 +171,10 @@ function scheduleRequest() {
 }
 
 function startRequest() {
+	debug("Starting request");
 	getUnreadCount(
 		function(count) {
+			debug("Everything was successful");
 			scheduleRequest();
 			//loadingAnimation.stop();
 			updateBadge(count);
@@ -168,6 +183,7 @@ function startRequest() {
 			if (popup != null) popup.initPopup();
 		},
 		function() {
+			debug("something REALLY bad happened");
 			//loadingAnimation.stop();
 			//showLoggedOut();
 			scheduleRequest();
