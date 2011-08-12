@@ -9,7 +9,7 @@
 		"default_icon": "flag.gif",
 		"badge": ""
 	},
-	"icons": { "128": "128.png", "64": "64.png", "16": "icon.png" },
+	"icons": { "128": "128.png", "48": "48.png", "16": "icon.png" },
 	"permissions": [
 		"tabs",
 		"contextMenus",

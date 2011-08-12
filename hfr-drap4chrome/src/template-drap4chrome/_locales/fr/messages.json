@@ -194,7 +194,7 @@
 		"description": "cyan flags"
 	},
 	"not_connected": {
-		"message": "Vous n'êtes pas connectés au forum !",
+		"message": "Vous n'êtes pas connectés !",
 		"description": "Not connected message"
 	}
 }
