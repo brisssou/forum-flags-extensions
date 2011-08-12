@@ -7,12 +7,33 @@
 	text-align: center;
 	border: solid blue 1;
 	-webkit-border-radius: 10;
-	background-color:-webkit-gradient(
-			linear,
-			left bottom,
-			left top,
-			color-stop(0, rgb(255,255,255)),
-			color-stop(0.55, rgb(51,102,153)));
+}
+
+#prefs div {
+	clear: both;
+	font-size: small;
+}
+
+#prefs div label {
+	margin-bottom: 10px;
+	width: 50%; 
+	float: left;
+	text-align: right;
+}
+
+#prefs div label[title] {
+	cursor: help;
+}
+
+#prefs div input {
+	margin-left: 15px;
+	width: 5%;
+	text-align: left;
+	float: left;
+}
+#prefs div a {
+	text-align: left;
+	float: left;
 }
 
 #prefs .error {
@@ -20,9 +41,21 @@
 	font-weight: bold;
 }
 
+#muted {
+	width: 50%;
+}
+
 #muted	li{
 	list-style-type: none;
+	text-align: right;
 }
+
+#muted_label {
+	font-size: medium;
+	font-weight: bold;
+	text-decoration: underline;
+}
+
 /*popup*/
 #popup {
 	max-height: 560px;
