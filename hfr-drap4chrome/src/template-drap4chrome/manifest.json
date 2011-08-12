@@ -13,6 +13,7 @@
 	"permissions": [
 		"tabs",
 		"contextMenus",
+		"notifications",
 		"http://www.infos-du-net.com/"
 	]
 }

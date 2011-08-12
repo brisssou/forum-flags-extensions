@@ -67,6 +67,7 @@ function Hfr() {
 	this.bgColorRex = /<input name="inputcouleurTabHeader" .* value="(.*)"/;
 	this.catsMasterRex = /<select name="cat"(.+)<\/select>/;
 	this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
+	this.notConnectedRex = /Aucun sujet que vous avez lu n'est connu/;
 }
 Hfr.prototype = new Site('HFR', "forum.hardware.fr", "hfr.inc", '#2F3740', 120, 'flags4chrome=1');
 Hfr.prototype.getSetupUrl = function() {
@@ -129,6 +130,7 @@ function MesDisc() {
 	this.bgColorRex = /<input name="inputcouleurTabHeader" .* value="(.*)"/;
 	this.catsMasterRex = /<select name="cat"(.+)<\/select>/;
 	this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
+	this.notConnectedRex = /Aucun sujet que vous avez lu n'est connu/;
 }
 MesDisc.prototype = new Site('Mes Discussions', "www.mesdiscussions.net", "md.inc", '#AF261E', 120, 'flags4chrome=1');
 MesDisc.prototype.parseUnread = Hfr.prototype.parseUnread;
@@ -147,6 +149,7 @@ function LesNum() {
 	this.bgColorRex = /<input name="inputcouleurTabHeader" .* value="(.*)"/;
 	this.catsMasterRex = /<select name="cat"(.+)<\/select>/;
 	this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
+	this.notConnectedRex = /Aucun sujet que vous avez lu n'est connu/;
 }
 LesNum.prototype = new Site('Les numériques', "www.lesnumeriques.com", "avis.inc", '#AF261E', 120, 'flags4chrome=1');
 LesNum.prototype.parseUnread = Hfr.prototype.parseUnread;
