@@ -72,11 +72,11 @@
 #headBar {
 	display: block;
 	height: 17px;
+	padding : 0 0.5em;
 }
 
 #headBar li {
 	display : inline;
-	padding : 0 0.5em;
 }
 
 #left {
@@ -85,7 +85,6 @@
 
 #right {
 	float: right;
-	widht: 162px;
 }
 
 #headBar li {
