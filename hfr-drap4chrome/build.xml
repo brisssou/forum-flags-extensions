@@ -69,7 +69,7 @@
 		<for param="ext-dir">
 			<dirset refid="extensions" />
 			<sequential>
-				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/]*)$" select="\1" global="true" override="true" />
+				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/\\]*)$" select="\1" global="true" override="true" />
 				<echo message="--Copiing to ${copy}/${ext-dir-name}" />
 				<copy todir="${copy}/${ext-dir-name}">
 					<fileset dir="${src}/${ext-dir-name}" />
@@ -88,7 +88,7 @@
 		<for param="ext-dir">
 			<dirset refid="extensions" />
 			<sequential>
-				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/]*)$" select="\1" global="true" override="true" />
+				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/\\]*)$" select="\1" global="true" override="true" />
 				<exec executable="google-chrome" os="Linux">
 					<arg value="--pack-extension=${copy}/${ext-dir-name}" />
 					<arg value="--pack-extension-key=${pem}/${ext-dir-name}.pem" />
@@ -112,7 +112,7 @@
 		<for param="ext-dir">
 			<dirset refid="extensions" />
 			<sequential>
-				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/]*)$" select="\1" global="true" override="true" />
+				<propertyregex property="ext-dir-name" input="@{ext-dir}" regexp="([^/\\]*)$" select="\1" global="true" override="true" />
 				<zip destfile="${zip}/${ext-dir-name}.zip" basedir="${copy}/${ext-dir-name}" />
 			</sequential>
 		</for>
