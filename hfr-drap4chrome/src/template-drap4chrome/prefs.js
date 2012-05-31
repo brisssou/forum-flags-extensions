@@ -11,6 +11,7 @@ var MUTED_TOPICS = "muted_topics";
 var BG_COLOR = "bg_color";
 var MAX_OPEN_ALL = "max_open_all";
 var SHOW_CAT = "show_cat";
+var SHOW_NOTIFICATIONS = "show_notifications";
 var GET_TOPICS = "get_topics";
 var GET_MPS = "get_mps";
 
@@ -27,6 +28,7 @@ PREFS_DEFAULT[MUTED_TOPICS] = '';
 PREFS_DEFAULT[BG_COLOR] = chrome.extension.getBackgroundPage().site.defaultColor;
 PREFS_DEFAULT[MAX_OPEN_ALL] = 10;
 PREFS_DEFAULT[SHOW_CAT] = 'true';
+PREFS_DEFAULT[SHOW_NOTIFICATIONS] = 'false';
 PREFS_DEFAULT[GET_TOPICS] = 'true';
 PREFS_DEFAULT[GET_MPS] = 'true';
 

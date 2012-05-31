@@ -191,6 +191,14 @@ function initControls() {
 	getMps.onchange = function (event) {
 		setPref(GET_MPS, this.checked);
 	};
+
+	var getShowNotLbl = document.getElementById("SHOW_NOTIFICATIONS_label");
+	getShowNotLbl.innerText = chrome.i18n.getMessage("SHOW_NOTIFICATIONS_label");
+	var getShowNot = document.getElementById('SHOW_NOTIFICATIONS');
+	getShowNot.checked = getPref(SHOW_NOTIFICATIONS);
+	getShowNot.onchange = function (event) {
+		setPref(SHOW_NOTIFICATIONS, this.checked);
+	};
 	
 	document.title = chrome.i18n.getMessage("optionsPageTitle", site.name);
 	
@@ -239,6 +247,10 @@ function unmute(cat, topic) {
 		<div>
 			<label for="GET_MPS" id="GET_MPS_label"></label>
 			<input type="checkbox" name="GET_MPS" id="GET_MPS"/>
+		</div>
+		<div>
+			<label for="SHOW_NOTIFICATIONS" id="SHOW_NOTIFICATIONS_label"></label>
+			<input type="checkbox" name="SHOW_NOTIFICATIONS" id="SHOW_NOTIFICATIONS"/>
 		</div>
 		<div>
 			<label for="MAX_OPEN_ALL" id="MAX_OPEN_ALL_label"></label>
