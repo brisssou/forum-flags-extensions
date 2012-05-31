@@ -41,6 +41,10 @@
 		"message": "Récupérer le nombre de messages privés non lus :",
 		"description": "A label to ask the user whether he want's the extension to tell him how many unread PM he has left."
 	},
+	"SHOW_NOTIFICATIONS_label": {
+		"message": "Display a notification if not connected to the forum :",
+		"description": "A label to ask the user whether he want's the extension to tell him if he is not connected to the forum."
+	},
 	"ONLY_FAVS_label": {
 		"message": "Rafraîchir uniquement les favoris :",
 		"description": "A label to ask the user whether he want's the extension to notify him for bookmarks, or bookmarks+flags."
