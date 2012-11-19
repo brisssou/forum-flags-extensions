@@ -113,7 +113,7 @@ function animateFlip() {
 	drawIconAtRotation();
 
 	if (rotation <= 1) {
-		setTimeout("animateFlip()", animationSpeed);
+		setTimeout(animateFlip, animationSpeed);
 	} else {
 		rotation = 0;
 		drawIconAtRotation();

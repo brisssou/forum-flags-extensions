@@ -5,8 +5,10 @@
 /*prefs page*/
 #prefs {
 	text-align: center;
+/*	
 	border: solid blue 1;
 	-webkit-border-radius: 10;
+*/
 }
 
 #prefs div {
@@ -59,7 +61,7 @@
 /*popup*/
 #popup {
 	max-height: 560px;
-	width: 350px;
+	width: 355px;
 	font-size: 10pt;
 }
 
@@ -71,24 +73,22 @@
 
 #headBar {
 	display: block;
-	height: 17px;
+	height: 20px;
 	padding : 0 0.5em;
 }
 
 #headBar li {
 	display : inline;
+	font-size : 8pt;
 }
 
 #left {
 	float: left;
+	margin-top: 2px;
 }
 
 #right {
 	float: right;
-}
-
-#headBar li {
-	font-size : 8pt;
 }
 
 #entries {

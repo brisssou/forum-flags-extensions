@@ -1,8 +1,11 @@
  {
+	"manifest_version": 2,
 	"name": "Template - Tom's Guide FR - __MSG_extName__",
 	"version": "0.0.1",
 	"description": "__MSG_extShortDesc__",
-	"background_page": "bg.html",
+  	"background": {
+		"page": "bg.html"
+	},
 	"options_page": "options.html",
 	"default_locale": "fr",
 	"browser_action": {

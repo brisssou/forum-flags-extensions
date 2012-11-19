@@ -42,15 +42,20 @@
 	<dirset id="extensions" dir="${src}" includes="*-drap4chrome" excludes="template-drap4chrome" />
 	<fileset id="commonFiles" dir="${src}/template-drap4chrome/">
 		<patternset>
+			<include name="bg.html"/>
 			<include name="behaviour.js" />
 			<include name="log.js" />
 			<include name="options.html" />
-			<include name="pop.html" />
-			<include name="pop.js" />
+			<include name="options.js" />
 			<include name="prefs.js" />
+			<include name="pop.html" />
+			<include name="popup.js" />
+			<include name="pop.js" />
 			<include name="site.js" />
 			<include name="style.css" />
 			<include name="web.js" />
+			<include name="jquery-1.8.3.min.js"/>
+			<include name="konami.js"/>
 			<include name="_locales/**" />
 		</patternset>
 	</fileset>
