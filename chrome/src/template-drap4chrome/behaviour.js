@@ -3,6 +3,12 @@ function waitAndRefresh() {
 	chrome.extension.getBackgroundPage().window.setTimeout(chrome.extension.getBackgroundPage().startRequest, 700);
 }
 
+function htmlDecode(input){
+	var e = document.createElement('div');
+	e.innerHTML = input;
+	return e.childNodes[0].nodeValue;
+}
+
 function initBehaviour() {
 	if (getPref(USE_DIRECT_LINK)) {
 		chrome.browserAction.setPopup({popup:""});
