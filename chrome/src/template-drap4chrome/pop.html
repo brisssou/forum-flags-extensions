@@ -8,120 +8,19 @@
 <script src="log.js"></script>
 <script src="behaviour.js"></script>
 <script src="site.js"></script>
-<script type="text/javascript">	
-	function mute(cat, post, title) {
-		_mute(cat, post, title);
-		initPopup();
-	}
-	
-	function initPopup() {
-		var innerHtml = "";
-		var entry;
-		var catPrev = null;
-		var catCur = null;
-		var bgPage = chrome.extension.getBackgroundPage();
-		var site = bgPage.site;
-		var popupContent = bgPage.popupContent;
-		var bgColor = getPref(BG_COLOR);
-		innerHtml += "<ul style=\"background-color: "+bgColor+"\">";
-		var openCat = getPref(OPEN_CAT);
-		var thingsToOpen = false;
-		if (popupContent.mpsNb > 0) {
-			thingsToOpen = true;
-			catCur = 'prive';
-			innerHtml += "<li id=\"mp\"><a href=\"javascript:goToPage('";
-			innerHtml += site.getMpsUrl(catCur);
-			innerHtml += "', true)\">";
-			innerHtml += popupContent.mpsNb;
-			innerHtml += ' ';
-			if (popupContent.mpsNb > 1) {
-				innerHtml += chrome.i18n.getMessage("private_messages");
-			} else {
-				innerHtml += chrome.i18n.getMessage("private_message");
-			}
-			innerHtml += "</a></li>";
-		}
-		for (var i = 0; i < popupContent.entries.length; i++) {
-			entry = popupContent.entries[i];
-			if (!isMuted(entry.cat, entry.post)) {
-				thingsToOpen = true;
-				catCur = entry.cat;
-				if (catCur != catPrev){
-					if (catPrev != null) {
-						innerHtml += "</li></ul>";
-					}
-					innerHtml += "<li>"
-					if (getPref(SHOW_CAT)) {
-						innerHtml += "<a href=\"javascript:";
-						if (openCat) {
-							innerHtml += "openCat(";
-							innerHtml += catCur;
-						} else {
-							innerHtml += "goToPage('";
-							innerHtml += site.getOwnCatUrl(catCur);
-							innerHtml += "', true";
-						}
-						innerHtml += ")\">";
-						innerHtml += bgPage.cats[catCur];
-						innerHtml += "</a>"
-					}
-					innerHtml += "<ul>";
-				}
-				innerHtml += "<li><a class=\"mute\" href=\"javascript:mute(";
-				innerHtml += entry.cat + ', ' + entry.post + ', \'' + entry.title.replace(/'/g,"\\'")
-				innerHtml += "\')\"><img src=\"mute.gif\" title=\""+chrome.i18n.getMessage("mute")+"\"/></a>&nbsp;<a href=\"javascript:goToPage('";
-				innerHtml += getFullUrl(entry.href);
-				innerHtml += "', true)\"";
-				var linkTitle = "";
-				if (entry.nbUnread>0) {
-					if (entry.nbUnread>1) {
-						linkTitle += chrome.i18n.getMessage("new_pages", String(entry.nbUnread));
-					} else {
-						linkTitle += chrome.i18n.getMessage("new_page");
-					}
-				} else {
-					linkTitle += chrome.i18n.getMessage("no_new_page");
-				}
-				innerHtml += " title=\"";
-				innerHtml += linkTitle;
-				innerHtml += "\">";
-				innerHtml += entry.title;
-				innerHtml += "</a></li>";
-				catPrev = catCur;
-			}
-		}
-		innerHtml += "</ul>";
-		document.getElementById('entries').innerHTML = innerHtml;
-		document.getElementById('entries').style.maxHeight=screen.availHeight*.45;
-		if (thingsToOpen) {
-			document.getElementById('openAll').style.display='inline';
-		} else {
-			document.getElementById('openAll').style.display='none';
-		}
-		document.getElementById('goToSite').innerText = chrome.extension.getBackgroundPage().site.name;
-
-		document.getElementById('openAll').innerText = chrome.i18n.getMessage("open_all");
-		document.getElementById('refresh').innerText = chrome.i18n.getMessage("refresh");
-		document.getElementById('options').innerText = chrome.i18n.getMessage("options");
-	}
-
-	function htmlDecode(input){
-		var e = document.createElement('div');
-		e.innerHTML = input;
-		return e.childNodes[0].nodeValue;
-	}
-</script>
+<script src="jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="popup.js"></script>
 </head>
-<body onload="initPopup()">
+<body>
 <div id="popup">
 	<div id="headbar">
 		<ul id="right">
-			<li><a href="javascript:openAll()" id="openAll"></a></li>
-			<li><a href="javascript:chrome.extension.getBackgroundPage().startRequest()" id="refresh"></a></li>
-			<li><a href="javascript:goToHfr()" id="goToSite"></a></li>
+			<li><a href="#" id="openAll"></a></li>
+			<li><a href="#" id="refresh"></a></li>
+			<li><a href="#" id="goToSite"></a></li>
 		</ul>
 		<ul id="left">
-			<li><a href="javascript:goToPage('options.html', false);" id="options"></a></li>
+			<li><a href="#" id="options"></a></li>
 		</ul>
 	</div>
 	<div id="entries">

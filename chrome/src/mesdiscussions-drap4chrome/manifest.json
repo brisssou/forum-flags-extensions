@@ -1,8 +1,11 @@
  {
+  "manifest_version": 2,
   "name": "Mes Discussions - Mes sujets",
   "version": "@VERSION@",
   "description": "Vérifie si les sujets drapalisés sur forum de mes discussions ont de nouveaux messages.",
-  "background_page": "bg.html",
+  "background": {
+    "page": "bg.html"
+  },
   "options_page": "options.html",
   "default_locale": "fr",
   "browser_action": {

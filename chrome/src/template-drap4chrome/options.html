@@ -3,237 +3,15 @@
 <title> - Mes Sujets - Options</title>
 <link rel="StyleSheet" href="style.css" type="text/css"/>
 <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu">
-<script src="prefs.js"></script>
-<script src="web.js"></script>
-<script src="behaviour.js"></script>
-<script src="log.js"></script>
-<script src="site.js"></script>
-<script type="text/javascript">
-
-function setVisible(element, isVisible) {
-	if (isVisible) {
-		element.style.display = 'block';
-	} else {
-		element.style.display = 'none';
-	}
-}
-
-// Restores select box state to saved value from localStorage.
-function initControls() {
-	var site = chrome.extension.getBackgroundPage().site;
-	
-	var refTimeLbl = document.getElementById("REFRESH_TIME_label");
-	refTimeLbl.innerText = chrome.i18n.getMessage("REFRESH_TIME_label");
-	var refTimeInput = document.getElementById("REFRESH_TIME");
-	refTimeInput.value = getPref(REFRESH_TIME);
-	refTimeInput.onchange = function(event) {
-		var refTime = parseInt(this.value);
-		var site = chrome.extension.getBackgroundPage().site;
-		if (isNaN(refTime)) {
-			document.getElementById("REFRESH_TIME.error").innerText = chrome.i18n.getMessage("errorOnlyInt");
-		} else if (refTime < site.minRefreshTime) {
-			document.getElementById("REFRESH_TIME.error").innerText = chrome.i18n.getMessage("errorMinRefreshTime", String(site.minRefreshTime));
-		} else {
-			document.getElementById("REFRESH_TIME.error").innerText = "";
-			setPref(REFRESH_TIME, refTime);
-			chrome.extension.getBackgroundPage().startRequest();
-		}
-	};
-	refTimeInput.onkeyup=refTimeInput.onchange;
-
-	var maxOpenAllLbl = document.getElementById("MAX_OPEN_ALL_label");
-	maxOpenAllLbl.innerText = chrome.i18n.getMessage("MAX_OPEN_ALL_label");
-	maxOpenAllLbl.title = chrome.i18n.getMessage("MAX_OPEN_ALL_label_title");
-	var maxOpenAllInput = document.getElementById("MAX_OPEN_ALL");
-	maxOpenAllInput.value = getPref(MAX_OPEN_ALL);
-	maxOpenAllInput.onchange = function(event) {
-		var maxOpenAll = parseInt(this.value);
-		if (isNaN(maxOpenAll)) {
-			document.getElementById("MAX_OPEN_ALL.error").innerText = chrome.i18n.getMessage("errorOnlyInt");
-		} else {
-			document.getElementById("MAX_OPEN_ALL.error").innerText = "";
-			setPref(MAX_OPEN_ALL, maxOpenAll);
-		}
-		chrome.extension.getBackgroundPage().startRequest();
-	};
-	maxOpenAllInput.onkeyup=maxOpenAllInput.onchange;
-
-	if (site.getSetupUrl) {
-	var bgColorLbl = document.getElementById("BG_COLOR_label");
-	bgColorLbl.innerText = chrome.i18n.getMessage("BG_COLOR_label");
-		var bgColorInput = document.getElementById("BG_COLOR");
-		bgColorInput.value = getPref(BG_COLOR);
-		bgColorInput.onchange = function(event) {
-			setPref(BG_COLOR, this.value);
-		};
-		bgColorInput.onkeyup=bgColorInput.onchange;
-	
-		var setDefaultColorA = document.getElementById('setDefaultColor');
-		setDefaultColorA.innerText = chrome.i18n.getMessage("setDefaultColor");
-		setDefaultColorA.onclick = function() {
-			bgColorInput.value = PREFS_DEFAULT[BG_COLOR];
-			setPref(BG_COLOR, bgColorInput.value);
-		}
-	} else {
-		document.getElementById("BG_COLOR.div").parentNode.removeChild(document.getElementById("BG_COLOR.div"));
-	}
-	
-	var directLinkLbl = document.getElementById("USE_DIRECT_LINK_label");
-	directLinkLbl.innerText = chrome.i18n.getMessage("USE_DIRECT_LINK_label");
-	directLinkLbl.title = chrome.i18n.getMessage("USE_DIRECT_LINK_label_title");
-	var directLinkInput = document.getElementById('USE_DIRECT_LINK');
-	directLinkInput.checked = getPref(USE_DIRECT_LINK);
-	directLinkInput.onchange = function (event) {
-		setPref(USE_DIRECT_LINK, this.checked);
-		initBehaviour();
-	};
-
-	var openCatLbl = document.getElementById("OPEN_CAT_label");
-	openCatLbl.innerText = chrome.i18n.getMessage("OPEN_CAT_label");
-	openCatLbl.title = chrome.i18n.getMessage("OPEN_CAT_label_title");
-	var openCat = document.getElementById('OPEN_CAT');
-	openCat.checked = getPref(OPEN_CAT);
-	openCat.onchange = function (event) {
-		setPref(OPEN_CAT, this.checked);
-		initBehaviour();
-	};
-
-	var onlyFavsLbl = document.getElementById("ONLY_FAVS_label");
-	onlyFavsLbl.innerText = chrome.i18n.getMessage("ONLY_FAVS_label");
-	onlyFavsLbl.title = chrome.i18n.getMessage("ONLY_FAVS_label_title");
-	var onlyFavsInput = document.getElementById('ONLY_FAVS');
-	onlyFavsInput.checked = getPref(ONLY_FAVS);
-	onlyFavsInput.onchange = function (event) {
-		setPref(ONLY_FAVS, this.checked);
-		initBrowserActionTitle();
-	};
-
-	var aniIconLbl = document.getElementById("ANIMATED_ICON_label");
-	aniIconLbl.innerText = chrome.i18n.getMessage("ANIMATED_ICON_label");
-	var aniIconInput = document.getElementById('ANIMATED_ICON');
-	aniIconInput.checked = getPref(ANIMATED_ICON);
-	aniIconInput.onchange = function (event) {
-		setPref(ANIMATED_ICON, this.checked);
-	};
-
-	var contextMenuLbl = document.getElementById("USE_CONTEXT_MENU_label");
-	contextMenuLbl.innerText = chrome.i18n.getMessage("USE_CONTEXT_MENU_label");
-	contextMenuLbl.title = chrome.i18n.getMessage("USE_CONTEXT_MENU_label_title");
-	var contextMenuInput = document.getElementById('USE_CONTEXT_MENU');
-	contextMenuInput.checked = getPref(USE_CONTEXT_MENU);
-	contextMenuInput.onchange = function (event) {
-		setPref(USE_CONTEXT_MENU, this.checked);
-		initBehaviour();
-	};
-
-	var newTabLbl = document.getElementById("NEW_TAB_label");
-	newTabLbl.innerText = chrome.i18n.getMessage("NEW_TAB_label");
-	newTabLbl.title = chrome.i18n.getMessage("NEW_TAB_label_title");
-	var newTabInput = document.getElementById('NEW_TAB');
-	newTabInput.checked = getPref(NEW_TAB);
-	newTabInput.onchange = function (event) {
-		setPref(NEW_TAB, this.checked);
-	};
-
-	var debugOnLbl = document.getElementById("DEBUG_ON_label");
-	debugOnLbl.innerText = chrome.i18n.getMessage("DEBUG_ON_label");
-	debugOnLbl.title = chrome.i18n.getMessage("DEBUG_ON_label_title");
-	var debugOnInput = document.getElementById('DEBUG_ON');
-	debugOnInput.checked = getPref(DEBUG_ON);
-	debugOnInput.onchange = function (event) {
-		setPref(DEBUG_ON, this.checked);
-	};
-
-	var showCatLbl = document.getElementById("SHOW_CAT_label");
-	showCatLbl.innerText = chrome.i18n.getMessage("SHOW_CAT_label");
-	var showCat = document.getElementById('SHOW_CAT');
-	showCat.checked = getPref(SHOW_CAT);
-	if (showCat.checked) {
-		document.getElementById('OPEN_CAT.div').style.visibility = 'visible';
-	} else {
-		document.getElementById('OPEN_CAT.div').style.visibility = 'hidden';
-	}
-	showCat.onchange = function (event) {
-		setPref(SHOW_CAT, this.checked);
-		if (showCat.checked) {
-			document.getElementById('OPEN_CAT.div').style.visibility = 'visible';
-		} else {
-			document.getElementById('OPEN_CAT.div').style.visibility = 'hidden';
-		}
-	};
-
-	var getTopicsLbl = document.getElementById("GET_TOPICS_label");
-	getTopicsLbl.innerText = chrome.i18n.getMessage("GET_TOPICS_label");
-	var getTopics = document.getElementById('GET_TOPICS');
-	getTopics.checked = getPref(GET_TOPICS);
-	if (getTopics.checked) {
-			document.getElementById('SHOW_CAT.div').style.visibility = 'visible';
-			document.getElementById('ONLY_FAVS.div').style.visibility = 'visible';
-		} else {
-			document.getElementById('ONLY_FAVS.div').style.visibility = 'hidden';
-			document.getElementById('SHOW_CAT.div').style.visibility = 'hidden';
-	}
-	getTopics.onchange = function (event) {
-		setPref(GET_TOPICS, this.checked);
-		if (getTopics.checked) {
-			document.getElementById('SHOW_CAT.div').style.visibility = 'visible';
-			document.getElementById('ONLY_FAVS.div').style.visibility = 'visible';
-		} else {
-			document.getElementById('ONLY_FAVS.div').style.visibility = 'hidden';
-			document.getElementById('SHOW_CAT.div').style.visibility = 'hidden';
-		}
-	};
-
-	var getMpsLbl = document.getElementById("GET_MPS_label");
-	getMpsLbl.innerText = chrome.i18n.getMessage("GET_MPS_label");
-	var getMps = document.getElementById('GET_MPS');
-	getMps.checked = getPref(GET_MPS);
-	getMps.onchange = function (event) {
-		setPref(GET_MPS, this.checked);
-	};
-
-	var getShowNotLbl = document.getElementById("SHOW_NOTIFICATIONS_label");
-	getShowNotLbl.innerText = chrome.i18n.getMessage("SHOW_NOTIFICATIONS_label");
-	var getShowNot = document.getElementById('SHOW_NOTIFICATIONS');
-	getShowNot.checked = getPref(SHOW_NOTIFICATIONS);
-	getShowNot.onchange = function (event) {
-		setPref(SHOW_NOTIFICATIONS, this.checked);
-	};
-	
-	document.title = chrome.i18n.getMessage("optionsPageTitle", site.name);
-	
-	document.getElementById('muted_label').innerText = chrome.i18n.getMessage("muted_label", site.name);
-	initMuted();
-
-}
-
-function initMuted() {
-	var mutedTopics = getPref(MUTED_TOPICS).split('|');
-	var mutedTopicsInnerHtml = '<ul id="muted">';
-	var topic = null;
-	
-	for (var i = 0; i < mutedTopics.length; i++) {
-		topic = mutedTopics[i];
-		if (topic.indexOf('#') != -1) {
-			mutedTopicsInnerHtml += '<li>';
-			var splitted = topic.split('#');
-			mutedTopicsInnerHtml += splitted[2] + " <button onclick='javascript:unmute(" + splitted[0] + ',' + splitted[1] + ");'>"+chrome.i18n.getMessage("options_unmute")+"</button><br/>";
-			mutedTopicsInnerHtml += '</li>';
-		}
-	}
-	mutedTopicsInnerHtml += '</ul>';
-	document.getElementById('muted').innerHTML = mutedTopicsInnerHtml;
-}
-
-function unmute(cat, topic) {
-	_unmute(cat, topic);
-	initMuted();
-	chrome.extension.getBackgroundPage().startRequest();
-}
-
-</script>
+<script type="text/javascript" src="prefs.js"></script>
+<script type="text/javascript" src="web.js"></script>
+<script type="text/javascript" src="behaviour.js"></script>
+<script type="text/javascript" src="log.js"></script>
+<script type="text/javascript" src="site.js"></script>
+<script type="text/javascript" src="konami.js"></script>
+<script type="text/javascript" src="options.js"></script>
 </head>
-<body onload="initControls()">
+<body id="optionsPage">
 	<div id="prefs">
 		<div>
 			<label for="REFRESH_TIME" id="REFRESH_TIME_label"></label>
@@ -249,17 +27,17 @@ function unmute(cat, topic) {
 			<input type="checkbox" name="GET_MPS" id="GET_MPS"/>
 		</div>
 		<div>
-			<label for="SHOW_NOTIFICATIONS" id="SHOW_NOTIFICATIONS_label"></label>
-			<input type="checkbox" name="SHOW_NOTIFICATIONS" id="SHOW_NOTIFICATIONS"/>
+			<label for="NEW_TAB" id="NEW_TAB_label"></label>
+			<input type="checkbox" name="NEW_TAB" id="NEW_TAB"/>
+		</div>
+		<div>
+			<label for="OPEN_TO_FRONT" id="OPEN_TO_FRONT_label"></label>
+			<input type="checkbox" name="OPEN_TO_FRONT" id="OPEN_TO_FRONT"/>
 		</div>
 		<div>
 			<label for="MAX_OPEN_ALL" id="MAX_OPEN_ALL_label"></label>
 			<input type="text" name="MAX_OPEN_ALL" id="MAX_OPEN_ALL"/>
 			<div id="MAX_OPEN_ALL.error" class="error"></div>
-		</div>
-		<div id="ONLY_FAVS.div">
-			<label for="ONLY_FAVS" id="ONLY_FAVS_label"></label>
-			<input type="checkbox" name="ONLY_FAVS" id="ONLY_FAVS"/>
 		</div>
 		<div>
 			<label for="USE_DIRECT_LINK" id="USE_DIRECT_LINK_label"></label>
@@ -281,10 +59,6 @@ function unmute(cat, topic) {
 			<label for="ANIMATED_ICON" id="ANIMATED_ICON_label"></label>
 			<input type="checkbox" name="ANIMATED_ICON" id="ANIMATED_ICON"/>
 		</div>
-		<div>
-			<label for="NEW_TAB" id="NEW_TAB_label"></label>
-			<input type="checkbox" name="NEW_TAB" id="NEW_TAB"/>
-		</div>
 		<div id="BG_COLOR.div">
 			<label for="BG_COLOR" id="BG_COLOR_label"></label>
 			<input type="text" name="BG_COLOR" id="BG_COLOR"/>
@@ -295,7 +69,15 @@ function unmute(cat, topic) {
 			<label for="DEBUG_ON" id="DEBUG_ON_label"></label>
 			<input type="checkbox" name="DEBUG_ON" id="DEBUG_ON"/>
 		</div>
-		<div>
+		<div id="MODO_div">
+			<label for="MODO" id="MODO_label"></label>
+			<input type="checkbox" name="MODO" id="MODO"/>
+		</div>
+		<div id="AVATAR_div">
+			<label for="AVATAR" id="AVATAR_label"></label>
+			<input type="checkbox" name="AVATAR" id="AVATAR"/>
+		</div>
+		<div id="muted_div">
 			<span id="muted_label"></span>
 			<span id="muted"></span>
 		</div>

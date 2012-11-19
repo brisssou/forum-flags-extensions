@@ -35,7 +35,7 @@ PREFS_DEFAULT[GET_MPS] = 'true';
 function getPref(name) {
 	var value = localStorage[name];
 	if (value == null) value = PREFS_DEFAULT[name];
-	if (value == 'true' || value == 'false') value = eval(value);
+	if (value == 'true' || value == 'false') value = Boolean(value == 'true');
 	return value;
 }
 
