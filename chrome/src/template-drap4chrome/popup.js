@@ -40,7 +40,7 @@ function initPopup() {
 		innerHtml += "</a></li>";
 	}
 	for ( var i = 0; i < popupContent.entries.length; i++) {
-		entry = popupContent.entries[i];
+		var entry = popupContent.entries[i];
 		if (!isMuted(entry.cat, entry.post)) {
 			thingsToOpen = true;
 			catCur = entry.cat;
@@ -94,7 +94,7 @@ function initPopup() {
 					goToPage(href, true);
 					return false;
 				}
-			}(getFullUrl(entry.href));
+			}(getFullUrl(htmlDecode(entry.href)));
 			var linkTitle = "";
 			if (entry.nbUnread > 0) {
 				if (entry.nbUnread > 1) {
@@ -133,12 +133,6 @@ function initPopup() {
 		$("body").off('click', "#"+link_id,	links_actions[link_id]);
 		$("#"+link_id).click(links_actions[link_id]);
 	}
-}
-
-function htmlDecode(input){
-	var e = document.createElement('div');
-	e.innerHTML = input;
-	return e.childNodes[0].nodeValue;
 }
 
 $(document).ready(function(){
