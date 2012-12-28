@@ -45,6 +45,8 @@
 			<include name="bg.html"/>
 			<include name="behaviour.js" />
 			<include name="log.js" />
+			<include name="notification.html" />
+			<include name="notification.js" />
 			<include name="options.html" />
 			<include name="options.js" />
 			<include name="prefs.js" />

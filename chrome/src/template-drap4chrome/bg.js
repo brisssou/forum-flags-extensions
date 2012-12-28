@@ -1,4 +1,3 @@
-
 var popupContent = new PopupContent();
 var canvas;
 var canvasContext;
@@ -6,7 +5,8 @@ var iconImage;
 var cats = new Array();
 
 var requestTimeoutId = new Array();
-var site = new Tgufr();
+var site = new Hfr();
+var notification = webkitNotifications.createHTMLNotification('notification.html');
 
 $(document).ready(function() {
 	iconImage = document.getElementById('icon')
