@@ -1,5 +1,4 @@
-﻿
-function waitAndRefresh() {
+﻿function waitAndRefresh() {
 	chrome.extension.getBackgroundPage().window.setTimeout(chrome.extension.getBackgroundPage().startRequest, 700);
 }
 
@@ -16,7 +15,7 @@ function initBehaviour() {
 		chrome.browserAction.setPopup({popup:"pop.html"});
 	}
 	if (getPref(USE_CONTEXT_MENU)) {
-		chrome.contextMenus.create({title:chrome.i18n.getMessage("refresh_menu_label", chrome.extension.getBackgroundPage()), onclick:startRequest});
+		chrome.contextMenus.create({title:chrome.i18n.getMessage("refresh_menu_label", chrome.extension.getBackgroundPage().site.name), onclick:startRequest});
 	} else {
 		chrome.contextMenus.removeAll();
 	}
@@ -98,8 +97,12 @@ function updateBadge(nbUnread) {
 	if (nbUnread && nbUnread != null && parseInt(nbUnread) != NaN && parseInt(nbUnread) > 0) {
 		chrome.browserAction.setBadgeText({text:""+nbUnread});
 		if (getPref(ANIMATED_ICON)) animateFlip();
-	} else {
+	} else if (nbUnread != null && parseInt(nbUnread) == 0){
 		chrome.browserAction.setBadgeText({text:""});
+	} else if (nbUnread != null && nbUnread.length > 0){
+		chrome.browserAction.setBadgeText({text:nbUnread});
+	} else {
+		chrome.browserAction.setBadgeText({text:"..."});
 	}
 }
 

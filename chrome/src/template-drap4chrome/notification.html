@@ -1,23 +1,15 @@
 <html>
 <head>
-<script type="text/javascript">
-	function initNotification() {
-
-		document.getElmentById('title').innerText = chrome.i18n
-				.getMessage("extName");
-		document.getElmentById('message').innerText = chrome.i18n
-				.getMessage("not_connected");
-		site = chrome.extension.getBackgroundPage().site;
-		document.getElmentById('message').href = site.getFullUrl(site.getBaseUrl);
-		setTimeout(function() {
-			window.close();
-		}, 5000);
-	}
-</script>
+<link rel="StyleSheet" href="style.css" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu">
+<script type="text/javascript" src="jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="notification.js"></script>
 </head>
-<body onload="initNotification()">
-	<img src="48.png" />
-	<h1 id="title"></h1>
-	<a id="message"></a>
+<body>
+	<div id="notification">
+		<img src="128.png" alt="Site Icon" height="48" />
+		<h3 id="title"></h3>
+		<a id="message"></a>
+	</div>
 </body>
 </html>

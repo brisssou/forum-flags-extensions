@@ -40,7 +40,7 @@ function initPopup() {
 		innerHtml += "</a></li>";
 	}
 	for ( var i = 0; i < popupContent.entries.length; i++) {
-		var entry = popupContent.entries[i];
+		entry = popupContent.entries[i];
 		if (!isMuted(entry.cat, entry.post)) {
 			thingsToOpen = true;
 			catCur = entry.cat;
@@ -59,14 +59,14 @@ function initPopup() {
 							return function() {
 								openCat(cat);
 								return false;
-							}
+							};
 						}(catCur);
 					} else {
 						links_actions[link_id] = function(href) {
 							return function() {
 								goToPage(href, true);
 								return false;
-							}
+							};
 						}(site.getOwnCatUrl(catCur));
 					}
 				}
