@@ -183,10 +183,10 @@ function scheduleRequest() {
 
 function startRequest() {
 	debug("Starting request");
+	scheduleRequest();
 	getUnreadCount(
 		function(count) {
 			debug("Everything was successful");
-			scheduleRequest();
 			//loadingAnimation.stop();
 			updateBadge(count);
 			// si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
@@ -197,7 +197,6 @@ function startRequest() {
 			debug("something REALLY bad happened");
 			//loadingAnimation.stop();
 			//showLoggedOut();
-			scheduleRequest();
 		}
 	);
 }
