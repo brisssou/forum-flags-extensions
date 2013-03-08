@@ -168,7 +168,7 @@ function getUnreadCount(onSuccess, onError) {
 	}
 }
 
-function scheduleRequest() {
+function scheduleRequest(when) {
 	debug("Scheduling request");
 	var bgPage = bg;
 	if (bgPage.requestTimeoutId.length != 0) {
@@ -176,9 +176,12 @@ function scheduleRequest() {
 		bgPage.requestTimeoutId = new Array();
 		debug("requestTimeoutId was not null");
 	}
-	bgPage.requestTimeoutId.push(bgPage.window.setTimeout(startRequest, getPref(REFRESH_TIME) * 1000));
-	debug("request scheduled for " + getPref(REFRESH_TIME) + "s");
-	debug("Next request will be on "+ new Date(new Date().getTime() + getPref(REFRESH_TIME) * 1000));
+	if (!when) {
+		when = getPref(REFRESH_TIME);
+	}
+	bgPage.requestTimeoutId.push(bgPage.window.setTimeout(startRequest, when * 1000));
+	debug("request scheduled for " + when + "s");
+	debug("Next request will be on "+ new Date(new Date().getTime() + when * 1000));
 }
 
 function startRequest() {
@@ -195,6 +198,7 @@ function startRequest() {
 		},
 		function() {
 			debug("something REALLY bad happened");
+			scheduleRequest(5);
 			//loadingAnimation.stop();
 			//showLoggedOut();
 		}
