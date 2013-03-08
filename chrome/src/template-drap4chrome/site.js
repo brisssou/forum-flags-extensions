@@ -132,7 +132,7 @@ function MesDisc() {
 	this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
 	this.notConnectedRex = /Aucun sujet que vous avez lu n'est connu/;
 }
-MesDisc.prototype = new Site('Mes Discussions', "www.mesdiscussions.net", "md.inc", '#AF261E', 120, 'flags4chrome=1');
+MesDisc.prototype = new Site('Mes Discussions', "www.mesdiscussions.net", "md.inc", '#6394BD', 120, 'flags4chrome=1');
 MesDisc.prototype.parseUnread = Hfr.prototype.parseUnread;
 MesDisc.prototype.parseCats = Hfr.prototype.parseCats;
 MesDisc.prototype.parseMps = Hfr.prototype.parseMps;
@@ -151,7 +151,7 @@ function LesNum() {
 	this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
 	this.notConnectedRex = /Aucun sujet que vous avez lu n'est connu/;
 }
-LesNum.prototype = new Site('Les numériques', "www.lesnumeriques.com", "avis.inc", '#AF261E', 120, 'flags4chrome=1');
+LesNum.prototype = new Site('Les numériques', "www.lesnumeriques.com", "avis.inc", '#6394BD', 120, 'flags4chrome=1');
 LesNum.prototype.parseUnread = Hfr.prototype.parseUnread;
 LesNum.prototype.parseCats = Hfr.prototype.parseCats;
 LesNum.prototype.parseMps = Hfr.prototype.parseMps;
