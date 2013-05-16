@@ -53,6 +53,10 @@
 		"message": "If unchecked, refresh contributed threads AND bookmarks.",
 		"description": "A title to explain what ONLY_FAVS will do."
 	},
+	"OPEN_TO_FRONT_label": {
+		"message": "Open links to front:",
+		"description": "A label to ask the user if he wants the links to be open in a new tab."
+	},
 	"USE_DIRECT_LINK_label": {
 		"message": "Clicking the icon opens the unread threads page:",
 		"description": "A label to ask the user what will be the behavior of the browser action."
