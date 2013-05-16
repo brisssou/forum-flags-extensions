@@ -112,6 +112,15 @@ function initControls() {
 		setPref(NEW_TAB, this.checked);
 	};
 
+	var onlyFavsLbl = document.getElementById("ONLY_FAVS_label");
+	onlyFavsLbl.innerText = chrome.i18n.getMessage("ONLY_FAVS_label");
+	onlyFavsLbl.title = chrome.i18n.getMessage("ONLY_FAVS_label_title");
+	var onlyFavsInput = document.getElementById('ONLY_FAVS');
+	onlyFavsInput.checked = getPref(ONLY_FAVS);
+	onlyFavsInput.onchange = function (event) {
+		setPref(ONLY_FAVS, this.checked);
+	};
+
 	var debugOnLbl = document.getElementById("DEBUG_ON_label");
 	debugOnLbl.innerText = chrome.i18n.getMessage("DEBUG_ON_label");
 	debugOnLbl.title = chrome.i18n.getMessage("DEBUG_ON_label_title");

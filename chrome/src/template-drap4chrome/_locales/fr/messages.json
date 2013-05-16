@@ -89,6 +89,10 @@
 		"message": "Ouverture des liens dans un nouvel onglet :",
 		"description": "A label to ask the user if he wants the links to be open in a new tab."
 	},
+	"OPEN_TO_FRONT_label": {
+		"message": "Ouvrir les liens au premier plan :",
+		"description": "A label to ask the user if he wants the links to be open in a new tab."
+	},
 	"NEW_TAB_label_title": {
 		"message": "Ne sera pas pris en compte pour l'action 'Ouvrir tout'.",
 		"description": "A title to explain what NEW_TAB will do."
