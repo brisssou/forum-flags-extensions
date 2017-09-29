@@ -9,7 +9,7 @@ function initPopup() {
 	var entry;
 	var catPrev = null;
 	var catCur = null;
-	var bgPage = chrome.extension.getBackgroundPage();
+	var bgPage = browser.extension.getBackgroundPage();
 	var site = bgPage.site;
 	var popupContent = bgPage.popupContent;
 	var bgColor = getPref(BG_COLOR);
@@ -33,9 +33,9 @@ function initPopup() {
 		innerHtml += popupContent.mpsNb;
 		innerHtml += ' ';
 		if (popupContent.mpsNb > 1) {
-			innerHtml += chrome.i18n.getMessage("private_messages");
+			innerHtml += browser.i18n.getMessage("private_messages");
 		} else {
-			innerHtml += chrome.i18n.getMessage("private_message");
+			innerHtml += browser.i18n.getMessage("private_message");
 		}
 		innerHtml += "</a></li>";
 	}
@@ -85,7 +85,7 @@ function initPopup() {
 					};
 				}(entry);
 				innerHtml += "<img src=\"mute.gif\" title=\""
-						+ chrome.i18n.getMessage("mute") + "\"/></a>";
+						+ browser.i18n.getMessage("mute") + "\"/></a>";
 			}
 			link_id = link_id_base + 'thread_' + i;
 			innerHtml += "&nbsp;<a href=\"#\" id=\"" + link_id + "\"";
@@ -98,13 +98,13 @@ function initPopup() {
 			var linkTitle = "";
 			if (entry.nbUnread > 0) {
 				if (entry.nbUnread > 1) {
-					linkTitle += chrome.i18n.getMessage("new_pages",
+					linkTitle += browser.i18n.getMessage("new_pages",
 							String(entry.nbUnread));
 				} else {
-					linkTitle += chrome.i18n.getMessage("new_page");
+					linkTitle += browser.i18n.getMessage("new_page");
 				}
 			} else {
-				linkTitle += chrome.i18n.getMessage("no_new_page");
+				linkTitle += browser.i18n.getMessage("no_new_page");
 			}
 			innerHtml += " title=\"";
 			innerHtml += linkTitle;
@@ -122,12 +122,12 @@ function initPopup() {
 	} else {
 		document.getElementById('openAll').style.display = 'none';
 	}
-	document.getElementById('goToSite').innerText = chrome.extension
+	document.getElementById('goToSite').innerText = browser.extension
 			.getBackgroundPage().site.name;
 
-	document.getElementById('openAll').innerText = chrome.i18n.getMessage("open_all");
-	document.getElementById('refresh').innerText = chrome.i18n.getMessage("refresh");
-	document.getElementById('options').innerText = chrome.i18n.getMessage("options");
+	document.getElementById('openAll').innerText = browser.i18n.getMessage("open_all");
+	document.getElementById('refresh').innerText = browser.i18n.getMessage("refresh");
+	document.getElementById('options').innerText = browser.i18n.getMessage("options");
 
 	for ( var link_id in links_actions) {
 		$("body").off('click', "#"+link_id,	links_actions[link_id]);
@@ -139,7 +139,7 @@ $(document).ready(function(){
 	initPopup();
 
 	$("#openAll").click(openAll);
-	$("#refresh").click(chrome.extension.getBackgroundPage().startRequest);
+	$("#refresh").click(browser.extension.getBackgroundPage().startRequest);
 	$("#goToSite").click(goToHfr);
 	$("#options").click(function(){goToPage('options.html', false);});
 });
