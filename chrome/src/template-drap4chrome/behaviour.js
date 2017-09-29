@@ -1,5 +1,5 @@
 ﻿function waitAndRefresh() {
-	browser.extension.getBackgroundPage().window.setTimeout(browser.extension.getBackgroundPage().startRequest, 700);
+	chrome.extension.getBackgroundPage().window.setTimeout(chrome.extension.getBackgroundPage().startRequest, 700);
 }
 
 function htmlDecode(input){
@@ -10,43 +10,43 @@ function htmlDecode(input){
 
 function initBehaviour() {
 	if (getPref(USE_DIRECT_LINK)) {
-		browser.browserAction.setPopup({popup:""});
+		chrome.browserAction.setPopup({popup:""});
 	} else {
-		browser.browserAction.setPopup({popup:"pop.html"});
+		chrome.browserAction.setPopup({popup:"pop.html"});
 	}
 	if (getPref(USE_CONTEXT_MENU)) {
-		browser.contextMenus.create({title:browser.i18n.getMessage("refresh_menu_label", browser.extension.getBackgroundPage().site.name), onclick:startRequest});
+		chrome.contextMenus.create({title:chrome.i18n.getMessage("refresh_menu_label", chrome.extension.getBackgroundPage().site.name), onclick:startRequest});
 	} else {
-		browser.contextMenus.removeAll();
+		chrome.contextMenus.removeAll();
 	}
 }
 
 function initBrowserActionTitle() {
 	var tooltip;
 	if (getPref(ONLY_FAVS)) {
-		tooltip = browser.i18n.getMessage('bookmarks');
+		tooltip = chrome.i18n.getMessage('bookmarks');
 	} else {
-		tooltip = browser.i18n.getMessage('cyan_flags');
+		tooltip = chrome.i18n.getMessage('cyan_flags');
 	}
-	browser.browserAction.setTitle({title:tooltip});
+	chrome.browserAction.setTitle({title:tooltip});
 }
 
 function goToPage(url, readNewTabPref) {
 	if (readNewTabPref == null) readNewTabPref = false;
-		browser.tabs.query({currentWindow: true}, function(tabs){
+		chrome.tabs.query({currentWindow: true}, function(tabs){
 
 		for (var i = 0, tab; tab = tabs[i]; i++) {
 			if (tab.url && tab.url == url) {
-				browser.tabs.update(tab.id, {selected: true, url:url});
+				chrome.tabs.update(tab.id, {selected: true, url:url});
 				return;
 			}
 		}
 		if (readNewTabPref && !getPref(NEW_TAB)) {
-			browser.tabs.getSelected(undefined, function(tab){
-				browser.tabs.update(tab.id, {selected: true, url:url});
+			chrome.tabs.getSelected(undefined, function(tab){
+				chrome.tabs.update(tab.id, {selected: true, url:url});
 			});
 		} else {
-			browser.tabs.create({url: url});
+			chrome.tabs.create({url: url});
 		}
 	});
 	waitAndRefresh();
@@ -57,9 +57,9 @@ function goToHfr(){
 }
 
 function openAll() {
-	var popupContent = browser.extension.getBackgroundPage().popupContent;
+	var popupContent = chrome.extension.getBackgroundPage().popupContent;
 	var entry;
-	if (popupContent.entries.length < getPref(MAX_OPEN_ALL) || confirm(browser.i18n.getMessage('too_many_new_tabs', String(popupContent.entries.length)))) {
+	if (popupContent.entries.length < getPref(MAX_OPEN_ALL) || confirm(chrome.i18n.getMessage('too_many_new_tabs', String(popupContent.entries.length)))) {
 		for (var i = 0; i < popupContent.entries.length; i++) {
 			entry = popupContent.entries[i];
 			goToPage(getFullUrl(htmlDecode(entry.href)), false);
@@ -70,7 +70,7 @@ function openAll() {
 
 function openCat(cat) {
 	if (getPref(OPEN_CAT)) {
-		var popupContent = browser.extension.getBackgroundPage().popupContent;
+		var popupContent = chrome.extension.getBackgroundPage().popupContent;
 		var entry;
 		var entries = new Array();
 		for (var i = 0; i < popupContent.entries.length; i++) {
@@ -80,14 +80,14 @@ function openCat(cat) {
 			}
 		}
 		
-		if (entries.length < getPref(MAX_OPEN_ALL) || confirm(browser.i18n.getMessage('too_many_new_tabs', String(entries.length)))) {
+		if (entries.length < getPref(MAX_OPEN_ALL) || confirm(chrome.i18n.getMessage('too_many_new_tabs', String(entries.length)))) {
 			for (var i = 0; i < entries.length; i++) {
 				goToPage(entries[i], false);
 			}
 		}
 		waitAndRefresh();
 	} else {
-		var bgPage = browser.extension.getBackgroundPage();
+		var bgPage = chrome.extension.getBackgroundPage();
 		var site = bgPage.site;
 		goToPage(site.getOwnCatUrl(cat), false);
 	}
@@ -95,18 +95,18 @@ function openCat(cat) {
 
 function updateBadge(nbUnread) {
 	if (nbUnread && nbUnread != null && parseInt(nbUnread) != NaN && parseInt(nbUnread) > 0) {
-		browser.browserAction.setBadgeText({text:""+nbUnread});
+		chrome.browserAction.setBadgeText({text:""+nbUnread});
 		if (getPref(ANIMATED_ICON)) animateFlip();
 	} else if (nbUnread != null && parseInt(nbUnread) == 0){
-		browser.browserAction.setBadgeText({text:""});
+		chrome.browserAction.setBadgeText({text:""});
 	} else if (nbUnread != null && nbUnread.length > 0){
-		browser.browserAction.setBadgeText({text:nbUnread});
+		chrome.browserAction.setBadgeText({text:nbUnread});
 	} else {
-		browser.browserAction.setBadgeText({text:"..."});
+		chrome.browserAction.setBadgeText({text:"..."});
 	}
 }
 
-/*to rotate the browser action icon, (not so) shamelessly copied from google Examples*/
+/*to rotate the chrome action icon, (not so) shamelessly copied from google Examples*/
 	
 var rotation = 0;
 var animationFrames = 36;
@@ -130,7 +130,7 @@ function animateFlip() {
 }
 
 function drawIconAtRotation() {
-	var bgPage = browser.extension.getBackgroundPage();
+	var bgPage = chrome.extension.getBackgroundPage();
 	var canvas = bgPage.canvas;
 	var canvasContext = bgPage.canvasContext;
 	var iconImage = bgPage.iconImage;
@@ -147,5 +147,5 @@ function drawIconAtRotation() {
 
 	var imageData = canvasContext.getImageData(0, 0, canvas.width,canvas.height);
 	if (imageData instanceof ImageData)
-		browser.browserAction.setIcon({imageData: imageData});
+		chrome.browserAction.setIcon({imageData: imageData});
 }
