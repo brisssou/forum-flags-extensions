@@ -1,8 +1,0 @@
-{
-    "description": "V\u00e9rifie si les sujets drapalis\u00e9s sur forum.hardware.fr ont de nouveaux messages.", 
-    "license": "WTFPL 2", 
-    "author": "brice.laurencin", 
-    "version": "0.1", 
-    "fullName": "HFR - Mes sujets",
-    "name": "HFR - Mes sujets"
-}
