@@ -2,7 +2,7 @@ var requestFailureCount = 0;	// used for exponential backoff
 var requestTimeout = 1000 * 2;	// 2 seconds
 
 
-var bg = browser.extension.getBackgroundPage();
+var bg = chrome.extension.getBackgroundPage();
 
 function getUsedURL() {
 	return getPref(ONLY_FAVS) ? bg.site.getFavsUrl():bg.site.getDrapsUrl();
@@ -104,8 +104,8 @@ function getUnreadCount(onSuccess, onError) {
 				if (site.notConnectedRex.exec(content)) {
 					webkitNotifications.createNotification(
 					  '48.png',  // icon url - can be relative
-					  browser.i18n.getMessage("extName"),  // notification title
-					  browser.i18n.getMessage("not_connected")  // notification body text
+					  chrome.i18n.getMessage("extName"),  // notification title
+					  chrome.i18n.getMessage("not_connected")  // notification body text
 					).show();
 					debug("nUser not connected");
 					handleError();
@@ -146,7 +146,7 @@ function getUnreadCount(onSuccess, onError) {
 							badgeBackGroundColor = [255,0,0,255];
 						}
 					}
-					browser.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
+					chrome.browserAction.setBadgeBackgroundColor({color:badgeBackGroundColor});
 					debug("should now handle success");
 					handleSuccess(unreadCount);
 				}
@@ -193,7 +193,7 @@ function startRequest() {
 			//loadingAnimation.stop();
 			updateBadge(count);
 			// si initPopup existe, ça veut dire que la fonction a été appellée depuis la popup, il est de bon aloi de mettre à jour son contenu
-			var popup = browser.extension.getViews({type:'popup'})[0];
+			var popup = chrome.extension.getViews({type:'popup'})[0];
 			if (popup != null) popup.initPopup();
 		},
 		function() {

@@ -1,12 +1,12 @@
 $(document).ready(function () {
-		bg = browser.extension.getBackgroundPage();
+		bg = chrome.extension.getBackgroundPage();
 		site = bg.site;
 		bg.debug("Initiating notification");
-		document.getElementById('title').innerText = browser.i18n
+		document.getElementById('title').innerText = chrome.i18n
 				.getMessage("extName");
 		bg.debug("title set");
 		message = document.getElementById('message');
-		message.innerText = browser.i18n
+		message.innerText = chrome.i18n
 				.getMessage("not_connected");
 		bg.debug("message set");
 		message.href = site.getFullUrl(site.getForumRoot()+'/');
