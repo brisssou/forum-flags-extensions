@@ -1,22 +1,24 @@
  {
-	"manifest_version": 2,
-	"name": "Template - MD FR - __MSG_extName__",
-	"version": "0.0.1",
-	"description": "__MSG_extShortDesc__",
-  	"background": {
-		"page": "bg.html"
-	},
-	"options_page": "options.html",
-	"default_locale": "fr",
-	"browser_action": {
-		"default_icon": "flag.gif",
-		"badge": ""
-	},
-	"icons": { "128": "128.png", "48": "48.png", "16": "icon.png" },
-	"permissions": [
-		"tabs",
-		"contextMenus",
-		"notifications",
-		"http://forum.hardware.fr/"
-	]
+  "manifest_version": 2,
+  "name": "Template - MD FR - __MSG_extName__",
+  "version": "0.0.1",
+  "description": "__MSG_extShortDesc__",
+    "background": {
+    "page": "bg.html"
+  },
+  "options_ui": {
+    "page": "options.html",
+    "browser_style": false
+  },
+  "default_locale": "fr",
+  "browser_action": {
+    "default_icon": "flag.gif"
+  },
+  "icons": { "128": "128.png", "48": "48.png", "16": "icon.png" },
+  "permissions": [
+    "tabs",
+    "contextMenus",
+    "notifications",
+    "http://forum.hardware.fr/"
+  ]
 }
