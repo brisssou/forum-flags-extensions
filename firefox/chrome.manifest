@@ -1,7 +1,0 @@
-content   hfr-drap4ff                 chrome/content/
-skin      hfr-drap4ff   classic/1.0   chrome/skin/
-locale    hfr-drap4ff   en-US         chrome/locale/en-US/
-
-
-overlay   chrome://browser/content/browser.xul   chrome://hfr-drap4ff/content/ff-overlay.xul
-style chrome://global/content/customizeToolbar.xul chrome://hfr-drap4ff/skin/overlay.css
