@@ -16,7 +16,6 @@
   "permissions": [
     "tabs",
     "contextMenus",
-	"notifications",
     "http://www.mesdiscussions.net/"
   ]
 }

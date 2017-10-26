@@ -5,7 +5,6 @@ function mute(cat, post, title) {
 }
 
 function initPopup() {
-	var innerHtml = "";
 	var entry;
 	var catPrev = null;
 	var catCur = null;
@@ -13,7 +12,11 @@ function initPopup() {
 	var site = bgPage.site;
 	var popupContent = bgPage.popupContent;
 	var bgColor = getPref(BG_COLOR);
-	innerHtml += "<ul style=\"background-color: " + bgColor + "\">";
+	var entries = document.getElementById('entries');
+	clear(entries);
+	var ul = document.createElement('ul');
+	entries.appendChild(ul);
+	ul.style = "background-color: " + bgColor;
 	var openCatPref = getPref(OPEN_CAT);
 	var thingsToOpen = false;
 	var link_id_base = 'link_';
@@ -23,78 +26,95 @@ function initPopup() {
 		thingsToOpen = true;
 		catCur = 'prive';
 		link_id = link_id_base + 'MP';
-		innerHtml += "<li id=\"mp\"><a href=\"#\" id=\"" + link_id + "\">";
-		links_actions[link_id] = function(url) {
+		var li = document.createElement('li');
+		li.id = "mp";
+		var a = document.createElement('a');
+		a.setAttribute('href', '#');
+		a.id = link_id;
+		li.appendChild(a);
+		a.addEventListener('click', function(url) {
 			return function() {
 				goToPage(url, true);
 				return false;
 			};
-		}(site.getMpsUrl(catCur));
-		innerHtml += popupContent.mpsNb;
-		innerHtml += ' ';
+		}(site.getMpsUrl(catCur)));
+		var private_msg = popupContent.mpsNb;
+		private_msg += ' ';
 		if (popupContent.mpsNb > 1) {
-			innerHtml += chrome.i18n.getMessage("private_messages");
+			private_msg += chrome.i18n.getMessage("private_messages");
 		} else {
-			innerHtml += chrome.i18n.getMessage("private_message");
+			private_msg += chrome.i18n.getMessage("private_message");
 		}
-		innerHtml += "</a></li>";
+
+		a.appendChild(document.createTextNode(private_msg));
 	}
+	var currentCatLi = null;
 	for ( var i = 0; i < popupContent.entries.length; i++) {
 		entry = popupContent.entries[i];
 		if (!isMuted(entry.cat, entry.post)) {
 			thingsToOpen = true;
 			catCur = entry.cat;
 			if (catCur != catPrev) {
-				if (catPrev != null) {
-					innerHtml += "</li></ul>";
-				}
-				innerHtml += "<li>";
+				currentCatLi = document.createElement('li');
+				ul.appendChild(currentCatLi);
 				if (getPref(SHOW_CAT)) {
 					link_id = link_id_base + 'cat_' + i;
-					innerHtml += "<a href=\"#\" id=\"" + link_id + "\">";
-					innerHtml += bgPage.cats[catCur];
-					innerHtml += "</a>";
+					var a = document.createElement('a');
+					a.id = link_id;
+					a.setAttribute('href', '#');
+					currentCatLi.appendChild(a);
+					a.appendChild(document.createTextNode(bgPage.cats[catCur]));
 					if (openCatPref) {
-						links_actions[link_id] = function(cat) {
-							return function() {
-								openCat(cat);
-								return false;
-							};
-						}(catCur);
+						a.addEventListener('click', function(cat) {
+								return function() {
+									openCat(cat);
+									return false;
+								};
+							}(catCur));
 					} else {
-						links_actions[link_id] = function(href) {
-							return function() {
-								goToPage(href, true);
-								return false;
-							};
-						}(site.getOwnCatUrl(catCur));
+						a.addEventListener('click', function(href) {
+								return function() {
+									goToPage(href, true);
+									return false;
+								};
+							}(site.getOwnCatUrl(catCur)));
 					}
 				}
-				innerHtml += "<ul>";
 			}
-			innerHtml += "<li>";
+			var innerUl = document.createElement('ul');
+			currentCatLi.appendChild(innerUl);
+			var li = document.createElement('li');
+			innerUl.appendChild(li);
 			if (entry.cat != "modo") {
 				link_id = link_id_base + 'mute_' + i;
-				innerHtml += "<a href=\"#\" id=\"" + link_id
-						+ "\" class=\"mute\">";
-				links_actions[link_id] = function(some_entry) {
-					return function() {
-						mute(some_entry.cat, some_entry.post, some_entry.title
-								.replace(/&#039;/g, "\'"));
-						return false;
-					};
-				}(entry);
-				innerHtml += "<img src=\"mute.gif\" title=\""
-						+ chrome.i18n.getMessage("mute") + "\"/></a>";
+				var a = document.createElement('a');
+				li.appendChild(a);
+				a.id = link_id;
+				a.setAttribute('href', '#');
+				a.setAttribute('class', 'mute');
+				a.addEventListener('click', function(some_entry) {
+						return function() {
+							mute(some_entry.cat, some_entry.post, some_entry.title
+									.replace(/&#039;/g, "\'"));
+							return false;
+						};
+					}(entry));
+				var img = document.createElement('img');
+				a.appendChild(img);
+				img.setAttribute('src', 'mute.gif');
+				img.setAttribute('title', chrome.i18n.getMessage("mute"));
 			}
 			link_id = link_id_base + 'thread_' + i;
-			innerHtml += "&nbsp;<a href=\"#\" id=\"" + link_id + "\"";
-			links_actions[link_id] = function(href) {
-				return function() {
-					goToPage(href, true);
-					return false;
-				}
-			}(getFullUrl(htmlDecode(entry.href)));
+			li.appendChild(document.createTextNode(' '));
+			var a = document.createElement('a');
+			li.appendChild(a);
+			a.id = link_id;
+			a.addEventListener('click', function(href) {
+					return function() {
+						goToPage(href, true);
+						return false;
+					}
+				}(getFullUrl(htmlDecode(entry.href))));
 			var linkTitle = "";
 			if (entry.nbUnread > 0) {
 				if (entry.nbUnread > 1) {
@@ -106,33 +126,35 @@ function initPopup() {
 			} else {
 				linkTitle += chrome.i18n.getMessage("no_new_page");
 			}
-			innerHtml += " title=\"";
-			innerHtml += linkTitle;
-			innerHtml += "\">";
-			innerHtml += entry.title;
-			innerHtml += "</a></li>";
+			a.setAttribute('title', linkTitle);
+			a.appendChild(document.createTextNode(he.decode(entry.title)));
 			catPrev = catCur;
 		}
 	}
-	innerHtml += "</ul>";
-	document.getElementById('entries').innerHTML = innerHtml;
 	document.getElementById('entries').style.maxHeight = screen.availHeight * .45;
 	if (thingsToOpen) {
 		document.getElementById('openAll').style.display = 'inline';
 	} else {
 		document.getElementById('openAll').style.display = 'none';
 	}
-	document.getElementById('goToSite').innerText = chrome.extension
-			.getBackgroundPage().site.name;
+	while (document.getElementById('goToSite').firstChild) {
+	    document.getElementById('goToSite').removeChild(document.getElementById('goToSite').firstChild);
+	}
+	document.getElementById('goToSite').appendChild(document.createTextNode(chrome.extension
+			.getBackgroundPage().site.name));
 
-	document.getElementById('openAll').innerText = chrome.i18n.getMessage("open_all");
-	document.getElementById('refresh').innerText = chrome.i18n.getMessage("refresh");
-	document.getElementById('options').innerText = chrome.i18n.getMessage("options");
 
-	for ( var link_id in links_actions) {
+	clear(document.getElementById('openAll'));
+	clear(document.getElementById('refresh'));
+	clear(document.getElementById('options'));
+	document.getElementById('openAll').appendChild(document.createTextNode(chrome.i18n.getMessage("open_all")));
+	document.getElementById('refresh').appendChild(document.createTextNode(chrome.i18n.getMessage("refresh")));
+	document.getElementById('options').appendChild(document.createTextNode(chrome.i18n.getMessage("options")));
+
+	/*for ( var link_id in links_actions) {
 		$("body").off('click', "#"+link_id,	links_actions[link_id]);
 		$("#"+link_id).click(links_actions[link_id]);
-	}
+	}*/
 }
 
 $(document).ready(function(){

@@ -58,6 +58,7 @@
 			<include name="web.js" />
 			<include name="jquery-3.2.1.min.js"/>
 			<include name="konami.js"/>
+			<include name="he.js"/>
 			<include name="_locales/**" />
 		</patternset>
 	</fileset>

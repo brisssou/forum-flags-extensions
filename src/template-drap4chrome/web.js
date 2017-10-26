@@ -4,6 +4,12 @@ var requestTimeout = 1000 * 2;	// 2 seconds
 
 var bg = chrome.extension.getBackgroundPage();
 
+function clear(element) {
+	while (element.firstChild) {
+	    element.removeChild(element.firstChild);
+	}
+}
+
 function getUsedURL() {
 	return getPref(ONLY_FAVS) ? bg.site.getFavsUrl():bg.site.getDrapsUrl();
 }
@@ -102,11 +108,7 @@ function getUnreadCount(onSuccess, onError) {
 				debug("There is a responseText  - size="+xhr.responseText.length);
 				var content = xhr.responseText;
 				if (site.notConnectedRex.exec(content)) {
-					webkitNotifications.createNotification(
-					  '48.png',  // icon url - can be relative
-					  chrome.i18n.getMessage("extName"),  // notification title
-					  chrome.i18n.getMessage("not_connected")  // notification body text
-					).show();
+					updateBadge('x');
 					debug("nUser not connected");
 					handleError();
 				} else {
