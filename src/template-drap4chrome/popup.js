@@ -114,7 +114,7 @@ function initPopup() {
                         goToPage(href, true);
                         return false;
                     }
-                }(getFullUrl(htmlDecode(entry.href))));
+                }(getFullUrl(he.decode(entry.href))));
             var linkTitle = "";
             if (entry.nbUnread > 0) {
                 if (entry.nbUnread > 1) {
