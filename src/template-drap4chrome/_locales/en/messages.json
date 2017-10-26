@@ -1,204 +1,204 @@
 {
-	"extName": {
-		"message": "My Threads",
-		"description": "Extension's name"
-	},
-	"extShortDesc": {
-		"message": "Checks is your contributed threads have some new unread responses.",
-		"description": "Extension's short description, as it will be seen on the chrome galery page."
-	},
-	"errorOnlyInt": {
-		"message": "Only integers, thanks!",
-		"description": "Error message telling the user only int are to used."
-	},
-	"errorMinRefreshTime": {
-		"message": "Be kind with our servers. $MINTIME$ seconds minimum.",
-		"description": "Error message telling the user only int are to used.",
-		"placeholders": {
-			"MINTIME": {
-				"content": "$1",
-				"example": "50"
-			}
-		}
-	},
-	"REFRESH_TIME_label": {
-		"message": "Refresh time, in seconds:",
-		"description": "A label for min refresh time option text box."
-	},
-	"MAX_OPEN_ALL_label": {
-		"message": "Max number of tabs open simultaneously without warning:",
-		"description": "A label for max tabs when open all/open cat."
-	},
-	"MAX_OPEN_ALL_label_title": {
-		"message": "When clicking 'Open all' or a catégory, if it triggers more new tabs than this number, you will be prompted for a confirmation.",
-		"description": "A title for max tabs when open all/open cat."
-	},
-	"GET_TOPICS_label": {
-		"message": "Retrieve number of unread threads:",
-		"description": "A label to ask the user whether he want's the extension to tell him how many unread topics he has left."
-	},
-	"GET_MPS_label": {
-		"message": "Retrieve nunmber of unread private messages:",
-		"description": "A label to ask the user whether he want's the extension to tell him how many unread PM he has left."
-	},
-	"ONLY_FAVS_label": {
-		"message": "Refresh only bookmarks:",
-		"description": "A label to ask the user whether he want's the extension to notify him for bookmarks, or bookmarks+flags."
-	},
-	"ONLY_FAVS_label_title": {
-		"message": "If unchecked, refresh contributed threads AND bookmarks.",
-		"description": "A title to explain what ONLY_FAVS will do."
-	},
-	"OPEN_TO_FRONT_label": {
-		"message": "Open links to front:",
-		"description": "A label to ask the user if he wants the links to be open in a new tab."
-	},
-	"USE_DIRECT_LINK_label": {
-		"message": "Clicking the icon opens the unread threads page:",
-		"description": "A label to ask the user what will be the behavior of the browser action."
-	},
-	"USE_DIRECT_LINK_label_title": {
-		"message": "If unchecked, a popup is shown.",
-		"description": "A title to explain what USE_DIRECT_LINK will do."
-	},
-	"SHOW_CAT_label": {
-		"message": "Display categories' name in the popup:",
-		"description": "A label to ask the user if he wantsto see cat's name in the popup."
-	},
-	"OPEN_CAT_label": {
-		"message": "Clicking category's name in the popup opens all category's unread threads.",
-		"description": "A label to ask the user what will be the behavior when he clicks on a cat in the popup."
-	},
-	"OPEN_CAT_label_title": {
-		"message": "If unchecked, opens the category's page.",
-		"description": "A title to explain what OPEN_CAT will do."
-	},
-	"USE_CONTEXT_MENU_label": {
-		"message": "Enable context menu to refresh:",
-		"description": "A label to ask the user if he wants to use the context menu."
-	},
-	"USE_CONTEXT_MENU_label_title": {
-		"message": "Menu is shown upon right click on a page (along with copy, paste, ...).",
-		"description": "A title to explain what USE_CONTEXT_MENU will do."
-	},
-	"ANIMATED_ICON_label": {
-		"message": "Animate the icon if there are unread threads or private messages:",
-		"description": "A label to ask the user if he wants the browser action to move when unread topics are to be read."
-	},
-	"NEW_TAB_label": {
-		"message": "Open links in a new tab:",
-		"description": "A label to ask the user if he wants the links to be open in a new tab."
-	},
-	"NEW_TAB_label_title": {
-		"message": "'Open all' will ALWAYS open in new tabs.",
-		"description": "A title to explain what NEW_TAB will do."
-	},
-	"BG_COLOR_label": {
-		"message": "Main color:",
-		"description": "A label to ask the user want the main color will be."
-	},
-	"setDefaultColor": {
-		"message": "Default color",
-		"description": "A label to reset the main color to the site's default."
-	},
-	"muted_label": {
-		"message": "Muted thread:",
-		"description": "A label to display muted topics."
-	},
-	"DEBUG_ON_label": {
-		"message": "Debug mode:",
-		"description": "A label to ask the user if he wants the extension in debug mode."
-	},
-	"DEBUG_ON_label_title": {
-		"message": "Messages are available in the browser console.",
-		"description": "A title to explain what DEBUG_ON will do."
-	},
-	"optionsPageTitle": {
-		"message": "$SITE_NAME$ - My Threads - Options",
-		"description": "The Options page's title",
-		"placeholders": {
-			"SITE_NAME": {
-				"content": "$1",
-				"example": "Tom's Hardware France"
-			}
-		}
-	},
-	"options_unmute": {
-		"message": "Unmute",
-		"description": "The unmute button label"
-	},
-	"private_message": {
-		"message": "Private message",
-		"description": "Private Message label"
-	},
-	"private_messages": {
-		"message": "Private Messages",
-		"description": "Private Messages label"
-	},
-	"mute": {
-		"message": "Mute",
-		"description": "Mute title"
-	},
-	"no_new_page": {
-		"message": "No new page",
-		"description": "no new page"
-	},
-	"new_page": {
-		"message": "1 new page",
-		"description": "one new page"
-	},
-	"new_pages": {
-		"message": "$NB_PAGES$ new pages",
-		"description": "NB_PAGES new pages",
-		"placeholders": {
-			"NB_PAGES": {
-				"content": "$1",
-				"example": "5"
-			}
-		}
-	},
-	"open_all": {
-		"message": "Open all",
-		"description": "open all"
-	},
-	"refresh": {
-		"message": "Refresh",
-		"description": "refresh"
-	},
-	"options": {
-		"message": "Options",
-		"description": "options"
-	},
-	"refresh_menu_label": {
-		"message": "Refresh $SITE$",
-		"description": "options",
-		"placeholders": {
-			"SITE": {
-				"content": "$1",
-				"example": "Tom's Guide"
-			}
-		}
-	},
-	"too_many_new_tabs": {
-		"message": "You are about to open $NB_TABS$ tabs. That's a lot. Are you sure?'",
-		"description": "options",
-		"placeholders": {
-			"NB_TABS": {
-				"content": "$1",
-				"example": "12"
-			}
-		}
-	},
-	"bookmarks": {
-		"message": "Favoris'",
-		"description": "bookmarks"
-	},
-	"cyan_flags": {
-		"message": "Drapeaux cyans",
-		"description": "cyan flags"
-	},
-	"not_connected": {
-		"message": "You are not connected!",
-		"description": "Not connected message"
-	}
+    "extName": {
+        "message": "My Threads",
+        "description": "Extension's name"
+    },
+    "extShortDesc": {
+        "message": "Checks is your contributed threads have some new unread responses.",
+        "description": "Extension's short description, as it will be seen on the chrome galery page."
+    },
+    "errorOnlyInt": {
+        "message": "Only integers, thanks!",
+        "description": "Error message telling the user only int are to used."
+    },
+    "errorMinRefreshTime": {
+        "message": "Be kind with our servers. $MINTIME$ seconds minimum.",
+        "description": "Error message telling the user only int are to used.",
+        "placeholders": {
+            "MINTIME": {
+                "content": "$1",
+                "example": "50"
+            }
+        }
+    },
+    "REFRESH_TIME_label": {
+        "message": "Refresh time, in seconds:",
+        "description": "A label for min refresh time option text box."
+    },
+    "MAX_OPEN_ALL_label": {
+        "message": "Max number of tabs open simultaneously without warning:",
+        "description": "A label for max tabs when open all/open cat."
+    },
+    "MAX_OPEN_ALL_label_title": {
+        "message": "When clicking 'Open all' or a catégory, if it triggers more new tabs than this number, you will be prompted for a confirmation.",
+        "description": "A title for max tabs when open all/open cat."
+    },
+    "GET_TOPICS_label": {
+        "message": "Retrieve number of unread threads:",
+        "description": "A label to ask the user whether he want's the extension to tell him how many unread topics he has left."
+    },
+    "GET_MPS_label": {
+        "message": "Retrieve nunmber of unread private messages:",
+        "description": "A label to ask the user whether he want's the extension to tell him how many unread PM he has left."
+    },
+    "ONLY_FAVS_label": {
+        "message": "Refresh only bookmarks:",
+        "description": "A label to ask the user whether he want's the extension to notify him for bookmarks, or bookmarks+flags."
+    },
+    "ONLY_FAVS_label_title": {
+        "message": "If unchecked, refresh contributed threads AND bookmarks.",
+        "description": "A title to explain what ONLY_FAVS will do."
+    },
+    "OPEN_TO_FRONT_label": {
+        "message": "Open links to front:",
+        "description": "A label to ask the user if he wants the links to be open in a new tab."
+    },
+    "USE_DIRECT_LINK_label": {
+        "message": "Clicking the icon opens the unread threads page:",
+        "description": "A label to ask the user what will be the behavior of the browser action."
+    },
+    "USE_DIRECT_LINK_label_title": {
+        "message": "If unchecked, a popup is shown.",
+        "description": "A title to explain what USE_DIRECT_LINK will do."
+    },
+    "SHOW_CAT_label": {
+        "message": "Display categories' name in the popup:",
+        "description": "A label to ask the user if he wantsto see cat's name in the popup."
+    },
+    "OPEN_CAT_label": {
+        "message": "Clicking category's name in the popup opens all category's unread threads.",
+        "description": "A label to ask the user what will be the behavior when he clicks on a cat in the popup."
+    },
+    "OPEN_CAT_label_title": {
+        "message": "If unchecked, opens the category's page.",
+        "description": "A title to explain what OPEN_CAT will do."
+    },
+    "USE_CONTEXT_MENU_label": {
+        "message": "Enable context menu to refresh:",
+        "description": "A label to ask the user if he wants to use the context menu."
+    },
+    "USE_CONTEXT_MENU_label_title": {
+        "message": "Menu is shown upon right click on a page (along with copy, paste, ...).",
+        "description": "A title to explain what USE_CONTEXT_MENU will do."
+    },
+    "ANIMATED_ICON_label": {
+        "message": "Animate the icon if there are unread threads or private messages:",
+        "description": "A label to ask the user if he wants the browser action to move when unread topics are to be read."
+    },
+    "NEW_TAB_label": {
+        "message": "Open links in a new tab:",
+        "description": "A label to ask the user if he wants the links to be open in a new tab."
+    },
+    "NEW_TAB_label_title": {
+        "message": "'Open all' will ALWAYS open in new tabs.",
+        "description": "A title to explain what NEW_TAB will do."
+    },
+    "BG_COLOR_label": {
+        "message": "Main color:",
+        "description": "A label to ask the user want the main color will be."
+    },
+    "setDefaultColor": {
+        "message": "Default color",
+        "description": "A label to reset the main color to the site's default."
+    },
+    "muted_label": {
+        "message": "Muted thread:",
+        "description": "A label to display muted topics."
+    },
+    "DEBUG_ON_label": {
+        "message": "Debug mode:",
+        "description": "A label to ask the user if he wants the extension in debug mode."
+    },
+    "DEBUG_ON_label_title": {
+        "message": "Messages are available in the browser console.",
+        "description": "A title to explain what DEBUG_ON will do."
+    },
+    "optionsPageTitle": {
+        "message": "$SITE_NAME$ - My Threads - Options",
+        "description": "The Options page's title",
+        "placeholders": {
+            "SITE_NAME": {
+                "content": "$1",
+                "example": "Tom's Hardware France"
+            }
+        }
+    },
+    "options_unmute": {
+        "message": "Unmute",
+        "description": "The unmute button label"
+    },
+    "private_message": {
+        "message": "Private message",
+        "description": "Private Message label"
+    },
+    "private_messages": {
+        "message": "Private Messages",
+        "description": "Private Messages label"
+    },
+    "mute": {
+        "message": "Mute",
+        "description": "Mute title"
+    },
+    "no_new_page": {
+        "message": "No new page",
+        "description": "no new page"
+    },
+    "new_page": {
+        "message": "1 new page",
+        "description": "one new page"
+    },
+    "new_pages": {
+        "message": "$NB_PAGES$ new pages",
+        "description": "NB_PAGES new pages",
+        "placeholders": {
+            "NB_PAGES": {
+                "content": "$1",
+                "example": "5"
+            }
+        }
+    },
+    "open_all": {
+        "message": "Open all",
+        "description": "open all"
+    },
+    "refresh": {
+        "message": "Refresh",
+        "description": "refresh"
+    },
+    "options": {
+        "message": "Options",
+        "description": "options"
+    },
+    "refresh_menu_label": {
+        "message": "Refresh $SITE$",
+        "description": "options",
+        "placeholders": {
+            "SITE": {
+                "content": "$1",
+                "example": "Tom's Guide"
+            }
+        }
+    },
+    "too_many_new_tabs": {
+        "message": "You are about to open $NB_TABS$ tabs. That's a lot. Are you sure?'",
+        "description": "options",
+        "placeholders": {
+            "NB_TABS": {
+                "content": "$1",
+                "example": "12"
+            }
+        }
+    },
+    "bookmarks": {
+        "message": "Favoris'",
+        "description": "bookmarks"
+    },
+    "cyan_flags": {
+        "message": "Drapeaux cyans",
+        "description": "cyan flags"
+    },
+    "not_connected": {
+        "message": "You are not connected!",
+        "description": "Not connected message"
+    }
 }
