@@ -29,20 +29,20 @@ function goToPage(url, readNewTabPref) {
     if (readNewTabPref == null) readNewTabPref = false;
         chrome.tabs.query({currentWindow: true}, function(tabs){
 
-        for (var i = 0, tab; tab = tabs[i]; i++) {
-            if (tab.url && tab.url == url) {
-                chrome.tabs.update(tab.id, {selected: true, url:url});
-                return;
+            for (var i = 0, tab; tab = tabs[i]; i++) {
+                if (tab.url && tab.url == url) {
+                    chrome.tabs.update(tab.id, {selected: true, url:url});
+                    return;
+                }
             }
-        }
-        if (readNewTabPref && !getPref(NEW_TAB)) {
-            chrome.tabs.getSelected(undefined, function(tab){
-                chrome.tabs.update(tab.id, {selected: true, url:url});
-            });
-        } else {
-            chrome.tabs.create({url: url});
-        }
-    });
+            if (readNewTabPref && !getPref(NEW_TAB)) {
+                chrome.tabs.query({active: true}, function(tab){
+                    chrome.tabs.update(tab.id, {selected: true, url:url});
+                });
+            } else {
+                chrome.tabs.create({url: url});
+            }
+        });
     waitAndRefresh();
 }
 
