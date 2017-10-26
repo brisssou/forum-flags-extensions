@@ -2,12 +2,6 @@
     chrome.extension.getBackgroundPage().window.setTimeout(chrome.extension.getBackgroundPage().startRequest, 700);
 }
 
-function htmlDecode(input){
-    var e = document.createElement('div');
-    e.innerHTML = input;
-    return e.childNodes[0].nodeValue;
-}
-
 function initBehaviour() {
     if (getPref(USE_DIRECT_LINK)) {
         chrome.browserAction.setPopup({popup:""});
@@ -62,7 +56,7 @@ function openAll() {
     if (popupContent.entries.length < getPref(MAX_OPEN_ALL) || confirm(chrome.i18n.getMessage('too_many_new_tabs', String(popupContent.entries.length)))) {
         for (var i = 0; i < popupContent.entries.length; i++) {
             entry = popupContent.entries[i];
-            goToPage(getFullUrl(htmlDecode(entry.href)), false);
+            goToPage(getFullUrl(he.decode(entry.href)), false);
         }
     }
     waitAndRefresh();
@@ -76,7 +70,7 @@ function openCat(cat) {
         for (var i = 0; i < popupContent.entries.length; i++) {
             entry = popupContent.entries[i];
             if (entry.cat == cat) {
-                entries.push(getFullUrl(htmlDecode(entry.href)));
+                entries.push(getFullUrl(he.decode(entry.href)));
             }
         }
         
