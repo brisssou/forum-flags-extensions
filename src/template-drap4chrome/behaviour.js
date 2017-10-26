@@ -94,7 +94,9 @@ function openCat(cat) {
 }
 
 function updateBadge(nbUnread) {
-	if (nbUnread && nbUnread != null && parseInt(nbUnread) != NaN && parseInt(nbUnread) > 0) {
+	if (nbUnread && nbUnread != null && 
+		((parseInt(nbUnread) != NaN && parseInt(nbUnread) > 0) 
+			|| nbUnread == "x")) {
 		chrome.browserAction.setBadgeText({text:""+nbUnread});
 		if (getPref(ANIMATED_ICON)) animateFlip();
 	} else if (nbUnread != null && parseInt(nbUnread) == 0){

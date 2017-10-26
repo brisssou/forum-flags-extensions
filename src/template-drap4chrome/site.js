@@ -111,8 +111,8 @@ Hfr.prototype.parseCats = function(content) {
 	if (matches!=null) {
 		var catsString = matches[0];
 		while (matches = this.catsRex.exec(catsString)) {
-			cats[matches[1]] = matches[2];
-			debug("new cat :"+matches[1]+"/"+matches[2]);
+			cats[matches[1]] = he.decode(matches[2]);
+			debug("new cat :"+matches[1]+"/"+he.decode(matches[2]));
 		}
 	}
 	return cats;

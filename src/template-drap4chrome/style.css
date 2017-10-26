@@ -129,16 +129,3 @@
 #entries	a:hover {
 	text-decoration: underline;
 }
-
-/* Notification */
-#notification {
-	font-size: small;
-	height: 70px;
-}
-#notification img {
-	float: left;
-	margin-right: 15px;
-}
-#notification h1 {
-	margin-bottom: 0;
-}
