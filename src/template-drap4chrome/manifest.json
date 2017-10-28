@@ -11,9 +11,9 @@
   },
   "default_locale": "fr",
   "browser_action": {
-    "default_icon": "flag.gif"
+    "default_icon": "images/flag.gif"
   },
-  "icons": { "128": "128.png", "48": "48.png", "16": "icon.png" },
+  "icons": { "128": "images/128.png", "48": "images/48.png", "16": "images/icon.png" },
   "permissions": [
     "tabs",
     "contextMenus",

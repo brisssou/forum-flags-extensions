@@ -1,4 +1,3 @@
-
 function mute(cat, post, title) {
     _mute(cat, post, title);
     initPopup();
@@ -29,7 +28,7 @@ function initPopup() {
         var li = document.createElement('li');
         li.id = "mp";
         var a = document.createElement('a');
-        a.setAttribute('href', '#');
+        a.setAttribute('href', site.getMpsUrl(catCur));
         a.id = link_id;
         li.appendChild(a);
         a.addEventListener('click', function(url) {
@@ -57,12 +56,10 @@ function initPopup() {
             if (catCur != catPrev) {
                 currentCatLi = document.createElement('li');
                 ul.appendChild(currentCatLi);
+                var a = document.createElement('a');
+                currentCatLi.appendChild(a);
                 if (getPref(SHOW_CAT)) {
                     link_id = link_id_base + 'cat_' + i;
-                    var a = document.createElement('a');
-                    a.id = link_id;
-                    a.setAttribute('href', '#');
-                    currentCatLi.appendChild(a);
                     a.appendChild(document.createTextNode(bgPage.cats[catCur]));
                     if (openCatPref) {
                         a.addEventListener('click', function(cat) {
@@ -90,7 +87,6 @@ function initPopup() {
                 var a = document.createElement('a');
                 li.appendChild(a);
                 a.id = link_id;
-                a.setAttribute('href', '#');
                 a.setAttribute('class', 'mute');
                 a.addEventListener('click', function(some_entry) {
                         return function() {
@@ -101,7 +97,7 @@ function initPopup() {
                     }(entry));
                 var img = document.createElement('img');
                 a.appendChild(img);
-                img.setAttribute('src', 'mute.gif');
+                img.setAttribute('src', 'images/mute.gif');
                 img.setAttribute('title', chrome.i18n.getMessage("mute"));
             }
             link_id = link_id_base + 'thread_' + i;
@@ -109,6 +105,7 @@ function initPopup() {
             var a = document.createElement('a');
             li.appendChild(a);
             a.id = link_id;
+            a.setAttribute('href', getFullUrl(he.decode(entry.href)));
             a.addEventListener('click', function(href) {
                     return function() {
                         goToPage(href, true);
@@ -137,31 +134,24 @@ function initPopup() {
     } else {
         document.getElementById('openAll').style.display = 'none';
     }
-    while (document.getElementById('goToSite').firstChild) {
-        document.getElementById('goToSite').removeChild(document.getElementById('goToSite').firstChild);
-    }
-    document.getElementById('goToSite').appendChild(document.createTextNode(chrome.extension
-            .getBackgroundPage().site.name));
+
+    document.getElementById('goToSite').setAttribute('title', chrome.extension.getBackgroundPage().site.name);
 
 
-    clear(document.getElementById('openAll'));
-    clear(document.getElementById('refresh'));
-    clear(document.getElementById('options'));
-    document.getElementById('openAll').appendChild(document.createTextNode(chrome.i18n.getMessage("open_all")));
-    document.getElementById('refresh').appendChild(document.createTextNode(chrome.i18n.getMessage("refresh")));
-    document.getElementById('options').appendChild(document.createTextNode(chrome.i18n.getMessage("options")));
+    document.getElementById('openAll').setAttribute('title', chrome.i18n.getMessage("open_all"));
+    document.getElementById('refresh').setAttribute('title', chrome.i18n.getMessage("refresh"));
+    document.getElementById('options').setAttribute('title', chrome.i18n.getMessage("options"));
 
-    /*for ( var link_id in links_actions) {
-        $("body").off('click', "#"+link_id,    links_actions[link_id]);
-        $("#"+link_id).click(links_actions[link_id]);
-    }*/
 }
 
-$(document).ready(function(){
-    initPopup();
+document.addEventListener(
+    'DOMContentLoaded', 
+    function(){
+        initPopup();
 
-    $("#openAll").click(openAll);
-    $("#refresh").click(chrome.extension.getBackgroundPage().startRequest);
-    $("#goToSite").click(goToHfr);
-    $("#options").click(function(){goToPage('options.html', false);});
-});
+        document.getElementById('openAll').addEventListener('click', openAll);
+        document.getElementById('refresh').addEventListener('click', chrome.extension.getBackgroundPage().startRequest);
+        document.getElementById('goToSite').addEventListener('click', goToHfr);
+        document.getElementById('options').addEventListener('click', function(){goToPage('options.html', false);});
+    },
+    false);
