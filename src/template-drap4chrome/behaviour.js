@@ -1,4 +1,4 @@
-﻿function waitAndRefresh() {
+function waitAndRefresh() {
     chrome.extension.getBackgroundPage().window.setTimeout(chrome.extension.getBackgroundPage().startRequest, 700);
 }
 
@@ -9,7 +9,9 @@ function initBehaviour() {
         chrome.browserAction.setPopup({popup:"pop.html"});
     }
     if (getPref(USE_CONTEXT_MENU)) {
-        chrome.contextMenus.create({title:chrome.i18n.getMessage("refresh_menu_label", chrome.extension.getBackgroundPage().site.name), onclick:startRequest});
+        chrome.contextMenus.create({title:chrome.i18n.getMessage("refresh_menu_label", 
+            chrome.extension.getBackgroundPage().site.name), 
+        onclick:startRequest});
     } else {
         chrome.contextMenus.removeAll();
     }
@@ -44,10 +46,12 @@ function goToPage(url, readNewTabPref) {
             }
         });
     waitAndRefresh();
+    return false;
 }
 
 function goToHfr(){
     goToPage(getUsedURL(), true);
+    return false;
 }
 
 function openAll() {
@@ -60,6 +64,7 @@ function openAll() {
         }
     }
     waitAndRefresh();
+    return false;
 }
 
 function openCat(cat) {
@@ -85,6 +90,7 @@ function openCat(cat) {
         var site = bgPage.site;
         goToPage(site.getOwnCatUrl(cat), false);
     }
+    return false;
 }
 
 function updateBadge(nbUnread) {

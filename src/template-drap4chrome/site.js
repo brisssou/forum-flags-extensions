@@ -99,7 +99,7 @@ Hfr.prototype.parseMps = function(content) {
     if (mps != null) {
         mpsNb = parseInt(mps[1]);
         if (mpsNb == NaN) mpsNb = 0;
-        debug("found "+mpsNb+" private messages");
+        debug("found " + mpsNb + " private messages");
     }
     return mpsNb;
 };

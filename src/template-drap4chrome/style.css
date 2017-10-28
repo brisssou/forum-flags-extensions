@@ -79,6 +79,11 @@
     font-size : 8pt;
 }
 
+#headBar img {
+    width: 15px;
+    cursor: pointer;
+}
+
 #left {
     float: left;
     margin-top: 2px;
@@ -86,6 +91,10 @@
 
 #right {
     float: right;
+}
+
+#right img {
+    margin-left: 15px;
 }
 
 #entries {
@@ -103,6 +112,10 @@
 
 #mp {
     background-color: red;
+}
+
+#entries ul>li>a {
+    cursor: pointer;
 }
 
 #entries ul>li>ul {
@@ -126,6 +139,6 @@
     margin-bottom: 15px;
 }
 
-#entries    a:hover {
+#entries a:hover {
     text-decoration: underline;
 }

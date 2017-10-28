@@ -56,9 +56,8 @@
 			<include name="site.js" />
 			<include name="style.css" />
 			<include name="web.js" />
-			<include name="jquery-3.2.1.min.js"/>
-			<include name="konami.js"/>
-			<include name="he.js"/>
+			<include name="libs/**"/>
+			<include name="images/icons8*"/>
 			<include name="_locales/**" />
 		</patternset>
 	</fileset>
@@ -72,7 +71,7 @@
 	</target>
 
 	<target name="copy" description="This script copies code from template-drap4chrome to t[gh].*-drap4chrome.">
-		<echo>Copiing...</echo>
+		<echo>Copying...</echo>
 		<mkdir dir="${copy}"/>
 		<for param="ext-dir">
 			<dirset refid="extensions" />
