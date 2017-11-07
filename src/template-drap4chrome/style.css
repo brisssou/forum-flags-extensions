@@ -1,8 +1,12 @@
 * {
-    font-family: "ubuntu";
+    font-family: Verdana,Arial,Sans-serif,Helvetica;
 }
 
 /*prefs page*/
+#optionsPage {
+    min-width: 1050px;
+}
+
 #prefs {
     text-align: center;
 }

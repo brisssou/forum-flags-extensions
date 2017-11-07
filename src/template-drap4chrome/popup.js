@@ -22,17 +22,17 @@ function initPopup() {
     var link_id = '';
     var links_actions = {};
     if (popupContent.mpsNb > 0) {
-        thingsToOpen = true;
-        catCur = 'prive';
         link_id = link_id_base + 'MP';
         var li = document.createElement('li');
+        ul.appendChild(li);
         li.id = "mp";
         var a = document.createElement('a');
         a.setAttribute('href', site.getMpsUrl(catCur));
         a.id = link_id;
         li.appendChild(a);
         a.addEventListener('click', function(url) {
-            return function() {
+            return function(e) {
+                e.preventDefault();
                 goToPage(url, true);
                 return false;
             };
@@ -63,14 +63,16 @@ function initPopup() {
                     a.appendChild(document.createTextNode(bgPage.cats[catCur]));
                     if (openCatPref) {
                         a.addEventListener('click', function(cat) {
-                                return function() {
+                                return function(e) {
+                                    e.preventDefault();
                                     openCat(cat);
                                     return false;
                                 };
                             }(catCur));
                     } else {
                         a.addEventListener('click', function(href) {
-                                return function() {
+                                return function(e) {
+                                    e.preventDefault();
                                     goToPage(href, true);
                                     return false;
                                 };
@@ -89,7 +91,8 @@ function initPopup() {
                 a.id = link_id;
                 a.setAttribute('class', 'mute');
                 a.addEventListener('click', function(some_entry) {
-                        return function() {
+                        return function(e) {
+                            e.preventDefault();
                             mute(some_entry.cat, some_entry.post, some_entry.title
                                     .replace(/&#039;/g, "\'"));
                             return false;
@@ -107,7 +110,8 @@ function initPopup() {
             a.id = link_id;
             a.setAttribute('href', getFullUrl(he.decode(entry.href)));
             a.addEventListener('click', function(href) {
-                    return function() {
+                    return function(e) {
+                        e.preventDefault();
                         goToPage(href, true);
                         return false;
                     }
