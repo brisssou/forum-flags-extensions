@@ -106,6 +106,23 @@ function updateBadge(nbUnread) {
     } else {
         chrome.browserAction.setBadgeText({text:"..."});
     }
+    var title = "";
+    var popupContent = chrome.extension.getBackgroundPage().popupContent;
+    if (popupContent.mpsNb > 0) {
+        title += popupContent.mpsNb;
+        title += " ";
+        if (popupContent.mpsNb > 1) {
+            title += chrome.i18n.getMessage("private_messages");
+        } else {
+            title += chrome.i18n.getMessage("private_message");
+        }
+        title += "\n";
+    }
+    for ( var i = 0; i < popupContent.entries.length; i++) {
+        entry = popupContent.entries[i];
+        title += he.decode(entry.title) + "\n";
+    }
+    chrome.browserAction.setTitle({title:title});
 }
 
 /*to rotate the chrome action icon, (not so) shamelessly copied from google Examples*/
