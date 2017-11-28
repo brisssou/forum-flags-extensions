@@ -17,6 +17,7 @@
   "permissions": [
     "tabs",
     "contextMenus",
+    "https://forum.hardware.fr/",
     "http://forum.hardware.fr/"
   ]
 }
