@@ -71,7 +71,7 @@ function Hfr() {
 }
 Hfr.prototype = new Site('HFR', "forum.hardware.fr", "hfr.inc", '#2F3740', 120, 'flags4chrome=1');
 Hfr.prototype.getSetupUrl = function() {
-    return this.applyXtor("http://"+this.hostAndBase+"/setperso.php?config="+this.config);
+    return this.applyXtor("https://"+this.hostAndBase+"/setperso.php?config="+this.config);
 };
 Hfr.prototype.parseUnread = function(content, muted) {
     var matches = null;
