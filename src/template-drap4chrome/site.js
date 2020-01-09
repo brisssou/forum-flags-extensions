@@ -6,6 +6,7 @@ function Site (name, hostAndBase, config, defaultColor, minRefreshTime, fragment
     this.minRefreshTime = minRefreshTime;
     this.fragment = fragment;
     this.parsableMpsUrl = undefined;
+    this.isSecured = false;
     
     
     Site.prototype.applyXtor = function(url) {
@@ -53,7 +54,8 @@ function Site (name, hostAndBase, config, defaultColor, minRefreshTime, fragment
         return null;
     };
     Site.prototype.getFullUrl = function(uri) {
-        return this.applyXtor("http://"+this.hostAndBase+uri);
+        var scheme = this.isSecured ? 'https' : 'http';
+        return this.applyXtor("https://"+this.hostAndBase+uri);
     };
 }
 
@@ -68,10 +70,11 @@ function Hfr() {
     this.catsMasterRex = /<select name="cat"(.+)<\/select>/;
     this.catsRex = /<option value="([^"]+)" >([^<]+)/g;
     this.notConnectedRex = /Aucun sujet que vous avez lu n'est connu/;
+    this.isSecured = true;
 }
 Hfr.prototype = new Site('HFR', "forum.hardware.fr", "hfr.inc", '#2F3740', 120, 'flags4chrome=1');
 Hfr.prototype.getSetupUrl = function() {
-    return this.applyXtor("https://"+this.hostAndBase+"/setperso.php?config="+this.config);
+    return this.getFullUrl("/setperso.php?config="+this.config);
 };
 Hfr.prototype.parseUnread = function(content, muted) {
     var matches = null;
