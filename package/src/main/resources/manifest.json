@@ -13,7 +13,13 @@
     "default_popup": "popup.html",
     "default_title": "Compose Chrome Extension Template"
   },
+  "background": {
+    "service_worker": "worker.js",
+    "type": "module"
+  },
   "permissions": [
+    "alarms",
+    "storage",
     "tabs"
   ]
 }

@@ -2,8 +2,10 @@
 
 package com.composeweb.chrome.wrapper
 
-external fun query(queryInfo: QueryInfo, callback: (Array<Tab>) -> Unit)
-external fun create(createProperties: Tab/*, optional function callback*/)
+import kotlin.js.Promise
+
+external fun query(queryInfo: QueryInfo): Promise<Tab>
+external fun create(createProperties: Tab): Promise<Tab>
 
 
 external interface QueryInfo {
