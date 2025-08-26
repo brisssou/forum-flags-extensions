@@ -10,7 +10,10 @@
   },
   "action": {
     "default_icon": "icons/icon128.png",
-    "default_popup": "index.html",
+    "default_popup": "popup.html",
     "default_title": "Compose Chrome Extension Template"
-  }
+  },
+  "permissions": [
+    "tabs"
+  ]
 }

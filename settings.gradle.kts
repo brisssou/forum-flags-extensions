@@ -8,3 +8,8 @@ pluginManagement {
 }
 rootProject.name = "compose-chrome-extension-template"
 
+include("common")
+include("worker")
+include("popup")
+include("prefs")
+include("package")
