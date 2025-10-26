@@ -6,7 +6,7 @@ pluginManagement {
     plugins {
     }
 }
-rootProject.name = "compose-chrome-extension-template"
+rootProject.name = "forum-flags-extension"
 
 include("common")
 include("worker")
