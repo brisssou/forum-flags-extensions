@@ -8,8 +8,4 @@ pluginManagement {
 }
 rootProject.name = "forum-flags-extension"
 
-include("common")
-include("worker")
-include("popup")
-include("prefs")
-include("package")
+include("common", "worker", "popup", "prefs", "package")
