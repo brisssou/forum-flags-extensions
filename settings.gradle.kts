@@ -8,4 +8,4 @@ pluginManagement {
 }
 rootProject.name = "forum-flags-extension"
 
-include("common", "worker", "popup", "prefs", "package")
+include("js-lib", "common", "worker", "popup", "prefs", "package")

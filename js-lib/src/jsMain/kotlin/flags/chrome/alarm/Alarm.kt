@@ -1,6 +1,6 @@
 @file:JsQualifier("chrome.alarms")
 
-package com.composeweb.chrome.alarm
+package flags.chrome.alarm
 
 import org.w3c.dom.events.Event
 import kotlin.js.Promise
