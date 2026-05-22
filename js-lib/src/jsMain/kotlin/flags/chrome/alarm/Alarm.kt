@@ -2,7 +2,6 @@
 
 package flags.chrome.alarm
 
-import org.w3c.dom.events.Event
 import kotlin.js.Promise
 
 external interface AlarmCreateInfo {
@@ -10,20 +9,20 @@ external interface AlarmCreateInfo {
      *
      * Length of time in minutes after which the onAlarm event should fire.
      */
-    var delayInMinutes: Int?
+    var delayInMinutes: Double?
 
     /**
      *
      * If set, the onAlarm event should fire every periodInMinutes minutes after the initial event specified by when or delayInMinutes. If not set, the alarm will only fire once.
      * when
      */
-    var periodInMinutes: Int?
+    var periodInMinutes: Double?
 
     /**
      * Time at which the alarm should fire, in milliseconds past the epoch (e.g. Date.now() + n).
      *
      */
-    var `when`: Int?
+    var `when`: Double?
 }
 
 external interface Alarm {
@@ -35,12 +34,12 @@ external interface Alarm {
     /**
      * If not null, the alarm is a repeating alarm and will fire again in periodInMinutes minutes.
      */
-    var periodInMinutes: Int?
+    var periodInMinutes: Double?
 
     /**
      * Time at which this alarm was scheduled to fire, in milliseconds past the epoch (e.g. Date.now() + n). For performance reasons, the alarm may have been delayed an arbitrary amount beyond this.
      */
-    var scheduledTime: Int
+    var scheduledTime: Double
 }
 
 /**
@@ -69,10 +68,10 @@ external fun get(
     name: String?,
 ): Promise<Alarm?>
 
-external object onAlarm : Event{
+external object onAlarm {
 
     /**
      * Fired when an alarm has elapsed. Useful for event pages.
      */
-    fun addListener(callBack: (Alarm)->Unit)
+    fun addListener(callBack: (Alarm) -> Unit)
 }

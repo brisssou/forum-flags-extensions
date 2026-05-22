@@ -17,8 +17,8 @@ fun createAlarm() {
             create(
                 ALARM,
                 AlarmCreateInfo {
-                    periodInMinutes = 1
-                    delayInMinutes = 1
+                    periodInMinutes = 1.0
+                    delayInMinutes = 1.0
                 }
             ).then { console.info("Alarm set") }
         } else {
