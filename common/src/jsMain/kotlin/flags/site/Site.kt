@@ -40,14 +40,10 @@ interface Site {
     fun drapsUrl(): String =
         "https://$host$basePath/forum1f.php?$fragment&config=$config&owntopic=1"
 
-    /** Absolute url of the private-messages ("messagerie", `cat=prive`) page. */
-    fun mpsUrl(): String =
-        "https://$host$basePath/forum1.php?$fragment&config=$config&cat=prive"
-
     /** Flagged topics with unread pages, parsed from the draps page html. */
     fun parseUnread(html: String): List<Topic>
 
-    /** Count of new private messages, parsed from the MP page html (0 if none). */
+    /** Count of new private messages, parsed from the draps page header (0 if none). */
     fun parseMps(html: String): Int
 
     /** True when [html] is the "not logged in" page rather than real content. */

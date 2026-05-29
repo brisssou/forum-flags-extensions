@@ -14,8 +14,14 @@ import kotlin.js.Promise
 
 private const val ALARM = "forum-flags-alarm"
 
-/** 1.0 badge background; blue (MP) is added with the private-messages milestone. */
+/** 1.0 badge backgrounds: red normally, blue when there are new private messages. */
 private val RED = arrayOf(255, 0, 0, 255)
+private val BLUE = arrayOf(0, 0, 255, 255)
+
+private fun setBadge(text: String, color: Array<Int>) {
+    setBadgeBackgroundColor(BadgeColorDetails { this.color = color })
+    setBadgeText(BadgeTextDetails { this.text = text })
+}
 
 fun createAlarm() {
     get(ALARM).then {
@@ -34,19 +40,27 @@ fun createAlarm() {
 }
 
 /**
- * Fetches the draps page, counts flagged topics and reflects it on the badge.
- * As in 1.0 the count is the number of flagged topics; an empty count blanks
- * the badge. Logged-out ("x") and private-message handling land later.
+ * The draps page header carries both the flagged topics and the new-MP notice,
+ * so one fetch is enough. "x" when logged out; otherwise show (flagged topics +
+ * new MPs) as in 1.0 — blue when MPs > 0, red otherwise, blank at 0. The
+ * `GET_MPS` gate lands with prefs.
  */
-fun refreshBadge(): Promise<Unit> =
-    fetchPage(Hfr.drapsUrl()).then { html ->
-        val topics = Hfr.parseUnread(html)
-        console.info("forum-flags: parsed ${topics.size} flagged topics")
-        setBadgeBackgroundColor(BadgeColorDetails { color = RED })
-        setBadgeText(BadgeTextDetails { text = if (topics.isEmpty()) "" else topics.size.toString() })
-    }.catch { e ->
-        console.warn("forum-flags: refresh failed", e)
+private fun updateBadgeFromDrapsPage(html: String) {
+    if (Hfr.isNotLoggedIn(html)) {
+        setBadge("x", RED)
+        return
     }
+    val topics = Hfr.parseUnread(html)
+    val mps = Hfr.parseMps(html)
+    val total = topics.size + mps
+    console.info("forum-flags: ${topics.size} flagged topics, $mps new MPs")
+    setBadge(if (total == 0) "" else total.toString(), if (mps > 0) BLUE else RED)
+}
+
+fun refreshBadge(): Promise<Unit> =
+    fetchPage(Hfr.drapsUrl())
+        .then(::updateBadgeFromDrapsPage)
+        .catch { e -> console.warn("forum-flags: refresh failed", e) }
 
 fun main() {
     console.info("starting worker")
