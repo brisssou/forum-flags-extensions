@@ -16,6 +16,7 @@ kotlin {
     sourceSets {
         val jsMain by getting {
             dependencies {
+                implementation(project(":js-lib"))
                 implementation(npm("linkedom", "0.18.12"))
             }
         }
