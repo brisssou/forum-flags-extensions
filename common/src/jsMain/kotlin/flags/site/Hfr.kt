@@ -37,8 +37,21 @@ object Hfr : Site {
                 nbUnread = (total - lastRead).coerceAtLeast(0),
             )
         }
+
+    /**
+     * The new-MP notice is the private-messages link (`cat=prive`) whose text
+     * reads "Vous avez N nouveau(x) message(s)…". Keyed on that semantic link
+     * rather than its `.red` styling; the plain "Messages privés" link carries
+     * no such phrase, and a missing notice means 0. `nouveau` is a prefix of
+     * `nouveaux`, so the regex covers singular and plural.
+     */
+    override fun parseMps(html: String): Int =
+        parseHTML(html).document.querySelectorAll("a[href*=\"cat=prive\"]")
+            .firstNotNullOfOrNull { el -> MP_COUNT.find(el.textContent.orEmpty())?.groupValues?.get(1)?.toIntOrNull() }
+            ?: 0
 }
 
 private val CAT = Regex("[?&]cat=(\\d+)")
 private val POST = Regex("[?&]post=(\\d+)")
 private val PAGE = Regex("[?&]page=(\\d+)")
+private val MP_COUNT = Regex("Vous avez (\\d+) nouveau")
