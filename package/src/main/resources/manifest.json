@@ -3,6 +3,7 @@
   "version": "2.0.0",
   "description": "Vérifie si les sujets drapalisés sur forum.hardware.fr ont de nouveaux messages.",
   "manifest_version": 3,
+  "default_locale": "fr",
   "icons": {
     "16": "images/icon.png",
     "48": "images/48.png",
