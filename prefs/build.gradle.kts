@@ -14,6 +14,8 @@ kotlin {
             dependencies {
                 implementation(compose.html.core)
                 implementation(compose.runtime)
+                implementation(project(":js-lib"))
+                implementation(project(":common"))
             }
         }
     }

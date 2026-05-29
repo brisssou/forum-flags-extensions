@@ -18,6 +18,10 @@
     "service_worker": "worker.js",
     "type": "module"
   },
+  "options_ui": {
+    "page": "prefs.html",
+    "open_in_tab": false
+  },
   "permissions": [
     "alarms",
     "storage",

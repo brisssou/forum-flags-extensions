@@ -8,6 +8,7 @@ import flags.parse.parseHTML
  */
 object Hfr : Site {
     override val id = "hfr"
+    override val displayName = "HFR"
     override val host = "forum.hardware.fr"
     override val config = "hfr.inc"
     override val defaultColor = "#2F3740"

@@ -14,6 +14,9 @@ interface Site {
     /** Stable identifier used to pick the active site at startup. */
     val id: String
 
+    /** Human-readable site name, e.g. `HFR` (shown in the options page title). */
+    val displayName: String
+
     /** Forum host, e.g. `forum.hardware.fr`. */
     val host: String
 
@@ -22,6 +25,9 @@ interface Site {
 
     /** Theme color (the 1.0 `BG_COLOR` default); per-site. */
     val defaultColor: String
+
+    /** Smallest allowed poll interval in seconds (1.0 used 120 for all sites). */
+    val minRefreshTimeSeconds: Int get() = 120
 
     /** Path prefix before the forum scripts (e.g. `/forum` for mesdiscussions). */
     val basePath: String get() = ""
