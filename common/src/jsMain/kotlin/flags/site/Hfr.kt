@@ -1,26 +1,44 @@
 package flags.site
 
+import flags.model.Topic
+import flags.parse.parseHTML
+
 /**
- * hardware.fr forum.
- *
- * The 1.0 extension built urls through a `Site.applyXtor` helper that
- * prepended a `flags4chrome=1` fragment to the query string; that indirection
- * is collapsed here into simple url templates.
+ * hardware.fr forum. Uses the shared [Site] url builders (no `basePath`).
  */
 object Hfr : Site {
     override val id = "hfr"
     override val host = "forum.hardware.fr"
+    override val config = "hfr.inc"
     override val defaultColor = "#2F3740"
 
-    private const val CONFIG = "hfr.inc"
-
-    /** Marks the request as coming from the extension (kept from 1.0). */
-    private const val FRAGMENT = "flags4chrome=1"
-
-    /** Flagged topics live on forum1f.php; private messages on forum1.php. */
-    override fun drapsUrl() =
-        "https://$host/forum1f.php?$FRAGMENT&config=$CONFIG&owntopic=1"
-
-    override fun mpsUrl() =
-        "https://$host/forum1.php?$FRAGMENT&config=$CONFIG&cat=prive"
+    /**
+     * Each flagged topic is a `tr.sujet` row. The title and total page count
+     * are separate `a.cCatTopic` links (distinguished by their `td` cell); the
+     * flag link's href carries the cat / post / last-read-page query params.
+     * Unread pages = total − last-read, never negative.
+     */
+    override fun parseUnread(html: String): List<Topic> =
+        parseHTML(html).document.querySelectorAll("tr.sujet").mapNotNull { row ->
+            val title = row.querySelector("td.sujetCase3 a.cCatTopic")?.textContent
+                ?: return@mapNotNull null
+            val href = row.querySelector("td.sujetCase5 a")?.getAttribute("href")
+                ?: return@mapNotNull null
+            val cat = CAT.find(href)?.groupValues?.get(1) ?: return@mapNotNull null
+            val post = POST.find(href)?.groupValues?.get(1) ?: return@mapNotNull null
+            val lastRead = PAGE.find(href)?.groupValues?.get(1)?.toIntOrNull() ?: 1
+            val total = row.querySelector("td.sujetCase4 a.cCatTopic")
+                ?.textContent?.trim()?.toIntOrNull() ?: lastRead
+            Topic(
+                topicId = post,
+                title = title.trim(),
+                categoryId = cat,
+                href = href,
+                nbUnread = (total - lastRead).coerceAtLeast(0),
+            )
+        }
 }
+
+private val CAT = Regex("[?&]cat=(\\d+)")
+private val POST = Regex("[?&]post=(\\d+)")
+private val PAGE = Regex("[?&]page=(\\d+)")
