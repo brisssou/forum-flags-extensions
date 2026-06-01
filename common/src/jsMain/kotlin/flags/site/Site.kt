@@ -1,6 +1,7 @@
 package flags.site
 
 import flags.model.Topic
+import flags.snapshot.Snapshot
 
 /**
  * A supported forum. Each shipping artifact bundles every implementation and
@@ -60,4 +61,23 @@ interface Site {
 
     /** True when [html] is the "not logged in" page rather than real content. */
     fun isNotLoggedIn(html: String): Boolean = html.contains(notLoggedInMarker)
+
+    /**
+     * Composes the per-site parsers into the cached [Snapshot] for the draps
+     * page (which carries the topics, categories and new-MP notice together).
+     * Logged out → an empty, `loggedIn = false` snapshot. [fetchedAt] (epoch
+     * millis) is supplied by the caller's clock so this stays pure and testable.
+     */
+    fun snapshot(html: String, fetchedAt: Double): Snapshot =
+        if (isNotLoggedIn(html)) {
+            Snapshot(loggedIn = false, fetchedAt = fetchedAt)
+        } else {
+            Snapshot(
+                loggedIn = true,
+                topics = parseUnread(html),
+                mps = parseMps(html),
+                categories = parseCategories(html),
+                fetchedAt = fetchedAt,
+            )
+        }
 }

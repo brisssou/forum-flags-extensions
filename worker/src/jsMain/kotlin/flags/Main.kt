@@ -8,8 +8,14 @@ import flags.chrome.alarm.Companion.AlarmCreateInfo
 import flags.chrome.alarm.create
 import flags.chrome.alarm.get
 import flags.chrome.alarm.onAlarm
+import flags.chrome.runtime.onMessage
+import flags.message.Messages
 import flags.net.fetchPage
 import flags.site.Hfr
+import flags.snapshot.Mapper.toRecord
+import flags.snapshot.Snapshot
+import flags.snapshot.SnapshotStore
+import kotlin.js.Date
 import kotlin.js.Promise
 
 private const val ALARM = "forum-flags-alarm"
@@ -17,6 +23,8 @@ private const val ALARM = "forum-flags-alarm"
 /** 1.0 badge backgrounds: red normally, blue when there are new private messages. */
 private val RED = arrayOf(255, 0, 0, 255)
 private val BLUE = arrayOf(0, 0, 255, 255)
+
+private val store = SnapshotStore()
 
 private fun setBadge(text: String, color: Array<Int>) {
     setBadgeBackgroundColor(BadgeColorDetails { this.color = color })
@@ -40,32 +48,46 @@ fun createAlarm() {
 }
 
 /**
- * The draps page header carries both the flagged topics and the new-MP notice,
- * so one fetch is enough. "x" when logged out; otherwise show (flagged topics +
- * new MPs) as in 1.0 — blue when MPs > 0, red otherwise, blank at 0. The
- * `GET_MPS` gate lands with prefs.
+ * Badge from the snapshot, so it never drifts from what the popup shows. "x"
+ * when logged out; otherwise (flagged topics + new MPs) as in 1.0 — blue when
+ * MPs > 0, red otherwise, blank at 0. The `GET_MPS` gate lands with prefs.
  */
-private fun updateBadgeFromDrapsPage(html: String) {
-    if (Hfr.isNotLoggedIn(html)) {
+private fun updateBadge(snapshot: Snapshot) {
+    if (!snapshot.loggedIn) {
         setBadge("x", RED)
         return
     }
-    val topics = Hfr.parseUnread(html)
-    val mps = Hfr.parseMps(html)
-    val total = topics.size + mps
-    console.info("forum-flags: ${topics.size} flagged topics, $mps new MPs")
-    setBadge(if (total == 0) "" else total.toString(), if (mps > 0) BLUE else RED)
+    val total = snapshot.topics.size + snapshot.mps
+    setBadge(if (total == 0) "" else total.toString(), if (snapshot.mps > 0) BLUE else RED)
 }
 
-fun refreshBadge(): Promise<Unit> =
-    fetchPage(Hfr.drapsUrl())
-        .then(::updateBadgeFromDrapsPage)
-        .catch { e -> console.warn("forum-flags: refresh failed", e) }
+/** Polls the forum, updates the badge, caches the snapshot, and returns it. */
+fun refresh(): Promise<Snapshot> =
+    fetchPage(Hfr.drapsUrl()).then { html ->
+        val snapshot = Hfr.snapshot(html, Date.now())
+        console.info(
+            "forum-flags: ${snapshot.topics.size} flagged topics, " +
+                "${snapshot.mps} new MPs, loggedIn=${snapshot.loggedIn}",
+        )
+        updateBadge(snapshot)
+        store.save(snapshot)
+        snapshot
+    }
 
 fun main() {
     console.info("starting worker")
     createAlarm()
-    onAlarm.addListener { refreshBadge() }
-    refreshBadge()
+    onAlarm.addListener { refresh().catch { e -> console.warn("forum-flags: refresh failed", e) } }
+    onMessage.addListener { message, _, sendResponse ->
+        if (message?.type != Messages.REFRESH) return@addListener false
+        refresh()
+            .then { sendResponse(it.toRecord()) }
+            .catch { e ->
+                console.warn("forum-flags: refresh failed", e)
+                sendResponse(null)
+            }
+        true // keep the channel open for the asynchronous sendResponse above
+    }
+    refresh().catch { e -> console.warn("forum-flags: refresh failed", e) }
     console.info("Listener added")
 }
