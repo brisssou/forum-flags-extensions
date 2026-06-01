@@ -40,6 +40,21 @@ object Hfr : Site {
         }
 
     /**
+     * Each forum section is introduced by a `tr.fondForum1fCat` header row
+     * holding an `a.cHeader` whose href carries the section's `cat=` id and
+     * whose text is the section name. The sibling reset link in the same row
+     * has no `cat=` digits, so keying on the id naturally skips it.
+     */
+    override fun parseCategories(html: String): Map<String, String> =
+        parseHTML(html).document.querySelectorAll("tr.fondForum1fCat a.cHeader")
+            .mapNotNull { a ->
+                val href = a.getAttribute("href") ?: return@mapNotNull null
+                val cat = CAT.find(href)?.groupValues?.get(1) ?: return@mapNotNull null
+                cat to a.textContent.orEmpty().trim()
+            }
+            .toMap()
+
+    /**
      * The new-MP notice is the private-messages link (`cat=prive`) whose text
      * reads "Vous avez N nouveau(x) message(s)…". Keyed on that semantic link
      * rather than its `.red` styling; the plain "Messages privés" link carries

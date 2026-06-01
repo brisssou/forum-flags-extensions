@@ -49,6 +49,12 @@ interface Site {
     /** Flagged topics with unread pages, parsed from the draps page html. */
     fun parseUnread(html: String): List<Topic>
 
+    /**
+     * Category id → display name, parsed from the draps page section headers.
+     * Used by the popup to group [parseUnread]'s topics under their category.
+     */
+    fun parseCategories(html: String): Map<String, String>
+
     /** Count of new private messages, parsed from the draps page header (0 if none). */
     fun parseMps(html: String): Int
 

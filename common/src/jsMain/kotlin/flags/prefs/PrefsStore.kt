@@ -2,6 +2,8 @@ package flags.prefs
 
 import flags.chrome.storage.StorageArea
 import flags.chrome.storage.local
+import flags.prefs.Mapper.fromRecord
+import flags.prefs.Mapper.toRecord
 import kotlin.js.Promise
 
 /**
@@ -12,7 +14,7 @@ import kotlin.js.Promise
 class PrefsStore(private val area: StorageArea = local) {
 
     fun load(): Promise<Prefs> =
-        area.get().then(::prefsFromRecord)
+        area.get().then<Prefs> { Prefs.fromRecord(it) }
 
     fun save(prefs: Prefs): Promise<Unit> =
         area.set(prefs.toRecord())

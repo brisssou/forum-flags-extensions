@@ -1,5 +1,7 @@
 package flags.prefs
 
+import flags.prefs.Mapper.fromRecord
+import flags.prefs.Mapper.toRecord
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -7,7 +9,7 @@ class PrefsTest {
 
     @Test
     fun emptyRecordYieldsDefaults() {
-        assertEquals(Prefs(), prefsFromRecord(js("{}")))
+        assertEquals(Prefs(), Prefs.fromRecord(js("{}")))
     }
 
     @Test
@@ -20,7 +22,7 @@ class PrefsTest {
             bgColor = "#123456",
             mutedTopics = listOf("3#154877#Demos", "5#200553#VR"),
         )
-        assertEquals(prefs, prefsFromRecord(prefs.toRecord()))
+        assertEquals(prefs, Prefs.fromRecord(prefs.toRecord()))
     }
 
     @Test
@@ -29,7 +31,7 @@ class PrefsTest {
         record.refreshTime = 120
         record.getTopics = false
 
-        val prefs = prefsFromRecord(record)
+        val prefs = Prefs.fromRecord(record)
         assertEquals(120, prefs.refreshTime)
         assertEquals(false, prefs.getTopics)
         // untouched keys fall back to defaults
