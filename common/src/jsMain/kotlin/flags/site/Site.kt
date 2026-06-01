@@ -47,6 +47,14 @@ interface Site {
     fun drapsUrl(): String =
         "https://$host$basePath/forum1f.php?$fragment&config=$config&owntopic=1"
 
+    /** Absolute url of the private-messages page (linked from the popup MP line). */
+    fun mpsUrl(): String =
+        "https://$host$basePath/forum1.php?config=$config&cat=prive&page=1&owntopic=0"
+
+    /** Absolute url of a single category's flagged topics (popup category link). */
+    fun ownCatUrl(categoryId: String): String =
+        "https://$host$basePath/forum1.php?config=$config&owntopic=1&cat=$categoryId"
+
     /** Flagged topics with unread pages, parsed from the draps page html. */
     fun parseUnread(html: String): List<Topic>
 

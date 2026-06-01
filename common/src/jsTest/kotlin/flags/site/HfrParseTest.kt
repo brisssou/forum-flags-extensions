@@ -47,5 +47,13 @@ class HfrParseTest {
             "https://forum.hardware.fr/forum1f.php?flags4chrome=1&config=hfr.inc&owntopic=1",
             Hfr.drapsUrl(),
         )
+        assertEquals(
+            "https://forum.hardware.fr/forum1.php?config=hfr.inc&cat=prive&page=1&owntopic=0",
+            Hfr.mpsUrl(),
+        )
+        assertEquals(
+            "https://forum.hardware.fr/forum1.php?config=hfr.inc&owntopic=1&cat=5",
+            Hfr.ownCatUrl("5"),
+        )
     }
 }
