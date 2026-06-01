@@ -19,6 +19,3 @@ fun orBool(v: dynamic, default: Boolean): Boolean =
 
 fun orString(v: dynamic, default: String?): String? =
     if (isAbsent(v)) default else v.unsafeCast<String>()
-
-fun orStringList(v: dynamic): List<String> =
-    if (isAbsent(v)) emptyList() else v.unsafeCast<Array<String>>().toList()

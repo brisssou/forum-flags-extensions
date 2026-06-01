@@ -1,11 +1,8 @@
 package flags.prefs
 
 /**
- * User preferences, ported from 1.0's `PREFS_DEFAULT`. Three 1.0 checkboxes
- * (OPEN_TO_FRONT, MODO, AVATAR) are dropped: they had no default and no
- * behavior ever read them, so they were inert. Defaults match 1.0. Persisted
- * as a flat record under clean camelCase keys by [toRecord] / [fromRecord];
- * the worker, popup and options page all share this type.
+ * User preferences, shared by the worker, popup and options page. Persisted as
+ * a flat record under camelCase keys by [toRecord] / [fromRecord].
  */
 data class Prefs(
     val refreshTime: Int = DEFAULT_REFRESH_TIME,
@@ -22,8 +19,8 @@ data class Prefs(
     val maxOpenAll: Int = DEFAULT_MAX_OPEN_ALL,
     /** Theme color; null means "use the active site's default". */
     val bgColor: String? = DEFAULT_BG_COLOR,
-    /** Muted topics as `cat#post#title` entries. */
-    val mutedTopics: List<String> = emptyList(),
+    /** Topics the user muted in the popup; hidden from the list. */
+    val mutedTopics: List<MutedTopic> = emptyList(),
 ) {
     /** Defaults, shared by the constructor above and [PrefsMapper.fromRecord]. */
     companion object {

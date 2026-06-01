@@ -20,7 +20,10 @@ class PrefsTest {
             onlyFavs = true,
             maxOpenAll = 25,
             bgColor = "#123456",
-            mutedTopics = listOf("3#154877#Demos", "5#200553#VR"),
+            mutedTopics = listOf(
+                MutedTopic("3", "154877", "Demos"),
+                MutedTopic("5", "200553", "VR"),
+            ),
         )
         assertEquals(prefs, Prefs.fromRecord(prefs.toRecord()))
     }

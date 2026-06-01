@@ -1,9 +1,9 @@
 package flags.prefs
 
+import flags.util.isAbsent
 import flags.util.orBool
 import flags.util.orInt
 import flags.util.orString
-import flags.util.orStringList
 
 /**
  * Maps [Prefs] to and from the plain JS records `chrome.storage` stores. Kept
@@ -30,7 +30,7 @@ object Mapper {
         r.showCat = showCat
         r.maxOpenAll = maxOpenAll
         r.bgColor = bgColor
-        r.mutedTopics = mutedTopics.toTypedArray()
+        r.mutedTopics = mutedTopics.map { it.toRecord() }.toTypedArray()
         return r
     }
 
@@ -58,6 +58,24 @@ object Mapper {
             showCat = orBool(record.showCat, DEFAULT_SHOW_CAT),
             maxOpenAll = orInt(record.maxOpenAll, DEFAULT_MAX_OPEN_ALL),
             bgColor = orString(record.bgColor, DEFAULT_BG_COLOR),
-            mutedTopics = orStringList(record.mutedTopics),
+            mutedTopics = mutedTopicsFromRecord(record.mutedTopics),
         )
+
+    private fun MutedTopic.toRecord(): dynamic {
+        val r = js("{}")
+        r.categoryId = categoryId
+        r.topicId = topicId
+        r.title = title
+        return r
+    }
+
+    private fun mutedTopicsFromRecord(v: dynamic): List<MutedTopic> =
+        if (isAbsent(v)) emptyList()
+        else v.unsafeCast<Array<dynamic>>().map { m ->
+            MutedTopic(
+                categoryId = m.categoryId.unsafeCast<String>(),
+                topicId = m.topicId.unsafeCast<String>(),
+                title = m.title.unsafeCast<String>(),
+            )
+        }
 }
