@@ -1,0 +1,121 @@
+/* Popup: a thin icon toolbar over a scrollable list of flagged topics,
+   grouped under coloured category bars. */
+
+#popupPage {
+    margin: 0;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 10pt;
+}
+
+#popup {
+    width: 355px;
+    max-height: 560px;
+    background-color: white;
+}
+
+#popup * {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+/* Toolbar */
+
+#headbar {
+    height: 20px;
+    padding: 2px 0.5em 0;
+}
+
+#headbar li {
+    display: inline;
+}
+
+#headbar img {
+    width: 15px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+#headbar img.disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+
+#left {
+    float: left;
+}
+
+#right {
+    float: right;
+}
+
+#right img {
+    margin-left: 15px;
+}
+
+/* Entries */
+
+#entries {
+    clear: both;
+    overflow-y: auto;
+    max-height: 520px;
+}
+
+/* Category bars: bold, centred, white on the theme colour (set inline). */
+#entries ul {
+    list-style-type: none;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+#entries a.category {
+    display: block;
+    cursor: pointer;
+    color: white;
+    padding: 2px 0;
+}
+
+/* The private-messages bar. */
+.mp {
+    background-color: red;
+}
+
+#entries .mp a {
+    display: block;
+    color: white;
+    padding: 2px 0;
+}
+
+/* Topic list: plain black-on-white rows under each category bar. */
+#entries ul > li > ul {
+    font-weight: normal;
+    color: black;
+    background-color: white;
+    text-align: left;
+}
+
+#entries ul > li > ul > li {
+    padding: 1px 0.5em;
+}
+
+#entries a {
+    text-decoration: none;
+    color: black;
+}
+
+#entries a:hover {
+    text-decoration: underline;
+}
+
+.mute img {
+    width: 12px;
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+.notice {
+    padding: 1rem;
+    text-align: center;
+    color: #c0392b;
+}
