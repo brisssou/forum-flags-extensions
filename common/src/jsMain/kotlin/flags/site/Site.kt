@@ -47,6 +47,10 @@ interface Site {
     fun drapsUrl(): String =
         "https://$host$basePath/forum1f.php?$fragment&config=$config&owntopic=1"
 
+    /** Absolute url of the favourites-only page (polled when `onlyFavs` is on). */
+    fun favsUrl(): String =
+        "https://$host$basePath/forum1f.php?$fragment&config=$config&owntopic=3"
+
     /** Absolute url of the private-messages page (linked from the popup MP line). */
     fun mpsUrl(): String =
         "https://$host$basePath/forum1.php?config=$config&cat=prive&page=1&owntopic=0"

@@ -55,5 +55,9 @@ class HfrParseTest {
             "https://forum.hardware.fr/forum1.php?config=hfr.inc&owntopic=1&cat=5",
             Hfr.ownCatUrl("5"),
         )
+        assertEquals(
+            "https://forum.hardware.fr/forum1f.php?flags4chrome=1&config=hfr.inc&owntopic=3",
+            Hfr.favsUrl(),
+        )
     }
 }
