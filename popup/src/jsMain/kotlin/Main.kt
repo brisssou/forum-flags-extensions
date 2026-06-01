@@ -47,7 +47,7 @@ fun main() {
     fun refresh() {
         if (refreshing) return
         refreshing = true
-        sendMessage(refreshMessage())
+        sendMessage(message(Messages.REFRESH))
             .then<Unit> { record ->
                 if (record != null) snapshot = Snapshot.fromRecord(record)
                 refreshing = false
@@ -85,7 +85,7 @@ private fun Popup(
             onOptions = { openOptionsPage() },
             onOpenAll = { openAll(visible, prefs) },
             onRefresh = onRefresh,
-            onGoToSite = { openUrl(Hfr.drapsUrl(), prefs.newTab) },
+            onGoToSite = { openTab(Hfr.drapsUrl(), prefs.newTab) },
         )
 
         Div(attrs = { id("entries") }) {
@@ -141,7 +141,7 @@ private fun MpLine(mps: Int, prefs: Prefs) {
     val url = Hfr.mpsUrl()
     val label = if (mps > 1) getMessage("private_messages") else getMessage("private_message")
     Li(attrs = { classes("mp") }) {
-        A(href = url, attrs = { onClick { it.preventDefault(); openUrl(url, prefs.newTab) } }) {
+        A(href = url, attrs = { onClick { it.preventDefault(); openLink(url, prefs.newTab) } }) {
             Text("$mps $label")
         }
     }
@@ -179,7 +179,7 @@ private fun TopicRow(topic: Topic, prefs: Prefs, onMute: (Topic) -> Unit) {
         Text(" ")
         A(href = url, attrs = {
             attr("title", unreadLabel(topic.nbUnread))
-            onClick { it.preventDefault(); openUrl(url, prefs.newTab) }
+            onClick { it.preventDefault(); openLink(url, prefs.newTab) }
         }) {
             Text(topic.title)
         }
@@ -193,28 +193,43 @@ private fun unreadLabel(nbUnread: Int): String = when {
 }
 
 /** Opens [url] honoring the new-tab pref: a fresh tab, or the current one. */
-private fun openUrl(url: String, newTab: Boolean) {
+private fun openTab(url: String, newTab: Boolean) {
     if (newTab) create(CreateProperties { this.url = url })
     else update(UpdateProperties { this.url = url })
 }
 
-/** Opens every topic in fresh tabs, confirming first past the maxOpenAll threshold. */
+/** Asks the worker to re-poll shortly, so the badge catches up once a page is read. */
+private fun scheduleRefresh() {
+    sendMessage(message(Messages.REFRESH_SOON))
+}
+
+/** Opens a single clicked link and schedules one catch-up re-poll. */
+private fun openLink(url: String, newTab: Boolean) {
+    openTab(url, newTab)
+    scheduleRefresh()
+}
+
+/**
+ * Opens every topic in fresh tabs (confirming first past the maxOpenAll
+ * threshold), then schedules a single catch-up re-poll for the whole batch.
+ */
 private fun openAll(topics: List<Topic>, prefs: Prefs) {
     if (topics.size < prefs.maxOpenAll ||
         window.confirm(getMessage("too_many_new_tabs", arrayOf(topics.size.toString())))
     ) {
-        topics.forEach { openUrl("https://${Hfr.host}${it.href}", newTab = true) }
+        topics.forEach { openTab("https://${Hfr.host}${it.href}", newTab = true) }
+        scheduleRefresh()
     }
 }
 
 /** Clicking a category opens all its topics, or navigates to it, per the openCat pref. */
 private fun openCategory(categoryId: String, topics: List<Topic>, prefs: Prefs) {
     if (prefs.openCat) openAll(topics, prefs)
-    else openUrl(Hfr.ownCatUrl(categoryId), prefs.newTab)
+    else openLink(Hfr.ownCatUrl(categoryId), prefs.newTab)
 }
 
-private fun refreshMessage(): dynamic {
+private fun message(type: Messages): dynamic {
     val message = js("{}")
-    message.type = Messages.REFRESH
+    message.type = type.name
     return message
 }

@@ -20,7 +20,11 @@ import kotlin.js.Promise
 
 private const val ALARM = "forum-flags-alarm"
 
-/** 1.0 badge backgrounds: red normally, blue when there are new private messages. */
+/** One-shot alarm armed after the popup opens links, to re-poll shortly after. */
+private const val SOON_ALARM = "forum-flags-refresh-soon"
+private const val SOON_DELAY_MINUTES = 0.1
+
+/** Badge backgrounds: red normally, blue when there are new private messages. */
 private val RED = arrayOf(255, 0, 0, 255)
 private val BLUE = arrayOf(0, 0, 255, 255)
 
@@ -49,8 +53,8 @@ fun createAlarm() {
 
 /**
  * Badge from the snapshot, so it never drifts from what the popup shows. "x"
- * when logged out; otherwise (flagged topics + new MPs) as in 1.0 — blue when
- * MPs > 0, red otherwise, blank at 0. The `GET_MPS` gate lands with prefs.
+ * when logged out; otherwise (flagged topics + new MPs) — blue when MPs > 0,
+ * red otherwise, blank at 0. The `GET_MPS` gate lands with prefs.
  */
 private fun updateBadge(snapshot: Snapshot) {
     if (!snapshot.loggedIn) {
@@ -79,14 +83,23 @@ fun main() {
     createAlarm()
     onAlarm.addListener { refresh().catch { e -> console.warn("forum-flags: refresh failed", e) } }
     onMessage.addListener { message, _, sendResponse ->
-        if (message?.type != Messages.REFRESH) return@addListener false
-        refresh()
-            .then { sendResponse(it.toRecord()) }
-            .catch { e ->
-                console.warn("forum-flags: refresh failed", e)
-                sendResponse(null)
+        when (message?.type) {
+            Messages.REFRESH.name -> {
+                refresh()
+                    .then { sendResponse(it.toRecord()) }
+                    .catch { e ->
+                        console.warn("forum-flags: refresh failed", e)
+                        sendResponse(null)
+                    }
+                true // keep the channel open for the asynchronous sendResponse above
             }
-        true // keep the channel open for the asynchronous sendResponse above
+            Messages.REFRESH_SOON.name -> {
+                // Re-poll a little later (one-shot), no reply needed.
+                create(SOON_ALARM, AlarmCreateInfo { delayInMinutes = SOON_DELAY_MINUTES })
+                false
+            }
+            else -> false
+        }
     }
     refresh().catch { e -> console.warn("forum-flags: refresh failed", e) }
     console.info("Listener added")
