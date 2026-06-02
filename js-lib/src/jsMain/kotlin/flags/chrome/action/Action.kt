@@ -24,8 +24,20 @@ external interface TitleDetails {
     var title: String
 }
 
+external interface PopupDetails {
+    /** Popup html to open on click; an empty string makes the icon fire [onClicked]. */
+    var popup: String
+}
+
 external fun setBadgeText(details: BadgeTextDetails): Promise<Unit>
 
 external fun setBadgeBackgroundColor(details: BadgeColorDetails): Promise<Unit>
 
 external fun setTitle(details: TitleDetails): Promise<Unit>
+
+external fun setPopup(details: PopupDetails): Promise<Unit>
+
+external object onClicked {
+    /** Fired when the toolbar icon is clicked while no popup is set. */
+    fun addListener(callback: (tab: dynamic) -> Unit)
+}
