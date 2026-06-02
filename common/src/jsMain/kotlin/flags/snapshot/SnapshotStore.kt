@@ -23,7 +23,8 @@ class SnapshotStore(private val area: StorageArea = local) {
         return area.set(wrapper)
     }
 
-    private companion object {
+    companion object {
+        /** Storage key the snapshot lives under; the worker filters it out of `onChanged`. */
         const val KEY = "snapshot"
     }
 }
