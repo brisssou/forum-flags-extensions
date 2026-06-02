@@ -30,3 +30,13 @@ external interface StorageArea {
 external val local: StorageArea
 external val sync: StorageArea
 external val session: StorageArea
+
+external object onChanged {
+
+    /**
+     * Fired when one or more items change in any area. `changes` is an object
+     * keyed by the changed item names (each value carries `oldValue`/`newValue`);
+     * `areaName` is the area that changed (e.g. `"local"`).
+     */
+    fun addListener(callback: (changes: dynamic, areaName: String) -> Unit)
+}
