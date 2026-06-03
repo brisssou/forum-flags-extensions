@@ -24,6 +24,7 @@
   },
   "permissions": [
     "alarms",
+    "contextMenus",
     "storage",
     "tabs"
   ],

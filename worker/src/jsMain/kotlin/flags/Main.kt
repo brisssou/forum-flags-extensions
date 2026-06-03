@@ -2,13 +2,23 @@ package flags
 
 import flags.chrome.action.Companion.BadgeColorDetails
 import flags.chrome.action.Companion.BadgeTextDetails
+import flags.chrome.action.Companion.PopupDetails
+import flags.chrome.action.onClicked as actionClicked
 import flags.chrome.action.setBadgeBackgroundColor
 import flags.chrome.action.setBadgeText
+import flags.chrome.action.setPopup
 import flags.chrome.alarm.Companion.AlarmCreateInfo
 import flags.chrome.alarm.create
 import flags.chrome.alarm.onAlarm
+import flags.chrome.contextMenus.Companion.CreateProperties as MenuCreateProperties
+import flags.chrome.contextMenus.create as createMenu
+import flags.chrome.contextMenus.onClicked as menuClicked
+import flags.chrome.contextMenus.removeAll
+import flags.chrome.i18n.getMessage
 import flags.chrome.runtime.onMessage
 import flags.chrome.storage.onChanged
+import flags.chrome.tabs.Companion.CreateProperties as TabCreateProperties
+import flags.chrome.tabs.create as createTab
 import flags.message.Messages
 import flags.net.fetchPage
 import flags.prefs.Prefs
@@ -28,6 +38,9 @@ private const val ALARM = "forum-flags-alarm"
 private const val SOON_ALARM = "forum-flags-refresh-soon"
 private const val SOON_DELAY_MINUTES = 0.1
 
+/** Id of the optional context-menu refresh entry. */
+private const val MENU_ID = "forum-flags-refresh"
+
 /** Badge backgrounds: red normally, blue when there are new private messages. */
 private val RED = arrayOf(255, 0, 0, 255)
 private val BLUE = arrayOf(0, 0, 255, 255)
@@ -40,10 +53,32 @@ private fun setBadge(text: String, color: Array<Int>) {
     setBadgeText(BadgeTextDetails { this.text = text })
 }
 
+/** The forum page the badge tracks: favourites when `onlyFavs`, else all flagged. */
+private fun forumUrl(prefs: Prefs): String = if (prefs.onlyFavs) Hfr.favsUrl() else Hfr.drapsUrl()
+
 /** (Re)arms the periodic poll alarm at the pref's interval (clamped to the site minimum). */
 private fun armAlarm(prefs: Prefs) {
     val seconds = max(prefs.refreshTime, Hfr.minRefreshTimeSeconds)
     create(ALARM, AlarmCreateInfo { periodInMinutes = seconds / 60.0 })
+}
+
+/**
+ * Applies the click-behavior prefs: with `useDirectLink` the icon has no popup
+ * (so clicking it fires [actionClicked], which opens the forum); the
+ * `useContextMenu` refresh entry is (re)created or removed.
+ */
+private fun applyBehavior(prefs: Prefs) {
+    setPopup(PopupDetails { popup = if (prefs.useDirectLink) "" else "popup.html" })
+    removeAll().then {
+        if (prefs.useContextMenu) {
+            createMenu(
+                MenuCreateProperties {
+                    id = MENU_ID
+                    title = getMessage("refresh_menu_label", arrayOf(Hfr.displayName))
+                },
+            )
+        }
+    }
 }
 
 /**
@@ -62,7 +97,7 @@ private fun updateBadge(snapshot: Snapshot) {
 
 /** Polls the page the prefs select, shapes it by the prefs, updates the badge and caches it. */
 private fun refreshWith(prefs: Prefs): Promise<Snapshot> =
-    fetchPage(if (prefs.onlyFavs) Hfr.favsUrl() else Hfr.drapsUrl()).then { html ->
+    fetchPage(forumUrl(prefs)).then { html ->
         val snapshot = Hfr.snapshot(html, Date.now()).forPrefs(prefs)
         if (prefs.debugOn) {
             console.info(
@@ -88,7 +123,10 @@ private fun onlySnapshotChanged(changes: dynamic): Boolean =
 
 fun main() {
     console.info("starting worker")
-    prefsStore.load().then(::armAlarm)
+    prefsStore.load().then { prefs ->
+        armAlarm(prefs)
+        applyBehavior(prefs)
+    }
     onAlarm.addListener { refresh().catch { e -> console.warn("forum-flags: refresh failed", e) } }
     onMessage.addListener { message, _, sendResponse ->
         when (message?.type) {
@@ -109,11 +147,22 @@ fun main() {
             else -> false
         }
     }
+    actionClicked.addListener {
+        // Fires only when the popup is disabled (direct-link on): open the forum.
+        prefsStore.load().then { prefs -> createTab(TabCreateProperties { url = forumUrl(prefs) }) }
+    }
+    menuClicked.addListener { info, _ ->
+        if (info.menuItemId == MENU_ID) {
+            refresh().catch { e -> console.warn("forum-flags: refresh failed", e) }
+        }
+    }
     onChanged.addListener { changes, areaName ->
-        // Prefs changed (options edit or popup mute): re-time the alarm and re-poll now.
+        // Prefs changed (options edit or popup mute): re-time the alarm, re-apply
+        // the click behaviour, and re-poll now.
         if (areaName == "local" && !onlySnapshotChanged(changes)) {
             prefsStore.load().then { prefs ->
                 armAlarm(prefs)
+                applyBehavior(prefs)
                 refreshWith(prefs).catch { e -> console.warn("forum-flags: refresh failed", e) }
             }
         }
