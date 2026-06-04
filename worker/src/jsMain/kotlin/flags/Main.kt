@@ -14,6 +14,7 @@ import flags.chrome.contextMenus.Companion.CreateProperties as MenuCreatePropert
 import flags.chrome.contextMenus.create as createMenu
 import flags.chrome.contextMenus.onClicked as menuClicked
 import flags.chrome.contextMenus.removeAll
+import flags.chrome.ensureBrowserNamespace
 import flags.chrome.i18n.getMessage
 import flags.chrome.runtime.onMessage
 import flags.chrome.storage.onChanged
@@ -45,8 +46,8 @@ private const val MENU_ID = "forum-flags-refresh"
 private val RED = arrayOf(255, 0, 0, 255)
 private val BLUE = arrayOf(0, 0, 255, 255)
 
-private val prefsStore = PrefsStore()
-private val snapshotStore = SnapshotStore()
+private val prefsStore by lazy { PrefsStore() }
+private val snapshotStore by lazy { SnapshotStore() }
 
 private fun setBadge(text: String, color: Array<Int>) {
     setBadgeBackgroundColor(BadgeColorDetails { this.color = color })
@@ -122,6 +123,7 @@ private fun onlySnapshotChanged(changes: dynamic): Boolean =
     js("Object.keys")(changes).unsafeCast<Array<String>>().all { it == SnapshotStore.KEY }
 
 fun main() {
+    ensureBrowserNamespace()
     console.info("starting worker")
     prefsStore.load().then { prefs ->
         armAlarm(prefs)

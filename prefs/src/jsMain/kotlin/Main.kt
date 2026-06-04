@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import flags.chrome.ensureBrowserNamespace
 import flags.chrome.i18n.getMessage
 import flags.prefs.Prefs
 import flags.prefs.PrefsStore
@@ -18,9 +19,10 @@ import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.dom.TextInput
 import org.jetbrains.compose.web.renderComposable
 
-private val store = PrefsStore()
+private val store by lazy { PrefsStore() }
 
 fun main() {
+    ensureBrowserNamespace()
     document.title = getMessage("optionsPageTitle", arrayOf(Hfr.displayName))
     var prefs by mutableStateOf(Prefs())
     store.load().then { prefs = it }

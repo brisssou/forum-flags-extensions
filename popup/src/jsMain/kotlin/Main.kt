@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import flags.chrome.ensureBrowserNamespace
 import flags.chrome.i18n.getMessage
 import flags.chrome.runtime.openOptionsPage
 import flags.chrome.runtime.sendMessage
@@ -32,10 +33,11 @@ import org.jetbrains.compose.web.dom.Text
 import org.jetbrains.compose.web.dom.Ul
 import org.jetbrains.compose.web.renderComposable
 
-private val snapshotStore = SnapshotStore()
-private val prefsStore = PrefsStore()
+private val snapshotStore by lazy { SnapshotStore() }
+private val prefsStore by lazy { PrefsStore() }
 
 fun main() {
+    ensureBrowserNamespace()
     var snapshot by mutableStateOf(Snapshot())
     var prefs by mutableStateOf(Prefs())
     var refreshing by mutableStateOf(false)
