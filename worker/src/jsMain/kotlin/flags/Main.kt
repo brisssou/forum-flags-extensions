@@ -3,10 +3,12 @@ package flags
 import flags.chrome.action.Companion.BadgeColorDetails
 import flags.chrome.action.Companion.BadgeTextDetails
 import flags.chrome.action.Companion.PopupDetails
+import flags.chrome.action.Companion.TitleDetails
 import flags.chrome.action.onClicked as actionClicked
 import flags.chrome.action.setBadgeBackgroundColor
 import flags.chrome.action.setBadgeText
 import flags.chrome.action.setPopup
+import flags.chrome.action.setTitle
 import flags.chrome.alarm.Companion.AlarmCreateInfo
 import flags.chrome.alarm.create
 import flags.chrome.alarm.onAlarm
@@ -83,11 +85,26 @@ private fun applyBehavior(prefs: Prefs) {
 }
 
 /**
- * Badge from the snapshot, so it never drifts from what the popup shows. "x"
- * when logged out; otherwise (flagged topics + new MPs) — blue when MPs > 0,
- * red otherwise, blank at 0.
+ * The hover tooltip mirrors the popup: the new-MP count line (when any),
+ * then one flagged-topic title per line. Empty when logged out / nothing new.
+ */
+private fun titleFor(snapshot: Snapshot): String {
+    val lines = mutableListOf<String>()
+    if (snapshot.mps > 0) {
+        val label = if (snapshot.mps > 1) getMessage("private_messages") else getMessage("private_message")
+        lines += "${snapshot.mps} $label"
+    }
+    snapshot.topics.forEach { lines += it.title }
+    return lines.joinToString("\n")
+}
+
+/**
+ * Badge + tooltip from the snapshot, so neither drifts from what the popup
+ * shows. Badge: "x" when logged out; otherwise (flagged topics + new MPs) —
+ * blue when MPs > 0, red otherwise, blank at 0. Tooltip: [titleFor].
  */
 private fun updateBadge(snapshot: Snapshot) {
+    setTitle(TitleDetails { title = titleFor(snapshot) })
     if (!snapshot.loggedIn) {
         setBadge("x", RED)
         return
