@@ -1,4 +1,4 @@
-@file:JsQualifier("chrome.alarms")
+@file:JsQualifier("browser.alarms")
 
 package flags.chrome.alarm
 

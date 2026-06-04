@@ -1,4 +1,4 @@
-@file:JsQualifier("chrome.runtime")
+@file:JsQualifier("browser.runtime")
 
 package flags.chrome.runtime
 

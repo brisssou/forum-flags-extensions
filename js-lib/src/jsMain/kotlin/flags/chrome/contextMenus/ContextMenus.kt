@@ -1,4 +1,4 @@
-@file:JsQualifier("chrome.contextMenus")
+@file:JsQualifier("browser.contextMenus")
 
 package flags.chrome.contextMenus
 

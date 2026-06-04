@@ -1,4 +1,4 @@
-@file:JsQualifier("chrome.i18n")
+@file:JsQualifier("browser.i18n")
 
 package flags.chrome.i18n
 

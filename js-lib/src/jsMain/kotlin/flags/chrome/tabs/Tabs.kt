@@ -1,4 +1,4 @@
-@file:JsQualifier("chrome.tabs")
+@file:JsQualifier("browser.tabs")
 
 package flags.chrome.tabs
 

@@ -1,4 +1,4 @@
-@file:JsQualifier("chrome.action")
+@file:JsQualifier("browser.action")
 
 package flags.chrome.action
 

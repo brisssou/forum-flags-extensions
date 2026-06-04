@@ -1,4 +1,4 @@
-@file:JsQualifier("chrome.storage")
+@file:JsQualifier("browser.storage")
 
 package flags.chrome.storage
 

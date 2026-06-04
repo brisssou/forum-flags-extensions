@@ -16,7 +16,15 @@
   },
   "background": {
     "service_worker": "worker.js",
+    "scripts": [
+      "worker.js"
+    ],
     "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "forum-flags@brisssou"
+    }
   },
   "options_ui": {
     "page": "prefs.html",
