@@ -36,7 +36,7 @@ fun main() {
     // this page is open. Refresh only mutedTopics, so fields being edited here
     // (the text/number inputs) aren't disturbed by an unrelated save.
     onChanged.addListener { changes, areaName ->
-        if (areaName == "local" && changes != null && changes.mutedTopics != undefined) {
+        if (areaName == "local" && mutedTopicsChanged(changes)) {
             store.load().then { prefs = prefs.copy(mutedTopics = it.mutedTopics) }
         }
     }
@@ -107,6 +107,10 @@ fun main() {
         }
     }
 }
+
+/** True when a storage change touched the muted-topics list (vs. only other prefs). */
+private fun mutedTopicsChanged(changes: dynamic): Boolean =
+    changes != null && changes.mutedTopics != undefined
 
 /** The muted-topics list with a "réactiver" button each (shown when not managing from the popup). */
 @Composable

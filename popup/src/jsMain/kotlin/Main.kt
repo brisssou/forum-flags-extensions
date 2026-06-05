@@ -64,13 +64,15 @@ fun main() {
             }
     }
 
-    fun toggleMute(topic: Topic) {
-        prefsStore.update { it.mute(topic) }.then { prefs = it }
+    // Persist a prefs change (read-modify-write, so a mute here can't clobber an
+    // options-page edit), then adopt the authoritative stored result.
+    fun changePrefs(transform: (Prefs) -> Prefs) {
+        prefsStore.update(transform).then { prefs = it }
     }
 
-    fun unmuteTopic(topic: MutedTopic) {
-        prefsStore.update { it.unmute(topic) }.then { prefs = it }
-    }
+    fun toggleMute(topic: Topic) = changePrefs { it.mute(topic) }
+
+    fun unmuteTopic(topic: MutedTopic) = changePrefs { it.unmute(topic) }
 
     renderComposable(rootElementId = "root") {
         Popup(snapshot, prefs, refreshing, onRefresh = ::refresh, onMute = ::toggleMute, onUnmute = ::unmuteTopic)
