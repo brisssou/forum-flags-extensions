@@ -48,6 +48,9 @@ private const val MENU_ID = "forum-flags-refresh"
 private val RED = arrayOf(255, 0, 0, 255)
 private val BLUE = arrayOf(0, 0, 255, 255)
 
+/** Badge text shown while a poll is in flight, until the result overwrites it. */
+private const val REFRESHING = "…"
+
 private val prefsStore by lazy { PrefsStore() }
 private val snapshotStore by lazy { SnapshotStore() }
 
@@ -114,8 +117,11 @@ private fun updateBadge(snapshot: Snapshot) {
 }
 
 /** Polls the page the prefs select, shapes it by the prefs, updates the badge and caches it. */
-private fun refreshWith(prefs: Prefs): Promise<Snapshot> =
-    fetchPage(forumUrl(prefs)).then { html ->
+private fun refreshWith(prefs: Prefs): Promise<Snapshot> {
+    // Mark the badge as refreshing while the poll is in flight; the result
+    // overwrites it. Text only, so the colour persists from the last poll.
+    setBadgeText(BadgeTextDetails { text = REFRESHING })
+    return fetchPage(forumUrl(prefs)).then { html ->
         val snapshot = Hfr.snapshot(html, Date.now()).forPrefs(prefs)
         if (prefs.debugOn) {
             console.info(
@@ -127,6 +133,7 @@ private fun refreshWith(prefs: Prefs): Promise<Snapshot> =
         snapshotStore.save(snapshot)
         snapshot
     }
+}
 
 /** Loads the prefs, then polls with them. */
 fun refresh(): Promise<Snapshot> =

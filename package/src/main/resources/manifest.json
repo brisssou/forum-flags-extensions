@@ -10,7 +10,7 @@
     "128": "images/128.png"
   },
   "action": {
-    "default_icon": "images/flag.gif",
+    "default_icon": "images/flag.png",
     "default_popup": "popup.html",
     "default_title": "HFR - Mes sujets"
   },

@@ -125,7 +125,7 @@ private fun Header(
         Ul(attrs = { id("right") }) {
             if (showOpenAll) Li { IconButton("images/icons8-chevron-filled.png", getMessage("open_all"), onOpenAll) }
             Li { IconButton("images/icons8-refresh.png", getMessage("refresh"), onRefresh, disabled = refreshing) }
-            Li { IconButton("images/icon.png", Hfr.displayName, onGoToSite) }
+            Li { IconButton("images/favicon.ico", Hfr.displayName, onGoToSite) }
         }
     }
 }

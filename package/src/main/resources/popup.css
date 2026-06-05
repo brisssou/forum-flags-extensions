@@ -2,7 +2,8 @@
    grouped under coloured category bars. */
 
 #popupPage {
-    margin: 0;
+    /* Match v1's default body margin, which insets the popup from the window. */
+    margin: 8px;
     font-family: Verdana, Arial, sans-serif;
     font-size: 10pt;
 }
@@ -23,7 +24,7 @@
 
 #headbar {
     height: 20px;
-    padding: 2px 0.5em 0;
+    padding: 0 0.5em;
 }
 
 #headbar li {
@@ -43,6 +44,7 @@
 
 #left {
     float: left;
+    margin-top: 2px;
 }
 
 #right {
