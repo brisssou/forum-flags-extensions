@@ -121,3 +121,41 @@
     text-align: center;
     color: #c0392b;
 }
+
+/* Muted-topics footer: a dimmed, collapsible list below the live entries.
+   Scoped under #popup to override the `#popup *` reset (margin/padding/border). */
+#popup .muted {
+    border-top: 1px solid #ccc;
+    padding: 2px 0.5em;
+    font-size: 9pt;
+    color: #555;
+}
+
+#popup .muted .toggle {
+    display: block;
+    cursor: pointer;
+    text-decoration: none;
+    color: #555;
+    padding: 2px 0;
+}
+
+#popup .muted .toggle:hover {
+    text-decoration: underline;
+}
+
+#popup .muted ul {
+    list-style-type: none;
+}
+
+#popup .muted li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5em;
+    padding: 1px 0;
+}
+
+#popup .muted button {
+    cursor: pointer;
+    font-size: 8pt;
+}

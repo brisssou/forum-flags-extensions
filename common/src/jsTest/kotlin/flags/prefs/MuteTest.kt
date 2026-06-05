@@ -45,4 +45,33 @@ class MuteTest {
         val prefs = Prefs(mutedTopics = listOf(MutedTopic("9", "200553", "elsewhere")))
         assertFalse(prefs.isMuted(topic))
     }
+
+    @Test
+    fun unmuteRemovesTheEntry() {
+        val muted = Prefs().mute(topic)
+        val restored = muted.unmute(MutedTopic("5", "200553", "[TU] VR autonome"))
+        assertEquals(emptyList(), restored.mutedTopics)
+        assertFalse(restored.isMuted(topic))
+    }
+
+    @Test
+    fun unmuteMatchesOnIdentityIgnoringStoredTitle() {
+        val muted = Prefs(mutedTopics = listOf(MutedTopic("5", "200553", "[TU] VR autonome")))
+        val restored = muted.unmute(MutedTopic("5", "200553", "stale title"))
+        assertEquals(emptyList(), restored.mutedTopics)
+    }
+
+    @Test
+    fun unmuteLeavesOtherMutedTopicsAlone() {
+        val keep = MutedTopic("9", "111", "elsewhere")
+        val muted = Prefs(mutedTopics = listOf(MutedTopic("5", "200553", "[TU] VR autonome"), keep))
+        val restored = muted.unmute(MutedTopic("5", "200553", "[TU] VR autonome"))
+        assertEquals(listOf(keep), restored.mutedTopics)
+    }
+
+    @Test
+    fun unmuteIsANoOpWhenNotMuted() {
+        val prefs = Prefs(mutedTopics = listOf(MutedTopic("9", "111", "elsewhere")))
+        assertEquals(prefs.mutedTopics, prefs.unmute(MutedTopic("5", "200553", "absent")).mutedTopics)
+    }
 }

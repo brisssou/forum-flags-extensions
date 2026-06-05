@@ -17,6 +17,8 @@ data class Prefs(
     val openCat: Boolean = DEFAULT_OPEN_CAT,
     val showCat: Boolean = DEFAULT_SHOW_CAT,
     val maxOpenAll: Int = DEFAULT_MAX_OPEN_ALL,
+    /** When on, muted topics are managed from the popup; otherwise from the options page. */
+    val mutedInPopup: Boolean = DEFAULT_MUTED_IN_POPUP,
     /** Theme color; null means "use the active site's default". */
     val bgColor: String? = DEFAULT_BG_COLOR,
     /** Topics the user muted in the popup; hidden from the list. */
@@ -36,6 +38,7 @@ data class Prefs(
         internal const val DEFAULT_OPEN_CAT = true
         internal const val DEFAULT_SHOW_CAT = true
         internal const val DEFAULT_MAX_OPEN_ALL = 10
+        internal const val DEFAULT_MUTED_IN_POPUP = false
 
         /** `null` can't be a `const`, so the nullable default is a plain `val`. */
         internal val DEFAULT_BG_COLOR: String? = null

@@ -19,6 +19,7 @@ class PrefsTest {
             getMps = false,
             onlyFavs = true,
             maxOpenAll = 25,
+            mutedInPopup = true,
             bgColor = "#123456",
             mutedTopics = listOf(
                 MutedTopic("3", "154877", "Demos"),
@@ -26,6 +27,23 @@ class PrefsTest {
             ),
         )
         assertEquals(prefs, Prefs.fromRecord(prefs.toRecord()))
+    }
+
+    @Test
+    fun roundTripsThroughStructuredClone() {
+        // chrome.storage clones values with the structured-clone algorithm before
+        // persisting; this reproduces that to catch nested-structure loss (the
+        // muted-topics array) the way a real browser store would.
+        val prefs = Prefs(
+            mutedInPopup = true,
+            mutedTopics = listOf(
+                MutedTopic("3", "154877", "Demos"),
+                MutedTopic("5", "200553", "VR"),
+            ),
+        )
+        val record = prefs.toRecord()
+        val cloned = js("typeof structuredClone !== 'undefined' ? structuredClone(record) : JSON.parse(JSON.stringify(record))")
+        assertEquals(prefs, Prefs.fromRecord(cloned))
     }
 
     @Test

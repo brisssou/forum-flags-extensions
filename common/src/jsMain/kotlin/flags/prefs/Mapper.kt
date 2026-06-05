@@ -29,6 +29,7 @@ object Mapper {
         r.openCat = openCat
         r.showCat = showCat
         r.maxOpenAll = maxOpenAll
+        r.mutedInPopup = mutedInPopup
         r.bgColor = bgColor
         r.mutedTopics = mutedTopics.map { it.toRecord() }.toTypedArray()
         return r
@@ -57,6 +58,7 @@ object Mapper {
             openCat = orBool(record.openCat, DEFAULT_OPEN_CAT),
             showCat = orBool(record.showCat, DEFAULT_SHOW_CAT),
             maxOpenAll = orInt(record.maxOpenAll, DEFAULT_MAX_OPEN_ALL),
+            mutedInPopup = orBool(record.mutedInPopup, DEFAULT_MUTED_IN_POPUP),
             bgColor = orString(record.bgColor, DEFAULT_BG_COLOR),
             mutedTopics = mutedTopicsFromRecord(record.mutedTopics),
         )

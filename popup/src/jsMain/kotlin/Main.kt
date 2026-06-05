@@ -3,6 +3,7 @@ package flags
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import flags.chrome.ensureBrowserNamespace
 import flags.chrome.i18n.getMessage
@@ -14,10 +15,12 @@ import flags.chrome.tabs.create
 import flags.chrome.tabs.update
 import flags.message.Messages
 import flags.model.Topic
+import flags.prefs.MutedTopic
 import flags.prefs.Prefs
 import flags.prefs.PrefsStore
 import flags.prefs.isMuted
 import flags.prefs.mute
+import flags.prefs.unmute
 import flags.site.Hfr
 import flags.snapshot.Mapper.fromRecord
 import flags.snapshot.Snapshot
@@ -26,6 +29,7 @@ import kotlinx.browser.window
 import org.jetbrains.compose.web.css.Color
 import org.jetbrains.compose.web.css.backgroundColor
 import org.jetbrains.compose.web.dom.A
+import org.jetbrains.compose.web.dom.Button
 import org.jetbrains.compose.web.dom.Div
 import org.jetbrains.compose.web.dom.Img
 import org.jetbrains.compose.web.dom.Li
@@ -61,12 +65,15 @@ fun main() {
     }
 
     fun toggleMute(topic: Topic) {
-        prefs = prefs.mute(topic)
-        prefsStore.save(prefs)
+        prefsStore.update { it.mute(topic) }.then { prefs = it }
+    }
+
+    fun unmuteTopic(topic: MutedTopic) {
+        prefsStore.update { it.unmute(topic) }.then { prefs = it }
     }
 
     renderComposable(rootElementId = "root") {
-        Popup(snapshot, prefs, refreshing, onRefresh = ::refresh, onMute = ::toggleMute)
+        Popup(snapshot, prefs, refreshing, onRefresh = ::refresh, onMute = ::toggleMute, onUnmute = ::unmuteTopic)
     }
 }
 
@@ -77,6 +84,7 @@ private fun Popup(
     refreshing: Boolean,
     onRefresh: () -> Unit,
     onMute: (Topic) -> Unit,
+    onUnmute: (MutedTopic) -> Unit,
 ) {
     val visible = snapshot.topics.filter { !prefs.isMuted(it) }
 
@@ -102,6 +110,38 @@ private fun Popup(
                         }
                     } else if (visible.isNotEmpty()) {
                         Li { Ul { visible.forEach { TopicRow(it, prefs, onMute) } } }
+                    }
+                }
+            }
+        }
+
+        if (prefs.mutedInPopup && prefs.mutedTopics.isNotEmpty()) MutedSection(prefs.mutedTopics, onUnmute)
+    }
+}
+
+/**
+ * Collapsible footer listing muted topics with a "réactiver" button each.
+ * Reads [MutedTopic.title] from prefs, so it works even when a muted topic is
+ * absent from the current snapshot. Collapsed by default to stay out of the way.
+ */
+@Composable
+private fun MutedSection(muted: List<MutedTopic>, onUnmute: (MutedTopic) -> Unit) {
+    var expanded by remember { mutableStateOf(false) }
+    Div(attrs = { classes("muted") }) {
+        A(href = "#", attrs = {
+            classes("toggle")
+            onClick { it.preventDefault(); expanded = !expanded }
+        }) {
+            Text("${if (expanded) "▾" else "▸"} ${getMessage("muted_label")} (${muted.size})")
+        }
+        if (expanded) {
+            Ul {
+                muted.forEach { topic ->
+                    Li {
+                        Text(topic.title)
+                        Button(attrs = { onClick { onUnmute(topic) } }) {
+                            Text(getMessage("options_unmute"))
+                        }
                     }
                 }
             }

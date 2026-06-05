@@ -46,3 +46,32 @@
     font-weight: bold;
     font-size: 0.85rem;
 }
+
+/* Muted-topics list (shown when not managing from the popup). The id-on-id
+   selector overrides `#prefs > div`, which would otherwise force a flex row. */
+#prefs > #muted {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+}
+
+#muted_label {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+#muted ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+#muted li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}

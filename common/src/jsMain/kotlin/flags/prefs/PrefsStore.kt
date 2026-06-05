@@ -18,4 +18,18 @@ class PrefsStore(private val area: StorageArea = local) {
 
     fun save(prefs: Prefs): Promise<Unit> =
         area.set(prefs.toRecord())
+
+    /**
+     * Loads the latest stored prefs, applies [transform], saves the result, and
+     * resolves to it. Saves merge onto current storage rather than a possibly
+     * stale in-memory snapshot — without this, a surface saving an out-of-date
+     * copy (e.g. the options page before its load resolved, or while the popup
+     * just added a mute) would overwrite fields it never touched, such as
+     * `mutedTopics`.
+     */
+    fun update(transform: (Prefs) -> Prefs): Promise<Prefs> =
+        load().then { current ->
+            val next = transform(current)
+            save(next).then { next }
+        }.unsafeCast<Promise<Prefs>>()
 }

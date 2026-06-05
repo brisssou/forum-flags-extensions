@@ -101,6 +101,10 @@
         "message": "Muted thread:",
         "description": "A label to display muted topics."
     },
+    "MUTED_IN_POPUP_label": {
+        "message": "Manage muted threads from the popup:",
+        "description": "A label asking whether muted topics are managed from the popup instead of the options page."
+    },
     "DEBUG_ON_label": {
         "message": "Debug mode:",
         "description": "A label to ask the user if he wants the extension in debug mode."

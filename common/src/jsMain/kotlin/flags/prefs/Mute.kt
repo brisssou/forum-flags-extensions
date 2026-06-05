@@ -15,3 +15,7 @@ fun Prefs.isMuted(topic: Topic): Boolean =
 fun Prefs.mute(topic: Topic): Prefs =
     if (isMuted(topic)) this
     else copy(mutedTopics = mutedTopics + MutedTopic(topic.categoryId, topic.topicId, topic.title))
+
+/** Returns a copy with [topic] unmuted (matched on category + topic id); a no-op if it was not muted. */
+fun Prefs.unmute(topic: MutedTopic): Prefs =
+    copy(mutedTopics = mutedTopics.filterNot { it.categoryId == topic.categoryId && it.topicId == topic.topicId })
