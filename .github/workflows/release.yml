@@ -1,0 +1,33 @@
+name: Release
+
+# When a GitHub release is published, build the extension and attach the
+# packaged zip(s) to that release.
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write # required to upload assets onto the release
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # Caches Gradle and the wrapper; the Kotlin/JS toolchain downloads its
+      # own Node/Yarn during the build.
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build and test
+        run: ./gradlew :common:jsTest :package:assemble --no-daemon
+
+      - name: Attach the zip(s) to the release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release upload "${{ github.event.release.tag_name }}" package/build/distributions/*.zip --clobber
