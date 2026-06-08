@@ -37,23 +37,26 @@ Fonctionne sur les navigateurs Chromium (Chrome, Vivaldi, …) et Firefox.
 ./gradlew :package:assemble
 ```
 
-Produit :
+Produit, par navigateur (manifeste adapté à chacun) :
 
-- `package/build/dist/` — l'extension décompressée.
-- `package/build/distributions/*.zip` — une archive zip.
+- `package/build/dist/chrome/` et `package/build/dist/firefox/` — l'extension
+  décompressée.
+- `package/build/distributions/package-chrome-<version>.zip` et
+  `package-firefox-<version>.zip` — les archives zip.
 
 ## Installation
 
 **Chrome / Vivaldi**
 
 1. Ouvrez `chrome://extensions` et activez le *mode développeur*.
-2. *Charger l'extension non empaquetée* → sélectionnez `package/build/dist`.
+2. *Charger l'extension non empaquetée* → sélectionnez
+   `package/build/dist/chrome`.
 
 **Firefox**
 
 1. Ouvrez `about:debugging#/runtime/this-firefox`.
 2. *Charger un module complémentaire temporaire* → sélectionnez
-   `package/build/dist/manifest.json`.
+   `package/build/dist/firefox/manifest.json`.
 
 ## Tests
 
