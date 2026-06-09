@@ -1,0 +1,47 @@
+name: CI
+
+# Build and test on pushes to the trunk and on every pull request.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      # Caches Gradle and the wrapper; the Kotlin/JS toolchain downloads its
+      # own Node/Yarn during the build.
+      - uses: gradle/actions/setup-gradle@v6
+
+      - name: Build and test
+        run: ./gradlew jsTest assemble --no-daemon
+
+      # Guards the packaging: `assemble` must emit exactly one zip per browser.
+      # No unit test exercises this, so a regression here would otherwise ship.
+      - name: Verify per-browser packaging
+        run: |
+          # nullglob: a pattern that matches no file expands to *nothing*
+          # (an empty array) instead of the literal text "package-chrome-*.zip".
+          # Without it, "zero zips" would still count as one (the literal) and
+          # slip through the check below.
+          shopt -s nullglob
+          echo "Artifacts:"; ls -1 package/build/distributions/
+          # Each glob expands into a bash array of the matching files;
+          # ${#array[@]} is therefore the number of zips found per browser.
+          chrome=(package/build/distributions/package-chrome-*.zip)
+          firefox=(package/build/distributions/package-firefox-*.zip)
+          # Require exactly one of each: catches a dropped browser (0) *and* an
+          # unexpected/stale extra (2+). `exit 1` fails the step (GHA runs these
+          # with `set -eo pipefail`); `::error::` surfaces it as an annotation.
+          # NOTE: when multi-site (M7) ships several zips per browser, relax this
+          # (e.g. count per site, or assert >= 1).
+          [ ${#chrome[@]} -eq 1 ] || { echo "::error::expected exactly one Chrome zip, found ${#chrome[@]}"; exit 1; }
+          [ ${#firefox[@]} -eq 1 ] || { echo "::error::expected exactly one Firefox zip, found ${#firefox[@]}"; exit 1; }
