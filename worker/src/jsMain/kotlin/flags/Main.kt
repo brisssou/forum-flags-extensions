@@ -37,9 +37,15 @@ import kotlin.math.max
 
 private const val ALARM = "forum-flags-alarm"
 
-/** One-shot alarm armed after the popup opens links, to re-poll shortly after. */
-private const val SOON_ALARM = "forum-flags-refresh-soon"
-private const val SOON_DELAY_MINUTES = 0.1
+/**
+ * Delay before the catch-up re-poll after the popup opens links. Driven by
+ * setTimeout, NOT chrome.alarms: alarms clamp sub-minute delays to ~30–60s
+ * (far too late to feel live), whereas the worker is still alive right after
+ * the message, so a short timeout fires on time.
+ */
+private const val SOON_DELAY_MS = 1000
+
+private external fun setTimeout(handler: () -> Unit, timeoutMs: Int): Int
 
 /** Id of the optional context-menu refresh entry. */
 private const val MENU_ID = "forum-flags-refresh"
@@ -166,8 +172,8 @@ fun main() {
                 true // keep the channel open for the asynchronous sendResponse above
             }
             Messages.REFRESH_SOON.name -> {
-                // Re-poll a little later (one-shot), no reply needed.
-                create(SOON_ALARM, AlarmCreateInfo { delayInMinutes = SOON_DELAY_MINUTES })
+                // Re-poll shortly after, no reply needed (see SOON_DELAY_MS).
+                setTimeout({ refresh().catch { e -> console.warn("forum-flags: refresh failed", e) } }, SOON_DELAY_MS)
                 false
             }
             else -> false
