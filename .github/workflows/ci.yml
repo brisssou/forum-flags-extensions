@@ -51,13 +51,19 @@ jobs:
           [ ${#chrome[@]} -eq 1 ] || { echo "::error::expected exactly one Chrome zip, found ${#chrome[@]}"; exit 1; }
           [ ${#firefox[@]} -eq 1 ] || { echo "::error::expected exactly one Firefox zip, found ${#firefox[@]}"; exit 1; }
 
-      # Reads the JUnit XML and surfaces failed tests inline (check run + PR
-      # annotations). `always()` so it still reports when "Build and test" failed.
+      # Reads the JUnit XML and surfaces results inline: a detailed per-suite
+      # table (passing tests included) in the run summary, plus an auto-updating
+      # comment on the PR. `always()` so it still reports when the build failed.
       - name: Publish test results
         if: always()
         uses: mikepenz/action-junit-report@v6
         with:
           report_paths: '**/build/test-results/**/*.xml'
+          detailed_summary: true # per-suite/test table, not just the counts
+          include_passed: true # list the green tests too, not only failures
+          group_suite: true # group the cases by test suite
+          comment: true # post the report as a PR comment...
+          updateComment: true # ...and edit it in place on re-runs
 
       # Full HTML report + raw XML as a run-scoped artifact, downloadable from
       # the run page (expires after retention). `always()` — kept on every run.
