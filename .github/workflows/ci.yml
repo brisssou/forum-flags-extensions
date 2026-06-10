@@ -53,6 +53,16 @@ jobs:
           [ ${#chrome[@]} -eq 1 ] || { echo "::error::expected exactly one Chrome zip, found ${#chrome[@]}"; exit 1; }
           [ ${#firefox[@]} -eq 1 ] || { echo "::error::expected exactly one Firefox zip, found ${#firefox[@]}"; exit 1; }
 
+      # The packaged extensions, downloadable from the run page so a PR can be
+      # tested without a local build. No `if:` — success-gated, so it only runs
+      # (and the zips only exist) once the build and the check above pass.
+      - name: Upload extension zips
+        uses: actions/upload-artifact@v7
+        with:
+          name: extension-zips
+          path: package/build/distributions/*.zip
+          retention-days: 14
+
       # Reads the JUnit XML and surfaces results inline: a detailed per-suite
       # table (passing tests included) in the run summary, plus an auto-updating
       # comment on the PR. `always()` so it still reports when the build failed.
