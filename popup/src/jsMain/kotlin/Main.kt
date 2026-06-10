@@ -9,6 +9,7 @@ import flags.chrome.ensureBrowserNamespace
 import flags.chrome.i18n.getMessage
 import flags.chrome.runtime.openOptionsPage
 import flags.chrome.runtime.sendMessage
+import flags.chrome.storage.onChanged
 import flags.chrome.tabs.Companion.CreateProperties
 import flags.chrome.tabs.Companion.UpdateProperties
 import flags.chrome.tabs.create
@@ -49,6 +50,15 @@ fun main() {
     // Render the cached snapshot immediately, then refine as the stores resolve.
     snapshotStore.load().then { snapshot = it }
     prefsStore.load().then { prefs = it }
+
+    // Live-refresh the list: opening a topic schedules a worker re-poll
+    // (REFRESH_SOON) that rewrites the cached snapshot once the topic reads as
+    // seen — reload it so an open popup drops that topic, like v1 did.
+    onChanged.addListener { changes, areaName ->
+        if (areaName == "local" && changes != null && changes[SnapshotStore.KEY] != undefined) {
+            snapshotStore.load().then { snapshot = it }
+        }
+    }
 
     fun refresh() {
         if (refreshing) return
