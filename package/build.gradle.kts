@@ -26,6 +26,13 @@ val assembleCommon by tasks.registering(Copy::class) {
 /** The dual-key manifest; each browser build strips it down to its clean form. */
 val baseManifestFile = layout.projectDirectory.file("src/main/resources/manifest.json").asFile
 
+// The manifest version must be numeric (Chrome/FF reject a SHA): use the Gradle
+// version on a `vX.Y.Z` tag build, else fall back to 0.0.0 — branch builds carry
+// the commit short SHA as their version (see git-versioning in the root build).
+val manifestVersion = project.version.toString().let {
+    if (it.matches(Regex("""\d+(\.\d+){0,3}"""))) it else "0.0.0"
+}
+
 val browsers = listOf("chrome", "firefox")
 
 browsers.forEach { browser ->
@@ -39,12 +46,15 @@ browsers.forEach { browser ->
         // `baseManifestFile` is a script-level val; capture it into a local so the
         // task body doesn't reference the script object (configuration-cache safe).
         val base = baseManifestFile
+        val ver = manifestVersion
         val isChrome = browser == "chrome"
         inputs.file(base)
+        inputs.property("version", ver)
         outputs.file(manifestOutFile)
         doLast {
             @Suppress("UNCHECKED_CAST")
             val manifest = JsonSlurper().parse(base) as MutableMap<String, Any?>
+            manifest["version"] = ver
             @Suppress("UNCHECKED_CAST")
             val background = manifest["background"] as MutableMap<String, Any?>
             if (isChrome) {
