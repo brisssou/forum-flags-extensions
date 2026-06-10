@@ -2,7 +2,7 @@
 
 Plus besoin de F5 vos sujets drapalisés sur HFR (et les forums cousins) toutes
 les cinq minutes : l'extension surveille pour vous les sujets suivis, compte
-vos MP non lus, et vous signale le nouveau directement sur l'icône — sans
+vos MP non lus, et vous le signale directement sur l'icône — sans
 jamais rafraîchir la page à la main.
 
 Manifest V3. Kotlin/JS, multi-module, Compose HTML pour les interfaces.
@@ -12,7 +12,7 @@ Fonctionne sur les navigateurs Chromium (Chrome, Vivaldi, …) et Firefox.
 
 - Un **badge** sur l'icône vous dit combien de sujets ont bougé (+ vos nouveaux
   MP) : bleu quand vous avez des MP, rouge sinon, et un `x` quand vous n'êtes
-  plus connecté.
+  pas/plus connecté.
 - La **popup** déroule les sujets qui ont du nouveau, groupés par catégorie si
   vous voulez, avec un bouton « tout ouvrir » et de quoi mettre un sujet en
   sourdine d'un clic.
@@ -34,7 +34,7 @@ Fonctionne sur les navigateurs Chromium (Chrome, Vivaldi, …) et Firefox.
 ## Compilation
 
 ```
-./gradlew :package:assemble
+./gradlew jsTest assemble
 ```
 
 Produit, par navigateur (manifeste adapté à chacun) :
@@ -61,7 +61,7 @@ Produit, par navigateur (manifeste adapté à chacun) :
 ## Tests
 
 ```
-./gradlew :common:jsTest
+./gradlew jsTest
 ```
 
 La logique métier est couverte par des suites `kotlin.test` qui s'exécutent sur
