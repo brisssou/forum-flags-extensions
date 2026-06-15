@@ -25,8 +25,30 @@ external interface UpdateProperties {
     var active: Boolean?
 }
 
+external interface QueryInfo {
+    /** Restrict to tabs in the current window. */
+    var currentWindow: Boolean?
+
+    /** Restrict to the active tab in each window. */
+    var active: Boolean?
+}
+
+external interface Tab {
+    /** The tab id, used to target [update]. */
+    val id: Int?
+
+    /** The tab's current url (populated only with the `tabs` or host permission). */
+    val url: String?
+}
+
 /** Opens a new tab. */
 external fun create(createProperties: CreateProperties): Promise<dynamic>
 
 /** Navigates the current (or given) tab; with no tab id, updates the active tab. */
 external fun update(updateProperties: UpdateProperties): Promise<dynamic>
+
+/** Navigates the tab with [tabId]. */
+external fun update(tabId: Int, updateProperties: UpdateProperties): Promise<dynamic>
+
+/** Lists open tabs matching [queryInfo]. */
+external fun query(queryInfo: QueryInfo): Promise<Array<Tab>>
