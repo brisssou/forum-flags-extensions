@@ -81,7 +81,8 @@ fun main() {
             PrefRow("REUSE_SAME_TOPIC") { id -> Checkbox(id, prefs.reuseSameTopic) { on -> update { it.copy(reuseSameTopic = on) } } }
             PrefRow("USE_DIRECT_LINK") { id -> Checkbox(id, prefs.useDirectLink) { on -> update { it.copy(useDirectLink = on) } } }
             PrefRow("USE_CONTEXT_MENU") { id -> Checkbox(id, prefs.useContextMenu) { on -> update { it.copy(useContextMenu = on) } } }
-            PrefRow("ANIMATED_ICON") { id -> Checkbox(id, prefs.animatedIcon) { on -> update { it.copy(animatedIcon = on) } } }
+            // Disabled until the icon-animation feature is implemented; the pref does nothing for now.
+            // PrefRow("ANIMATED_ICON") { id -> Checkbox(id, prefs.animatedIcon) { on -> update { it.copy(animatedIcon = on) } } }
             PrefRow("DEBUG_ON") { id -> Checkbox(id, prefs.debugOn) { on -> update { it.copy(debugOn = on) } } }
 
             PrefRow("MAX_OPEN_ALL") { fieldId ->
