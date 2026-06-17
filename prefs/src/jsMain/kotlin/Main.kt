@@ -80,7 +80,8 @@ fun main() {
             PrefRow("NEW_TAB") { id -> Checkbox(id, prefs.newTab) { on -> update { it.copy(newTab = on) } } }
             PrefRow("USE_DIRECT_LINK") { id -> Checkbox(id, prefs.useDirectLink) { on -> update { it.copy(useDirectLink = on) } } }
             PrefRow("USE_CONTEXT_MENU") { id -> Checkbox(id, prefs.useContextMenu) { on -> update { it.copy(useContextMenu = on) } } }
-            PrefRow("ANIMATED_ICON") { id -> Checkbox(id, prefs.animatedIcon) { on -> update { it.copy(animatedIcon = on) } } }
+            // Disabled until the icon-animation feature is implemented; the pref does nothing for now.
+            // PrefRow("ANIMATED_ICON") { id -> Checkbox(id, prefs.animatedIcon) { on -> update { it.copy(animatedIcon = on) } } }
             PrefRow("DEBUG_ON") { id -> Checkbox(id, prefs.debugOn) { on -> update { it.copy(debugOn = on) } } }
 
             PrefRow("MAX_OPEN_ALL") { fieldId ->
