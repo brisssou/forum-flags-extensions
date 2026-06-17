@@ -132,8 +132,13 @@ private fun MutedList(muted: List<MutedTopic>, onUnmute: (MutedTopic) -> Unit) {
 
 @Composable
 private fun PrefRow(fieldId: String, control: @Composable (String) -> Unit) {
+    // Show the "<FIELD>_label_title" hint as the label's hover tooltip when one
+    // exists (getMessage returns "" for the prefs that have no such key).
+    val tooltip = getMessage("${fieldId}_label_title")
     Div {
-        Label(forId = fieldId) { Text(getMessage("${fieldId}_label")) }
+        Label(forId = fieldId, attrs = { if (tooltip.isNotEmpty()) attr("title", tooltip) }) {
+            Text(getMessage("${fieldId}_label"))
+        }
         Div(attrs = { classes("control") }) { control(fieldId) }
     }
 }
