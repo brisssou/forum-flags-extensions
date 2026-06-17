@@ -10,10 +10,7 @@ import flags.chrome.i18n.getMessage
 import flags.chrome.runtime.openOptionsPage
 import flags.chrome.runtime.sendMessage
 import flags.chrome.storage.onChanged
-import flags.chrome.tabs.Companion.CreateProperties
-import flags.chrome.tabs.Companion.UpdateProperties
-import flags.chrome.tabs.create
-import flags.chrome.tabs.update
+import flags.chrome.tabs.openOrReuse
 import flags.message.Messages
 import flags.model.Topic
 import flags.prefs.MutedTopic
@@ -107,7 +104,7 @@ private fun Popup(
             onOptions = { openOptionsPage() },
             onOpenAll = { openAll(visible, prefs) },
             onRefresh = onRefresh,
-            onGoToSite = { openTab(Hfr.drapsUrl(), prefs.newTab) },
+            onGoToSite = { openSite(prefs) },
         )
 
         Div(attrs = { id("entries") }) {
@@ -233,7 +230,7 @@ private fun TopicRow(topic: Topic, prefs: Prefs, onMute: (Topic) -> Unit) {
         Text(" ")
         A(href = url, attrs = {
             attr("title", unreadLabel(topic.nbUnread))
-            onClick { it.preventDefault(); openLink(url, prefs.newTab) }
+            onClick { it.preventDefault(); openTopic(url, prefs) }
         }) {
             Text(topic.title)
         }
@@ -246,10 +243,17 @@ private fun unreadLabel(nbUnread: Int): String = when {
     else -> getMessage("no_new_page")
 }
 
-/** Opens [url] honoring the new-tab pref: a fresh tab, or the current one. */
-private fun openTab(url: String, newTab: Boolean) {
-    if (newTab) create(CreateProperties { this.url = url })
-    else update(UpdateProperties { this.url = url })
+/** The forum page the popup tracks: favourites when `onlyFavs`, else all flagged. */
+private fun siteUrl(prefs: Prefs): String = if (prefs.onlyFavs) Hfr.favsUrl() else Hfr.drapsUrl()
+
+/**
+ * Opens the tracked forum page, always reusing the tab already on it (it is a
+ * single destination — `newTab` only decides where to open when none exists),
+ * then schedules one catch-up re-poll.
+ */
+private fun openSite(prefs: Prefs) {
+    openOrReuse(siteUrl(prefs), prefs.newTab, reuse = true)
+    scheduleRefresh()
 }
 
 /** Asks the worker to re-poll shortly, so the badge catches up once a page is read. */
@@ -257,9 +261,25 @@ private fun scheduleRefresh() {
     sendMessage(message(Messages.REFRESH_SOON))
 }
 
-/** Opens a single clicked link and schedules one catch-up re-poll. */
+/**
+ * Opens a single clicked [url] honouring the new-tab pref (reusing a tab when
+ * off — see [openOrReuse]), then schedules one catch-up re-poll. [sameTab], when
+ * given, loosens which tab counts as a reuse target (e.g. the same topic).
+ */
 private fun openLink(url: String, newTab: Boolean) {
-    openTab(url, newTab)
+    openOrReuse(url, newTab, reuse = false)
+    scheduleRefresh()
+}
+
+/**
+ * Opens a clicked topic, then schedules one catch-up re-poll. With
+ * `reuseSameTopic` on, a tab already on this topic is reused — keyed on the
+ * topic id, so any page counts — even when newTab is on, reloading it to the
+ * last-read message; otherwise this behaves like [openLink].
+ */
+private fun openTopic(url: String, prefs: Prefs) {
+    if (prefs.reuseSameTopic) openOrReuse(url, prefs.newTab, reuse = true) { Hfr.topicId(it) ?: it }
+    else openOrReuse(url, prefs.newTab, reuse = false)
     scheduleRefresh()
 }
 
@@ -271,7 +291,7 @@ private fun openAll(topics: List<Topic>, prefs: Prefs) {
     if (topics.size < prefs.maxOpenAll ||
         window.confirm(getMessage("too_many_new_tabs", arrayOf(topics.size.toString())))
     ) {
-        topics.forEach { openTab("https://${Hfr.host}${it.href}", newTab = true) }
+        topics.forEach { openOrReuse("https://${Hfr.host}${it.href}", newTab = true, reuse = false) }
         scheduleRefresh()
     }
 }

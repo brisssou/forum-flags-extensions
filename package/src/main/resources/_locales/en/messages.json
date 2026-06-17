@@ -89,6 +89,14 @@
         "message": "'Open all' will ALWAYS open in new tabs.",
         "description": "A title to explain what NEW_TAB will do."
     },
+    "REUSE_SAME_TOPIC_label": {
+        "message": "Reuse a tab already open on the same topic:",
+        "description": "A label asking whether to reuse a tab already on the same topic, on any page."
+    },
+    "REUSE_SAME_TOPIC_label_title": {
+        "message": "Reuse a tab already on this topic (any page) even when opening in a new tab, reloading it.",
+        "description": "A title to explain what REUSE_SAME_TOPIC will do."
+    },
     "BG_COLOR_label": {
         "message": "Main color:",
         "description": "A label to ask the user want the main color will be."

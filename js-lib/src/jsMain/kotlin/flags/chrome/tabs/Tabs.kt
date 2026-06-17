@@ -52,3 +52,6 @@ external fun update(tabId: Int, updateProperties: UpdateProperties): Promise<dyn
 
 /** Lists open tabs matching [queryInfo]. */
 external fun query(queryInfo: QueryInfo): Promise<Array<Tab>>
+
+/** Reloads the tab with [tabId] (forces a refresh even when already on the url). */
+external fun reload(tabId: Int): Promise<dynamic>

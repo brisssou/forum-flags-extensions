@@ -25,6 +25,7 @@ object Mapper {
         r.animatedIcon = animatedIcon
         r.useContextMenu = useContextMenu
         r.newTab = newTab
+        r.reuseSameTopic = reuseSameTopic
         r.debugOn = debugOn
         r.openCat = openCat
         r.showCat = showCat
@@ -54,6 +55,7 @@ object Mapper {
             animatedIcon = orBool(record.animatedIcon, DEFAULT_ANIMATED_ICON),
             useContextMenu = orBool(record.useContextMenu, DEFAULT_USE_CONTEXT_MENU),
             newTab = orBool(record.newTab, DEFAULT_NEW_TAB),
+            reuseSameTopic = orBool(record.reuseSameTopic, DEFAULT_REUSE_SAME_TOPIC),
             debugOn = orBool(record.debugOn, DEFAULT_DEBUG_ON),
             openCat = orBool(record.openCat, DEFAULT_OPEN_CAT),
             showCat = orBool(record.showCat, DEFAULT_SHOW_CAT),

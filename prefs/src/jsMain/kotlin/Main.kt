@@ -78,6 +78,7 @@ fun main() {
             PrefRow("GET_MPS") { id -> Checkbox(id, prefs.getMps) { on -> update { it.copy(getMps = on) } } }
             PrefRow("ONLY_FAVS") { id -> Checkbox(id, prefs.onlyFavs) { on -> update { it.copy(onlyFavs = on) } } }
             PrefRow("NEW_TAB") { id -> Checkbox(id, prefs.newTab) { on -> update { it.copy(newTab = on) } } }
+            PrefRow("REUSE_SAME_TOPIC") { id -> Checkbox(id, prefs.reuseSameTopic) { on -> update { it.copy(reuseSameTopic = on) } } }
             PrefRow("USE_DIRECT_LINK") { id -> Checkbox(id, prefs.useDirectLink) { on -> update { it.copy(useDirectLink = on) } } }
             PrefRow("USE_CONTEXT_MENU") { id -> Checkbox(id, prefs.useContextMenu) { on -> update { it.copy(useContextMenu = on) } } }
             PrefRow("ANIMATED_ICON") { id -> Checkbox(id, prefs.animatedIcon) { on -> update { it.copy(animatedIcon = on) } } }
