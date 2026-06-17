@@ -89,6 +89,14 @@
         "message": "Ne sera pas pris en compte pour l'action 'Ouvrir tout'.",
         "description": "A title to explain what NEW_TAB will do."
     },
+    "REUSE_SAME_TOPIC_label": {
+        "message": "Réutiliser un onglet déjà ouvert sur le même sujet :",
+        "description": "A label asking whether to reuse a tab already on the same topic, on any page."
+    },
+    "REUSE_SAME_TOPIC_label_title": {
+        "message": "Réutilise un onglet déjà sur ce sujet (quelle que soit la page), même en cas d'ouverture dans un nouvel onglet, en le rechargeant.",
+        "description": "A title to explain what REUSE_SAME_TOPIC will do."
+    },
     "BG_COLOR_label": {
         "message": "Couleur principale de l'extension :",
         "description": "A label to ask the user want the main color will be."

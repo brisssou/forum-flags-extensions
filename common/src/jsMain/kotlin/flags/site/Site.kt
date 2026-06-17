@@ -3,6 +3,9 @@ package flags.site
 import flags.model.Topic
 import flags.snapshot.Snapshot
 
+/** The `post=` param (HFR's thread id) in a forum url; shared by all sites' engine. */
+private val TOPIC_POST = Regex("[?&]post=(\\d+)")
+
 /**
  * A supported forum. Each shipping artifact bundles every implementation and
  * selects the active one at runtime via [id].
@@ -58,6 +61,13 @@ interface Site {
     /** Absolute url of a single category's flagged topics (popup category link). */
     fun ownCatUrl(categoryId: String): String =
         "https://$host$basePath/forum1.php?config=$config&owntopic=1&cat=$categoryId"
+
+    /**
+     * The topic id (`post=` param) carried by a forum [url], or null when it is
+     * not a topic url. Lets a tab on the same topic be recognised for reuse
+     * regardless of which page/post the url targets.
+     */
+    fun topicId(url: String): String? = TOPIC_POST.find(url)?.groupValues?.get(1)
 
     /** Flagged topics with unread pages, parsed from the draps page html. */
     fun parseUnread(html: String): List<Topic>

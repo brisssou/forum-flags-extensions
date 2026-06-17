@@ -26,7 +26,7 @@ object Hfr : Site {
             val href = row.querySelector("td.sujetCase5 a")?.getAttribute("href")
                 ?: return@mapNotNull null
             val cat = CAT.find(href)?.groupValues?.get(1) ?: return@mapNotNull null
-            val post = POST.find(href)?.groupValues?.get(1) ?: return@mapNotNull null
+            val post = topicId(href) ?: return@mapNotNull null
             val lastRead = PAGE.find(href)?.groupValues?.get(1)?.toIntOrNull() ?: 1
             val total = row.querySelector("td.sujetCase4 a.cCatTopic")
                 ?.textContent?.trim()?.toIntOrNull() ?: lastRead
@@ -68,6 +68,5 @@ object Hfr : Site {
 }
 
 private val CAT = Regex("[?&]cat=(\\d+)")
-private val POST = Regex("[?&]post=(\\d+)")
 private val PAGE = Regex("[?&]page=(\\d+)")
 private val MP_COUNT = Regex("Vous avez (\\d+) nouveau")

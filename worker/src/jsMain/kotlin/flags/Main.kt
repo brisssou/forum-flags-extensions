@@ -20,12 +20,7 @@ import flags.chrome.ensureBrowserNamespace
 import flags.chrome.i18n.getMessage
 import flags.chrome.runtime.onMessage
 import flags.chrome.storage.onChanged
-import flags.chrome.tabs.Companion.CreateProperties as TabCreateProperties
-import flags.chrome.tabs.Companion.QueryInfo as TabQueryInfo
-import flags.chrome.tabs.Companion.UpdateProperties as TabUpdateProperties
-import flags.chrome.tabs.create as createTab
-import flags.chrome.tabs.query as queryTabs
-import flags.chrome.tabs.update as updateTab
+import flags.chrome.tabs.openOrReuse
 import flags.message.Messages
 import flags.net.fetchPage
 import flags.prefs.Prefs
@@ -73,22 +68,13 @@ private fun setBadge(text: String, color: Array<Int>) {
 private fun forumUrl(prefs: Prefs): String = if (prefs.onlyFavs) Hfr.favsUrl() else Hfr.drapsUrl()
 
 /**
- * Opens the forum when the popup is disabled: if a tab in the current window
- * already shows the forum page, focus and reload it; otherwise honour the
- * `newTab` pref — reuse the active tab when off, open a fresh tab when on.
- * Then schedules a catch-up re-poll so the badge reflects the page once it is
- * read.
+ * Opens the forum when the popup is disabled, always reusing the tab already on
+ * it (a single destination — `newTab` only picks where to open when none exists;
+ * see [openOrReuse]), then schedules a catch-up re-poll so the badge reflects
+ * the page once it is read.
  */
 private fun openForum(prefs: Prefs) {
-    val url = forumUrl(prefs)
-    queryTabs(TabQueryInfo { currentWindow = true }).then { tabs ->
-        val existingId = tabs.firstOrNull { it.url == url }?.id
-        when {
-            existingId != null -> updateTab(existingId, TabUpdateProperties { active = true; this.url = url })
-            !prefs.newTab -> updateTab(TabUpdateProperties { active = true; this.url = url })
-            else -> createTab(TabCreateProperties { this.url = url })
-        }
-    }
+    openOrReuse(forumUrl(prefs), prefs.newTab, reuse = true)
     setTimeout({ refresh().catch { e -> console.warn("forum-flags: refresh failed", e) } }, SOON_DELAY_MS)
 }
 

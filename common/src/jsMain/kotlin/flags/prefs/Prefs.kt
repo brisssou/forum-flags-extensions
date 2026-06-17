@@ -13,6 +13,8 @@ data class Prefs(
     val animatedIcon: Boolean = DEFAULT_ANIMATED_ICON,
     val useContextMenu: Boolean = DEFAULT_USE_CONTEXT_MENU,
     val newTab: Boolean = DEFAULT_NEW_TAB,
+    /** Reuse a tab already on the same topic (whatever its page/post) before opening, even when newTab is on. */
+    val reuseSameTopic: Boolean = DEFAULT_REUSE_SAME_TOPIC,
     val debugOn: Boolean = DEFAULT_DEBUG_ON,
     val openCat: Boolean = DEFAULT_OPEN_CAT,
     val showCat: Boolean = DEFAULT_SHOW_CAT,
@@ -34,6 +36,7 @@ data class Prefs(
         internal const val DEFAULT_ANIMATED_ICON = true
         internal const val DEFAULT_USE_CONTEXT_MENU = false
         internal const val DEFAULT_NEW_TAB = true
+        internal const val DEFAULT_REUSE_SAME_TOPIC = true
         internal const val DEFAULT_DEBUG_ON = false
         internal const val DEFAULT_OPEN_CAT = true
         internal const val DEFAULT_SHOW_CAT = true
