@@ -33,3 +33,12 @@ external object onMessage {
         callback: (message: dynamic, sender: MessageSender, sendResponse: (dynamic) -> Unit) -> Boolean,
     )
 }
+
+/**
+ * Fired when the browser starts up. Registering a listener also wakes Firefox's
+ * non-persistent event page at startup, so the top-level startup poll runs even
+ * though the background script is otherwise loaded lazily.
+ */
+external object onStartup {
+    fun addListener(callback: () -> Unit)
+}
