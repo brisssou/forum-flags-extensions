@@ -19,6 +19,7 @@ import flags.chrome.contextMenus.removeAll
 import flags.chrome.ensureBrowserNamespace
 import flags.chrome.i18n.getMessage
 import flags.chrome.runtime.onMessage
+import flags.chrome.runtime.onStartup
 import flags.chrome.storage.onChanged
 import flags.chrome.tabs.openOrReuse
 import flags.message.Messages
@@ -169,6 +170,7 @@ fun main() {
         armAlarm(prefs)
         applyBehavior(prefs)
     }
+    onStartup.addListener { refresh().catch { e -> console.warn("forum-flags: refresh failed", e) } }
     onAlarm.addListener { refresh().catch { e -> console.warn("forum-flags: refresh failed", e) } }
     onMessage.addListener { message, _, sendResponse ->
         when (message?.type) {
